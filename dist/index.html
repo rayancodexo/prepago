@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="PrépaFlow — organisez vos matières, tâches, séances de concentration et progression." />
+  <title>PrépaFlow — Mon espace prépa</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="refresh.css" />
+  <link rel="stylesheet" href="academy.css" />
+  <link rel="stylesheet" href="subject-hub.css" />
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="brand-mark">ϟ</span><span>prépa<span>flow</span></span></div>
+    <button class="profile-card" data-action="profile">
+      <span class="avatar">P</span><span><strong>Mon espace prépa</strong><small>Espace personnel</small></span>
+    </button>
+    <p class="nav-label">ESPACE DE TRAVAIL</p>
+    <nav id="mainNav">
+      <button class="nav-item active" data-page="overview"><span class="icon">▦</span>Vue d’ensemble</button>
+      <button class="nav-item" data-page="subjects"><span class="icon">▤</span>Mes matières</button>
+      <button class="nav-item" data-page="cnc"><span class="icon"></span>Annales CNC</button>
+      <button class="nav-item" data-page="tasks"><span class="icon">☑</span>Tâches quotidiennes</button>
+      <button class="nav-item" data-page="calendar"><span class="icon"></span>Calendrier</button>
+      <button class="nav-item" data-page="focus"><span class="icon">◷</span>Concentration</button>
+      <button class="nav-item" data-page="progress"><span class="icon">⌁</span>Ma progression</button>
+    </nav>
+    <div class="sidebar-level">
+      <span class="level-shield">◇</span><span><strong id="sideLevel">Niveau 1</strong><small id="sideXp">0 XP au total</small></span>
+    </div>
+    <p class="saved-note">Progression enregistrée<br>sur cet appareil</p>
+  </aside>
+
+  <header class="mobile-header">
+    <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+    <div class="brand"><span class="brand-mark">ϟ</span><span>prépa<span>flow</span></span></div>
+    <span class="avatar">P</span>
+  </header>
+
+  <main class="main">
+    <header class="topbar">
+      <div><span>Mon espace</span><i>/</i><strong id="breadcrumb">Vue d’ensemble</strong></div>
+      <div class="device-save">Enregistré sur cet appareil <span class="avatar">P</span></div>
+    </header>
+    <div id="page" class="page"></div>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Fermer">×</button>
+      <h2 id="modalTitle"></h2>
+      <form id="modalForm"></form>
+    </section>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+  <script src="productivity.js"></script>
+  <script src="academy.js"></script>
+</body>
+</html>

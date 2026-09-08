@@ -10,8 +10,38 @@
   <link rel="stylesheet" href="refresh.css" />
   <link rel="stylesheet" href="academy.css" />
   <link rel="stylesheet" href="subject-hub.css" />
+  <link rel="stylesheet" href="auth.css" />
 </head>
 <body>
+  <section class="auth-gate" id="authGate">
+    <div class="auth-card">
+      <div class="auth-brand"><span class="brand-mark">ϟ</span><div><strong>prépa<span style="color:#6558df">flow</span></strong><div style="color:#7a849f;font-size:.9rem">Votre espace prépa personnel</div></div></div>
+      <h1>Bienvenue.</h1>
+      <p>Connectez-vous pour retrouver votre espace sur n’importe quel appareil.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" type="button" data-auth-tab="login">Connexion</button>
+        <button class="auth-tab" type="button" data-auth-tab="signup">Créer un compte</button>
+      </div>
+      <div id="loginPanel">
+        <form id="loginForm">
+          <div class="auth-field"><label for="loginEmail">E-mail</label><input id="loginEmail" name="email" type="email" autocomplete="email" required></div>
+          <div class="auth-field"><label for="loginPassword">Mot de passe</label><input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="6" required></div>
+          <button class="auth-submit" type="submit">Se connecter</button>
+        </form>
+      </div>
+      <div id="signupPanel" hidden>
+        <form id="signupForm">
+          <div class="auth-field"><label for="signupName">Nom complet</label><input id="signupName" name="full_name" type="text" autocomplete="name" required></div>
+          <div class="auth-field"><label for="signupEmail">E-mail</label><input id="signupEmail" name="email" type="email" autocomplete="email" required></div>
+          <div class="auth-field"><label for="signupPassword">Mot de passe</label><input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="6" required></div>
+          <div class="auth-field"><label for="signupFiliere">Filière</label><select id="signupFiliere" name="filiere" required><option value="">Choisir...</option><option>MP</option><option>PSI</option><option>ECS</option><option>EST</option></select></div>
+          <button class="auth-submit" type="submit">Créer mon compte</button>
+        </form>
+      </div>
+      <div class="auth-message" id="authMessage"></div>
+    </div>
+  </section>
+
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="brand-mark">ϟ</span><span>prépa<span>flow</span></span></div>
     <button class="profile-card" data-action="profile">
@@ -31,6 +61,7 @@
       <span class="level-shield">◇</span><span><strong id="sideLevel">Niveau 1</strong><small id="sideXp">0 XP au total</small></span>
     </div>
     <p class="saved-note">Progression enregistrée<br>sur cet appareil</p>
+    <button class="auth-logout" id="logoutBtn" type="button">Se déconnecter</button>
   </aside>
 
   <header class="mobile-header">
@@ -42,7 +73,7 @@
   <main class="main">
     <header class="topbar">
       <div><span>Mon espace</span><i>/</i><strong id="breadcrumb">Vue d’ensemble</strong></div>
-      <div class="device-save">Enregistré sur cet appareil <span class="avatar">P</span></div>
+      <div class="device-save">Compte connecté <span class="avatar">P</span></div>
     </header>
     <div id="page" class="page"></div>
   </main>
@@ -55,8 +86,10 @@
     </section>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
   <script src="productivity.js"></script>
   <script src="academy.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>

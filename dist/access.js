@@ -69,10 +69,11 @@ if(promoForm){
     const submit=promoForm.querySelector('button[type="submit"]');
     submit.disabled=true;
     setPromoMessage('Vérification du code...');
-    const {error}=await supabaseClient.rpc('redeem_promo_code',{input_code:code});
+    const {data,error}=await supabaseClient.rpc('redeem_promo_code',{input_code:code});
     submit.disabled=false;
-    if(error){
-      setPromoMessage('Code invalide, expiré, déjà utilisé ou indisponible.','error');
+    const result=Array.isArray(data)?data[0]:data;
+    if(error||!result?.success){
+      setPromoMessage(result?.message||'Code invalide, expiré, déjà utilisé ou indisponible.','error');
       return;
     }
     setPromoMessage('Code activé. Accès Prepago débloqué.','success');

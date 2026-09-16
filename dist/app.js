@@ -1,4 +1,6 @@
 const STORAGE_KEY = 'prepaflow-v2';
+let activeStorageKey = STORAGE_KEY;
+let cloudSaveHandler = null;
 const COLORS = ['#6558df','#3b82f6','#f59e0b','#22a06b','#ec4899','#8b5cf6'];
 const defaultState = {
   subjects:[
@@ -13,8 +15,16 @@ let currentPage = 'overview';
 let calendarDate = new Date();
 let timer = {duration:25*60,left:25*60,running:false,interval:null};
 
-function loadState(){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}}catch{return structuredClone(defaultState)}}
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));updateSidebar()}
+function loadState(key=activeStorageKey){try{return {...structuredClone(defaultState),...JSON.parse(localStorage.getItem(key)||'{}')}}catch{return structuredClone(defaultState)}}
+function save(){try{localStorage.setItem(activeStorageKey,JSON.stringify(state))}catch{showToast('Stockage local indisponible. Gardez cette page ouverte pendant la synchronisation.')}updateSidebar();cloudSaveHandler?.(structuredClone(state))}
+window.PrepagoState={
+  snapshot:()=>structuredClone(state),
+  legacyKey:STORAGE_KEY,
+  useUser(userId){cloudSaveHandler=null;activeStorageKey=`prepago-user-${userId}`;const cached=localStorage.getItem(activeStorageKey)?loadState(activeStorageKey):null;state=cached||structuredClone(defaultState);window.dispatchEvent(new Event('prepago:state-replaced'));return cached},
+  replace(next){state={...structuredClone(defaultState),...(next||{})};try{localStorage.setItem(activeStorageKey,JSON.stringify(state))}catch{}window.dispatchEvent(new Event('prepago:state-replaced'));render()},
+  reset(){cloudSaveHandler=null;activeStorageKey=STORAGE_KEY;state=structuredClone(defaultState);window.dispatchEvent(new Event('prepago:state-replaced'));render()},
+  onSave(handler){cloudSaveHandler=handler}
+};
 function uid(prefix){return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function esc(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function allChapters(){return state.subjects.flatMap(s=>s.chapters||[])}
@@ -91,7 +101,7 @@ document.addEventListener('click',e=>{
   if(e.target.id==='modalClose'||e.target.id==='modalBackdrop')return closeModal();
   if(e.target.id==='addSubject')return openModal('Ajouter une matière',field('Nom de la matière','name')+field('Symbole court','symbol','text','maxlength="2" placeholder="∑"')+`<div class="field"><label for="color">Couleur</label><input id="color" name="color" type="color" value="${COLORS[state.subjects.length%COLORS.length]}"></div>`,d=>state.subjects.push({id:uid('s'),name:d.name,symbol:d.symbol||'•',color:d.color,chapters:[]}));
   const addCh=e.target.closest('[data-add-chapter]');if(addCh)return openModal('Ajouter un chapitre',field('Nom du chapitre','name'),d=>state.subjects.find(s=>s.id===addCh.dataset.addChapter)?.chapters.push({id:uid('c'),name:d.name,done:false}));
-  const delS=e.target.closest('[data-delete-subject]');if(delS&&confirm('Supprimer cette matière et tous ses chapitres ?')){state.subjects=state.subjects.filter(s=>s.id!==delS.dataset.deleteSubject);save();render()}
+  const delS=e.target.closest('[data-delete-subject]');if(delS&&confirm('Supprimer cette matière et tous ses chapitres ?')){const subject=state.subjects.find(s=>s.id===delS.dataset.deleteSubject);if(typeof chapterEarnedXp==='function')state.xp=Math.max(0,state.xp-(subject?.chapters||[]).reduce((sum,c)=>sum+chapterEarnedXp(c),0));state.subjects=state.subjects.filter(s=>s.id!==delS.dataset.deleteSubject);save();render()}
   const delC=e.target.closest('[data-delete-chapter]');if(delC){const s=state.subjects.find(s=>s.id===delC.dataset.subject);s.chapters=s.chapters.filter(c=>c.id!==delC.dataset.deleteChapter);save();render()}
   if(e.target.id==='addTask')return openModal('Nouvelle tâche',field('Titre','title')+field('Date','date','date',`value="${todayISO()}"`)+field('Heure','time','time')+`<div class="field"><label for="subject">Matière</label><select name="subject" id="subject">${subjectOptions()}</select></div><div class="field"><label for="priority">Priorité</label><select name="priority" id="priority"><option value="high">Prioritaire</option><option value="medium" selected>Normale</option><option value="low">Flexible</option></select></div>`,d=>state.tasks.push({id:uid('t'),...d,done:false}));
   if(e.target.id==='addEvent')return openModal('Ajouter au planning',field('Titre','title')+field('Date','date','date',`value="${todayISO()}"`)+field('Heure','time','time')+`<div class="field"><label for="color">Couleur</label><input id="color" name="color" type="color" value="#6558df"></div>`,d=>state.events.push({id:uid('e'),...d}));

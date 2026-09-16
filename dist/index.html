@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#111827" />
-  <meta name="description" content="PrépaFlow — organisez vos matières, tâches, séances de concentration et progression." />
-  <title>PrépaFlow — Mon espace prépa</title>
+  <meta name="description" content="Prepago — organisez vos matières, tâches, séances de concentration et progression." />
+  <title>Prepago — Mon espace prépa</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="refresh.css" />
   <link rel="stylesheet" href="academy.css" />
@@ -15,7 +15,7 @@
 <body>
   <section class="auth-gate" id="authGate">
     <div class="auth-card">
-      <div class="auth-brand"><span class="brand-mark">ϟ</span><div><strong>prépa<span style="color:#6558df">flow</span></strong><div style="color:#7a849f;font-size:.9rem">Votre espace prépa personnel</div></div></div>
+      <div class="auth-brand"><span class="brand-mark">ϟ</span><div><strong>prepa<span style="color:#1559ed">go</span></strong><div style="color:#7a849f;font-size:.9rem">Votre espace prépa personnel</div></div></div>
       <h1>Bienvenue.</h1>
       <p>Connectez-vous pour retrouver votre espace sur n’importe quel appareil.</p>
       <div class="auth-tabs">
@@ -42,8 +42,71 @@
     </div>
   </section>
 
+  <section class="access-gate" id="accessGate" hidden>
+    <div class="pricing-shell">
+      <div class="pricing-topbar">
+        <div class="pricing-brand"><span class="brand-mark">ϟ</span><strong>prepa<span>go</span></strong></div>
+        <button class="pricing-logout" id="accessLogoutBtn" type="button">Se déconnecter</button>
+      </div>
+
+      <div class="pricing-heading">
+        <span class="pricing-eyebrow">CHOISISSEZ VOTRE ACCÈS</span>
+        <h1>Continuez votre progression avec Prepago.</h1>
+        <p>Choisissez la formule qui vous convient ou utilisez un code promo pour activer votre accès.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="pricing-card">
+          <div class="plan-icon">P</div>
+          <div class="plan-name">Prepago</div>
+          <div class="plan-price"><strong>29</strong><span>DH<br><small>/ mois</small></span></div>
+          <p class="plan-desc">Tout ce qu’il faut pour organiser et suivre votre prépa au quotidien.</p>
+          <ul class="plan-features">
+            <li>✓ Dashboard complet</li>
+            <li>✓ Matières & progression</li>
+            <li>✓ Tâches & calendrier</li>
+            <li>✓ Concentration & statistiques</li>
+            <li>✓ Annales CNC</li>
+          </ul>
+          <button class="plan-button" type="button" data-plan="standard">Choisir Prepago</button>
+        </article>
+
+        <article class="pricing-card pricing-card-featured">
+          <div class="popular-pill">PLUS COMPLET</div>
+          <div class="plan-icon plan-icon-ai">AI</div>
+          <div class="plan-name">Prepago AI+</div>
+          <div class="plan-price"><strong>99</strong><span>DH<br><small>/ mois</small></span></div>
+          <p class="plan-desc">Prepago complet avec les fonctionnalités d’intelligence artificielle.</p>
+          <ul class="plan-features">
+            <li>✓ Tout Prepago</li>
+            <li>✓ Planificateur personnel IA</li>
+            <li>✓ Recommandations d’étude</li>
+            <li>✓ Planning adapté à vos objectifs</li>
+            <li>✓ Futures fonctions IA+</li>
+          </ul>
+          <button class="plan-button plan-button-primary" type="button" data-plan="ai_plus">Choisir AI+</button>
+        </article>
+      </div>
+
+      <section class="promo-card">
+        <div>
+          <span class="pricing-eyebrow">VOUS AVEZ UN CODE ?</span>
+          <h2>Activer un code promo</h2>
+          <p>Entrez votre code d’accès ci-dessous. Votre abonnement sera activé immédiatement s’il est valide.</p>
+        </div>
+        <form id="promoForm" class="promo-form">
+          <input id="promoCodeInput" name="promo_code" type="text" autocomplete="off" spellcheck="false" placeholder="Ex. PREPAGO30" required>
+          <button type="submit">Activer le code</button>
+        </form>
+        <div class="promo-message" id="promoMessage"></div>
+      </section>
+
+      <p class="pricing-note">Vos données restent enregistrées même lorsque votre accès n’est pas actif.</p>
+    </div>
+  </section>
+
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="brand-mark">ϟ</span><span>prépa<span>flow</span></span></div>
+    <div class="brand"><span class="brand-mark">ϟ</span><span>prepa<span>go</span></span></div>
     <button class="profile-card" data-action="profile">
       <span class="avatar">P</span><span><strong>Mon espace prépa</strong><small>Espace personnel</small></span>
     </button>
@@ -66,7 +129,7 @@
 
   <header class="mobile-header">
     <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
-    <div class="brand"><span class="brand-mark">ϟ</span><span>prépa<span>flow</span></span></div>
+    <div class="brand"><span class="brand-mark">ϟ</span><span>prepa<span>go</span></span></div>
     <span class="avatar">P</span>
   </header>
 

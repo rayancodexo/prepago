@@ -214,6 +214,7 @@ function flushCloudState() {
 async function loadUser(session) {
   if (!session?.user || loadedUserId === session.user.id) return;
   currentUser = session.user;
+  window.PrepagoCncLibrary?.clear();
   const userId = currentUser.id;
   const generation = sessionGeneration;
   loadedUserId = currentUser.id;
@@ -227,6 +228,7 @@ async function loadUser(session) {
   if (profileError) throw profileError;
   if (generation !== sessionGeneration || currentUser?.id !== userId) return;
   currentProfile = profile;
+  window.PrepagoCncLibrary?.connect(supabase, userId);
   window.PrepagoAccount = { profile, email: currentUser.email, statusLabel,
     signOut, async update(values) {
       const full_name = values.full_name.trim();
@@ -294,6 +296,7 @@ async function handleSession(session) {
     currentUser = null;
     currentProfile = null;
     window.PrepagoAccount = null;
+    window.PrepagoCncLibrary?.clear();
     window.PrepagoRecoverDraft = null;
     accessAllowed = false;
     appState.onSave(null);
@@ -475,6 +478,7 @@ async function signOut() {
   loadedUserId = null;
   currentProfile = null;
   window.PrepagoAccount = null;
+  window.PrepagoCncLibrary?.clear();
   window.PrepagoRecoverDraft = null;
   appState.onSave(null);
   appState.reset();

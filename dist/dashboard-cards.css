@@ -131,6 +131,9 @@ body .dashboard-layout .dashboard-study-chart .study-chart-day.is-today > small 
     box-shadow: var(--shadow-card);
   }
 
+  /* First visit: an empty week takes less room, so the first-steps checklist is in view. */
+  body .dashboard-reference .dashboard-study-chart:not(.has-data) { --study-plot-height: 150px; }
+
   /* Right column: two cards instead of a ruled strip. */
   body .dashboard-reference > .day-rail {
     display: grid;
@@ -163,9 +166,13 @@ body .dashboard-layout .dashboard-study-chart .study-chart-day.is-today > small 
   }
   body .dashboard-reference .dashboard-event:hover { background: #E1EBFF; }
 
-  /* First-steps checklist sits in its own card under the two columns. */
+  /* First-steps checklist: its own card, right under the greeting until it is finished. */
+  body .dashboard-reference:has(.studio-onboarding) {
+    grid-template-areas: "heading heading" "onboarding onboarding" "metrics metrics" "analysis rail";
+  }
   body .dashboard-reference .studio-onboarding {
-    margin: 4px 0 0 !important;
+    grid-area: onboarding;
+    margin: 0 !important;
     padding: 20px 24px;
     border: 1px solid var(--hairline);
     border-radius: var(--radius-card);
@@ -176,6 +183,7 @@ body .dashboard-layout .dashboard-study-chart .study-chart-day.is-today > small 
 
 @media (min-width: 768px) and (max-width: 959px) {
   body .dashboard-reference { grid-template-columns: 1fr; }
+  body .dashboard-reference:has(.studio-onboarding) { grid-template-areas: "heading" "onboarding" "metrics" "analysis" "rail"; }
   body .dashboard-reference > .day-rail { grid-template-columns: 1fr 1fr; padding: 0; border: 0; }
   body .dashboard-reference .dashboard-events { padding: 22px 24px; border: 1px solid var(--hairline); }
 }
@@ -199,6 +207,8 @@ body .dashboard-layout .dashboard-study-chart .study-chart-day.is-today > small 
   body .dashboard-reference .dashboard-metric,
   body .dashboard-reference .dashboard-metric:nth-child(even) { min-height: 0; padding: 14px 16px; }
   body .dashboard-reference .dashboard-metric:nth-child(-n+2) { border-bottom: 1px solid var(--hairline); }
+  /* First-steps checklist comes right after the greeting on phones too. */
+  body .dashboard-layout.dashboard-reference .studio-onboarding { order: 0; margin: 0 0 20px; padding: 0; }
   body .dashboard-reference .mobile-revisions {
     margin: 0 0 20px;
     padding: 18px;

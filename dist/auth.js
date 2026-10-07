@@ -760,6 +760,8 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 setMode(location.hash === '#inscription' ? 'signup' : 'login');
+// The forms are wired up from here on: let the login panel show (see the loader in index.html).
+document.documentElement.classList.remove('app-booting');
 submit.disabled = true;
 try {
   const session = await window.PrepagoAuthCore.resolveCallback(supabase.auth,callback);

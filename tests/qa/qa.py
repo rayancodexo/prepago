@@ -21,7 +21,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-DIST = os.path.join(ROOT, 'dist')
+DIST = os.environ.get('PREPAGO_DIST') or os.path.join(ROOT, 'dist')
 STUB = open(os.path.join(HERE, 'supabase-stub.js'), encoding='utf-8').read()
 
 VIEWPORTS = {
@@ -97,9 +97,12 @@ class Site:
 
     def open(self, path='/', viewport='desktop', qa=None, wait=900):
         """Open `path` with the stub configured by `qa`. Returns (page, problems)."""
-        ctx = self.browser.new_context(viewport=VIEWPORTS[viewport], is_mobile=(viewport == 'phone'), has_touch=(viewport == 'phone'), locale='fr-FR')
+        ctx = self.browser.new_context(viewport=VIEWPORTS[viewport], is_mobile=(viewport == 'phone'), has_touch=(viewport == 'phone'), locale='fr-FR', reduced_motion='reduce')
         problems = []
         ctx.add_init_script('window.__QA=' + json.dumps(qa or {}) + ';')
+        if (qa or {}).get('mode', 'active') not in ('signed-out',):
+            # A returning student has a stored session; the loader in index.html looks for it.
+            ctx.add_init_script("try{localStorage.setItem('sb-szrrrqqpmjourdbckojw-auth-token','{}')}catch(e){}")
 
         def route(r):
             url = r.request.url
@@ -137,6 +140,10 @@ def run(out=None):
             if problems:
                 failures.append((label, problems[:6]))
             if out:
+                # Settle fonts, images and focus so two runs of the same build give the same picture.
+                page.evaluate('''async () => { await document.fonts.ready; await Promise.all([...document.images].filter(i => !i.complete).map(i => new Promise(r => { i.onload = i.onerror = r; })));
+                    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur(); }''')
+                page.wait_for_timeout(250)
                 page.screenshot(path=os.path.join(out, label + '.png'), full_page=full)
             page.context.close()
 

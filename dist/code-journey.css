@@ -96,3 +96,13 @@
 /* The status line under "Active ton accès" is guidance, not an alert. */
 .auth-access > #accessStatus { color: var(--secondary); font-weight: var(--font-regular); }
 .auth-code-field { margin-bottom: 18px; }
+
+/* Section headlines on the public pages: large enough to be read while scrolling. */
+.public-page :is(.section-head, .studio-cnc-copy, .feature-copy) h2 {
+  font-size: clamp(26px, 2.6vw, 34px);
+  font-weight: var(--font-bold);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+}
+.public-page .final-cta h2 { font-size: clamp(26px, 2.6vw, 34px); line-height: 1.15; letter-spacing: -.03em; }
+.public-page .section-head > p { font-size: var(--text-base); max-width: 56ch; }

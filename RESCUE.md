@@ -6,7 +6,7 @@ Access to the tool that built and deployed Prepago was lost. This branch is a co
 
 | Path | What it is | Where it came from |
 | --- | --- | --- |
-| `dist/` | The complete site as served at https://www.prepago.site on 7 October 2026 (133 files: 11 pages, 41 scripts, 36 stylesheets, 32 icons, plus fonts and images). | Downloaded file by file from the live site. |
+| `dist/` | The complete site as served at https://www.prepago.site on 7 October 2026 (136 files: 14 pages, 41 scripts, 36 stylesheets, 32 icons, plus fonts and images). | Downloaded file by file from the live site. |
 | `supabase/functions/prepago-ai-tutor/` | Source of the AI tutor Edge Function (version 1). | Read from the Supabase project. |
 | `supabase/migrations/` | All 27 database migrations, in order, as recorded by Supabase. | Read from `supabase_migrations.schema_migrations`. |
 | `rescue-manifest.json` | Every URL that was fetched, with its size, type and status. | Written during the download. |
@@ -18,6 +18,7 @@ Access to the tool that built and deployed Prepago was lost. This branch is a co
   - Cloudflare's bot-detection snippet, which Cloudflare adds to each page at delivery time, was removed from the 11 HTML files. It is not part of the site.
   - The example text in the admin promo-code form (`dist/promo-admin.js`) was a real, active promo code. It is replaced with `CODE-EXEMPLE` here because this repository is public.
   - The same code is replaced with `REDACTED_LAUNCH_CODE` in `supabase/migrations/20260916004656_promo_code_access_system.sql`.
+- **Three pages were recovered by probing**, because nothing links to them but the confirmation and password-reset emails send people there: `/verification/`, `/nouveau-mot-de-passe/` and `/mot-de-passe-oublie/`. Each is a small redirect into the app; their rebuilt length matches the live pages character for character.
 - **Six icons were recovered by probing**, because the site builds their file names at run time and no page links to them directly: `circle-dot`, `expand`, `flask-conical`, `minus`, `paperclip`, `send`.
 - **Not included:** the database contents, the private PDF in Supabase Storage, the Edge Function's secrets (`OPENAI_API_KEY`, `PREPAGO_AI_MODEL`, `PREPAGO_AI_LIVE`), and Supabase Auth settings (email templates, redirect URLs, SMTP). Those live in the Supabase project.
 - **`tests/` and the QA preview in `vite.config.mjs` are stale.** They were written for the 16 September code and do not match these files. `db/` holds the older hand-kept SQL notes; `supabase/migrations/` is the complete record.

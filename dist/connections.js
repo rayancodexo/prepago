@@ -25,16 +25,7 @@
  const baseOverview=renderOverview;
  renderOverview=function(){
   baseOverview();
-  const live=snapshot().active;
   const reference=Boolean(document.querySelector('.dashboard-reference'));
-  const task=state.tasks.filter(t=>!t.done).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))||({high:0,medium:1,low:2}[a.priority]??1)-({high:0,medium:1,low:2}[b.priority]??1))[0];
-  const last=reference?nextStudy():state.subjects.flatMap(s=>s.chapters.filter(c=>!c.done).map(c=>({s,c}))).sort((a,b)=>Number(b.c.id===state.lastStudy?.chapter)-Number(a.c.id===state.lastStudy?.chapter))[0];
-  const resumeChapter=reference&&last&&!live;
-  const title=live?.session_goal||(resumeChapter?last.c.name:task?.title||last?.c.name)||'Prépare ta prochaine session';
-  const context=live?'Session '+(live.status==='paused'?'en pause':'en cours'):resumeChapter?last.s.name:task?`${task.date&&task.date<todayISO()?'En retard · ':''}${task.subject||'Prochaine tâche'}`:last?last.s.name:'Concentration';
-  const action=live?'data-go="focus"':resumeChapter?`data-resume-subject="${esc(last.s.id)}" data-resume-chapter="${esc(last.c.id)}"`:task?`data-task-focus="${esc(task.id)}"`:last?`data-resume-subject="${esc(last.s.id)}" data-resume-chapter="${esc(last.c.id)}"`:'data-go="focus"';
-  const label=reference?(live||last||task?'Reprendre':'Commencer'):live?'Reprendre ma session':task?'Travailler cette tâche':last?'Reprendre le chapitre':'Préparer une session';
-  document.querySelector('.dashboard-heading').insertAdjacentHTML('afterend',`<section class="next-action${reference?' dashboard-resume':''}"><div>${reference?'<span class="dashboard-resume-kicker">CONTINUER L’ÉTUDE</span>':''}<span class="dashboard-panel-kicker dashboard-resume-context">${esc(context)}</span><h2>${esc(title)}</h2><p>${live?'Retrouve ton chrono et ton objectif.':task&&!resumeChapter?`${task.minutes||25} min prévues${task.date?' · '+formatShort(task.date):''}`:last?`Prochaine étape : ${LEARNING_STEPS.find(s=>!last.c.steps?.[s.key])?.label||'Valider le chapitre'}`:'Choisis une matière et un objectif pour commencer.'}</p></div><button class="primary-btn" ${action}>${reference?uiIcon('play'):''}<span>${label}</span>${reference?'':uiIcon('right')}</button></section>`);
   document.querySelector('.dashboard-events>.dashboard-add')?.remove();
   const upcoming=reference?dashboardUpcomingEvents().slice(0,1):state.events.filter(e=>new Date((e.endDate||e.date)+'T'+(e.end||e.time||'23:59'))>=new Date()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,3);
   document.querySelector('.dashboard-events .dashboard-panel-list').innerHTML=upcoming.length?upcoming.map(dashboardEventRow).join(''):`<div class="dashboard-panel-empty"><p>Aucun événement à venir.</p><button class="link-btn" ${reference?'data-dashboard-new-event':'data-new-event'}>+ Planifier un événement</button></div>`;

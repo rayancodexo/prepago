@@ -1,0 +1,1146 @@
+{
+ "source": "https://www.prepago.site",
+ "captured_at": "2026-10-07T01:55:38.038Z",
+ "entries": [
+  {
+   "path": "/",
+   "saved": "index.html",
+   "status": 200,
+   "bytes": 35855,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/connexion/",
+   "saved": "connexion/index.html",
+   "status": 200,
+   "bytes": 1921,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/inscription/",
+   "saved": "inscription/index.html",
+   "status": 200,
+   "bytes": 1932,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/activation/",
+   "saved": "activation/index.html",
+   "status": 200,
+   "bytes": 1918,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/tarifs/",
+   "saved": "tarifs/index.html",
+   "status": 200,
+   "bytes": 7780,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/fonctionnalites/",
+   "saved": "fonctionnalites/index.html",
+   "status": 200,
+   "bytes": 11507,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/methode/",
+   "saved": "methode/index.html",
+   "status": 200,
+   "bytes": 7019,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/contact/",
+   "saved": "contact/index.html",
+   "status": 200,
+   "bytes": 5080,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/conditions/",
+   "saved": "conditions/index.html",
+   "status": 200,
+   "bytes": 10225,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/confidentialite/",
+   "saved": "confidentialite/index.html",
+   "status": 200,
+   "bytes": 12413,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/mentions-legales/",
+   "saved": "mentions-legales/index.html",
+   "status": 200,
+   "bytes": 4430,
+   "type": "text/html",
+   "kind": "seed"
+  },
+  {
+   "path": "/robots.txt",
+   "saved": "robots.txt",
+   "status": 200,
+   "bytes": 228,
+   "type": "text/plain",
+   "kind": "seed"
+  },
+  {
+   "path": "/sitemap.xml",
+   "saved": "sitemap.xml",
+   "status": 200,
+   "bytes": 535,
+   "type": "text/xml",
+   "kind": "seed"
+  },
+  {
+   "path": "/favicon.ico",
+   "saved": "favicon.ico",
+   "status": 200,
+   "bytes": 32038,
+   "type": "image/vnd.microsoft.icon",
+   "kind": "seed"
+  },
+  {
+   "path": "/404.html",
+   "status": 404,
+   "kind": "seed"
+  },
+  {
+   "path": "/manifest.webmanifest",
+   "status": 404,
+   "kind": "seed"
+  },
+  {
+   "path": "/cnc-health.json",
+   "saved": "cnc-health.json",
+   "status": 200,
+   "bytes": 6645,
+   "type": "application/json",
+   "kind": "seed"
+  },
+  {
+   "path": "/app/",
+   "status": 404,
+   "kind": "seed"
+  },
+  {
+   "path": "/dashboard/",
+   "status": 404,
+   "kind": "seed"
+  },
+  {
+   "path": "/fonts/inter-latin-400-normal.woff2",
+   "saved": "fonts/inter-latin-400-normal.woff2",
+   "status": 200,
+   "bytes": 23664,
+   "type": "application/octet-stream",
+   "kind": "asset"
+  },
+  {
+   "path": "/fonts/inter-latin-700-normal.woff2",
+   "saved": "fonts/inter-latin-700-normal.woff2",
+   "status": 200,
+   "bytes": 24356,
+   "type": "application/octet-stream",
+   "kind": "asset"
+  },
+  {
+   "path": "/styles.7c4512a173da.css",
+   "saved": "styles.7c4512a173da.css",
+   "status": 200,
+   "bytes": 13159,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/refresh.9dbff340dfc9.css",
+   "saved": "refresh.9dbff340dfc9.css",
+   "status": 200,
+   "bytes": 7931,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/academy.d961c354a750.css",
+   "saved": "academy.d961c354a750.css",
+   "status": 200,
+   "bytes": 7516,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/subject-hub.ab905ee488a9.css",
+   "saved": "subject-hub.ab905ee488a9.css",
+   "status": 200,
+   "bytes": 2331,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/redesign.3caa17d506a1.css",
+   "saved": "redesign.3caa17d506a1.css",
+   "status": 200,
+   "bytes": 37237,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/auth.90dfa02593db.css",
+   "saved": "auth.90dfa02593db.css",
+   "status": 200,
+   "bytes": 9995,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/product.29ea0ea02bbe.css",
+   "saved": "product.29ea0ea02bbe.css",
+   "status": 200,
+   "bytes": 15646,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/cnc-library.55c8f383e342.css",
+   "saved": "cnc-library.55c8f383e342.css",
+   "status": 200,
+   "bytes": 1910,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/concept-header.fe3634d37478.css",
+   "saved": "concept-header.fe3634d37478.css",
+   "status": 200,
+   "bytes": 4369,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/matieres-overview.45616e95fad7.css",
+   "saved": "matieres-overview.45616e95fad7.css",
+   "status": 200,
+   "bytes": 8326,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/workspace-refinement.96a8fe1fcf7d.css",
+   "saved": "workspace-refinement.96a8fe1fcf7d.css",
+   "status": 200,
+   "bytes": 14030,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/sidebar.c9db1a0acb6b.css",
+   "saved": "sidebar.c9db1a0acb6b.css",
+   "status": 200,
+   "bytes": 8259,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/experience.95770998b1d6.css",
+   "saved": "experience.95770998b1d6.css",
+   "status": 200,
+   "bytes": 11970,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/focus-workspace.c4f692add9f5.css",
+   "saved": "focus-workspace.c4f692add9f5.css",
+   "status": 200,
+   "bytes": 15149,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/landing.87f80f3e8d78.css",
+   "saved": "landing.87f80f3e8d78.css",
+   "status": 200,
+   "bytes": 21004,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/public.3400fb5ad958.css",
+   "saved": "public.3400fb5ad958.css",
+   "status": 200,
+   "bytes": 14308,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/favicon-32.png",
+   "saved": "favicon-32.png",
+   "status": 200,
+   "bytes": 1671,
+   "type": "image/png",
+   "kind": "asset"
+  },
+  {
+   "path": "/favicon-16.png",
+   "saved": "favicon-16.png",
+   "status": 200,
+   "bytes": 1114,
+   "type": "image/png",
+   "kind": "asset"
+  },
+  {
+   "path": "/apple-touch-icon.png",
+   "saved": "apple-touch-icon.png",
+   "status": 200,
+   "bytes": 12556,
+   "type": "image/png",
+   "kind": "asset"
+  },
+  {
+   "path": "/branding/brand.6238a9ed3d8e.css",
+   "saved": "branding/brand.6238a9ed3d8e.css",
+   "status": 200,
+   "bytes": 1499,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/connections.562986e7e387.css",
+   "saved": "connections.562986e7e387.css",
+   "status": 200,
+   "bytes": 9058,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/design-tokens.98d95b57a400.css",
+   "saved": "design-tokens.98d95b57a400.css",
+   "status": 200,
+   "bytes": 3085,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/studio-components.c2005ffb924a.css",
+   "saved": "studio-components.c2005ffb924a.css",
+   "status": 200,
+   "bytes": 18621,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/studio-pages.d9ce9836070b.css",
+   "saved": "studio-pages.d9ce9836070b.css",
+   "status": 200,
+   "bytes": 44027,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/studio-public.4f56c390c354.css",
+   "saved": "studio-public.4f56c390c354.css",
+   "status": 200,
+   "bytes": 32939,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/auth-reliability.3fb7d7cf76d8.css",
+   "saved": "auth-reliability.3fb7d7cf76d8.css",
+   "status": 200,
+   "bytes": 1024,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/cnc-classic.85fc8b80ef55.css",
+   "saved": "cnc-classic.85fc8b80ef55.css",
+   "status": 200,
+   "bytes": 9110,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/subject-organization.277e41bc254f.css",
+   "saved": "subject-organization.277e41bc254f.css",
+   "status": 200,
+   "bytes": 7313,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/admin-dashboard.2e116ac45326.css",
+   "saved": "admin-dashboard.2e116ac45326.css",
+   "status": 200,
+   "bytes": 5570,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/legal.2ff4c14b4669.css",
+   "saved": "legal.2ff4c14b4669.css",
+   "status": 200,
+   "bytes": 2265,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/mobile-dashboard.b477084c4868.css",
+   "saved": "mobile-dashboard.b477084c4868.css",
+   "status": 200,
+   "bytes": 9163,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/weekly-leaderboard.c91170dff1d5.css",
+   "saved": "weekly-leaderboard.c91170dff1d5.css",
+   "status": 200,
+   "bytes": 5865,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/tipe-workspace.56810b91b628.css",
+   "saved": "tipe-workspace.56810b91b628.css",
+   "status": 200,
+   "bytes": 9127,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/calendar-workspace.da168ff3f7f1.css",
+   "saved": "calendar-workspace.da168ff3f7f1.css",
+   "status": 200,
+   "bytes": 12188,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/dashboard.c31036fbb79c.css",
+   "saved": "dashboard.c31036fbb79c.css",
+   "status": 200,
+   "bytes": 16437,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/dashboard-reference.20b512718638.css",
+   "saved": "dashboard-reference.20b512718638.css",
+   "status": 200,
+   "bytes": 22460,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/ai-workspace.3e35e54849ea.css",
+   "saved": "ai-workspace.3e35e54849ea.css",
+   "status": 200,
+   "bytes": 15521,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/support.13951affd340.css",
+   "saved": "support.13951affd340.css",
+   "status": 200,
+   "bytes": 4550,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/typography.586357cbdba4.css",
+   "saved": "typography.586357cbdba4.css",
+   "status": 200,
+   "bytes": 3003,
+   "type": "text/css",
+   "kind": "asset"
+  },
+  {
+   "path": "/branding/prepago-mark.png",
+   "saved": "branding/prepago-mark.png",
+   "status": 200,
+   "bytes": 29210,
+   "type": "image/png",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/check.svg",
+   "saved": "icons/check.svg",
+   "status": 200,
+   "bytes": 317,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/arrow-right.svg",
+   "saved": "icons/arrow-right.svg",
+   "status": 200,
+   "bytes": 345,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/house.svg",
+   "saved": "icons/house.svg",
+   "status": 200,
+   "bytes": 461,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/book-open.svg",
+   "saved": "icons/book-open.svg",
+   "status": 200,
+   "bytes": 469,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/files.svg",
+   "saved": "icons/files.svg",
+   "status": 200,
+   "bytes": 522,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/square-check.svg",
+   "saved": "icons/square-check.svg",
+   "status": 200,
+   "bytes": 380,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/calendar-days.svg",
+   "saved": "icons/calendar-days.svg",
+   "status": 200,
+   "bytes": 569,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/timer.svg",
+   "saved": "icons/timer.svg",
+   "status": 200,
+   "bytes": 405,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/folder.svg",
+   "saved": "icons/folder.svg",
+   "status": 200,
+   "bytes": 421,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/public.js",
+   "saved": "public.js",
+   "status": 200,
+   "bytes": 902,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/landing.js",
+   "saved": "landing.js",
+   "status": 200,
+   "bytes": 1288,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/search.svg",
+   "saved": "icons/search.svg",
+   "status": 200,
+   "bytes": 354,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/chevron-down.svg",
+   "saved": "icons/chevron-down.svg",
+   "status": 200,
+   "bytes": 321,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/icons/bell.svg",
+   "saved": "icons/bell.svg",
+   "status": 200,
+   "bytes": 470,
+   "type": "image/svg+xml",
+   "kind": "asset"
+  },
+  {
+   "path": "/cpge-catalog.js",
+   "saved": "cpge-catalog.js",
+   "status": 200,
+   "bytes": 192127,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/curriculum-core.js",
+   "saved": "curriculum-core.js",
+   "status": 200,
+   "bytes": 5514,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/app.js",
+   "saved": "app.js",
+   "status": 200,
+   "bytes": 22350,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/productivity.js",
+   "saved": "productivity.js",
+   "status": 200,
+   "bytes": 14381,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/subject-organization.js",
+   "saved": "subject-organization.js",
+   "status": 200,
+   "bytes": 3059,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/learning-resources.js",
+   "saved": "learning-resources.js",
+   "status": 200,
+   "bytes": 17004,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/learning-content.js",
+   "saved": "learning-content.js",
+   "status": 200,
+   "bytes": 2155,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/subject-workspace.js",
+   "saved": "subject-workspace.js",
+   "status": 200,
+   "bytes": 11273,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/curriculum-workspace.js",
+   "saved": "curriculum-workspace.js",
+   "status": 200,
+   "bytes": 2227,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/academy.js",
+   "saved": "academy.js",
+   "status": 200,
+   "bytes": 26289,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/redesign.js",
+   "saved": "redesign.js",
+   "status": 200,
+   "bytes": 36278,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/product.js",
+   "saved": "product.js",
+   "status": 200,
+   "bytes": 24246,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/cnc-documents.js",
+   "saved": "cnc-documents.js",
+   "status": 200,
+   "bytes": 1580,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/cnc-library.js",
+   "saved": "cnc-library.js",
+   "status": 200,
+   "bytes": 14280,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/concept-header.js",
+   "saved": "concept-header.js",
+   "status": 200,
+   "bytes": 4535,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/workspace-refinement.js",
+   "saved": "workspace-refinement.js",
+   "status": 200,
+   "bytes": 16093,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/experience.js",
+   "saved": "experience.js",
+   "status": 200,
+   "bytes": 18316,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/focus-core.js",
+   "saved": "focus-core.js",
+   "status": 200,
+   "bytes": 2968,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/focus-workspace.js",
+   "saved": "focus-workspace.js",
+   "status": 200,
+   "bytes": 30178,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/tipe-core.js",
+   "saved": "tipe-core.js",
+   "status": 200,
+   "bytes": 4388,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/calendar-core.js",
+   "saved": "calendar-core.js",
+   "status": 200,
+   "bytes": 6121,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/connections.js",
+   "saved": "connections.js",
+   "status": 200,
+   "bytes": 9831,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/tipe-workspace.js",
+   "saved": "tipe-workspace.js",
+   "status": 200,
+   "bytes": 24872,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/calendar-workspace.js",
+   "saved": "calendar-workspace.js",
+   "status": 200,
+   "bytes": 17874,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/studio.js",
+   "saved": "studio.js",
+   "status": 200,
+   "bytes": 19999,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/mobile-dashboard.js",
+   "saved": "mobile-dashboard.js",
+   "status": 200,
+   "bytes": 5418,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/dashboard-reference.js",
+   "saved": "dashboard-reference.js",
+   "status": 200,
+   "bytes": 1901,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/studio-public.js",
+   "saved": "studio-public.js",
+   "status": 200,
+   "bytes": 1497,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/ai-core.js",
+   "saved": "ai-core.js",
+   "status": 200,
+   "bytes": 5308,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/ai-workspace.js",
+   "saved": "ai-workspace.js",
+   "status": 200,
+   "bytes": 20729,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/support-core.js",
+   "saved": "support-core.js",
+   "status": 200,
+   "bytes": 2732,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/support.js",
+   "saved": "support.js",
+   "status": 200,
+   "bytes": 10888,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/ai-live.js",
+   "saved": "ai-live.js",
+   "status": 200,
+   "bytes": 8990,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/vendor/supabase-2.102.0.js",
+   "saved": "vendor/supabase-2.102.0.js",
+   "status": 200,
+   "bytes": 186617,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/auth-core.js",
+   "saved": "auth-core.js",
+   "status": 200,
+   "bytes": 2416,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/promo-admin.js",
+   "saved": "promo-admin.js",
+   "status": 200,
+   "bytes": 6492,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/admin-dashboard.js",
+   "saved": "admin-dashboard.js",
+   "status": 200,
+   "bytes": 16058,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/weekly-leaderboard.js",
+   "saved": "weekly-leaderboard.js",
+   "status": 200,
+   "bytes": 8206,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/auth.js",
+   "saved": "auth.js",
+   "status": 200,
+   "bytes": 32740,
+   "type": "text/javascript",
+   "kind": "asset"
+  },
+  {
+   "path": "/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+   "saved": "cdn-cgi/challenge-platform/h/g/scripts/jsd/4df4a60fa397/main.js",
+   "status": 200,
+   "bytes": 24694,
+   "type": "application/javascript",
+   "kind": "ref",
+   "redirected": "/cdn-cgi/challenge-platform/h/g/scripts/jsd/4df4a60fa397/main.js"
+  },
+  {
+   "path": "/fonts/inter-latin-500-normal.woff2",
+   "saved": "fonts/inter-latin-500-normal.woff2",
+   "status": 200,
+   "bytes": 24272,
+   "type": "application/octet-stream",
+   "kind": "ref"
+  },
+  {
+   "path": "/fonts/inter-latin-600-normal.woff2",
+   "saved": "fonts/inter-latin-600-normal.woff2",
+   "status": 200,
+   "bytes": 24452,
+   "type": "application/octet-stream",
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/bolt.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/shield.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/focus.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/close.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/subjects.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/menu.svg",
+   "saved": "icons/menu.svg",
+   "status": 200,
+   "bytes": 356,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/left.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/right.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/note.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/link.svg",
+   "saved": "icons/link.svg",
+   "status": 200,
+   "bytes": 436,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/cnc.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/pause.svg",
+   "saved": "icons/pause.svg",
+   "status": 200,
+   "bytes": 391,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/play.svg",
+   "saved": "icons/play.svg",
+   "status": 200,
+   "bytes": 383,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/progress.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/chevron-left.svg",
+   "saved": "icons/chevron-left.svg",
+   "status": 200,
+   "bytes": 323,
+   "type": "image/svg+xml",
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/chart-no-axes-column-increasing.svg",
+   "saved": "icons/chart-no-axes-column-increasing.svg",
+   "status": 200,
+   "bytes": 384,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/zap.svg",
+   "saved": "icons/zap.svg",
+   "status": 200,
+   "bytes": 466,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/x.svg",
+   "saved": "icons/x.svg",
+   "status": 200,
+   "bytes": 334,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/plus.svg",
+   "saved": "icons/plus.svg",
+   "status": 200,
+   "bytes": 333,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/notebook-pen.svg",
+   "saved": "icons/notebook-pen.svg",
+   "status": 200,
+   "bytes": 604,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/sigma.svg",
+   "saved": "icons/sigma.svg",
+   "status": 200,
+   "bytes": 408,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/map-pin.svg",
+   "saved": "icons/map-pin.svg",
+   "status": 200,
+   "bytes": 437,
+   "type": "image/svg+xml",
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/location.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/calendar.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/application/pdf,.pdf",
+   "status": 404,
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/tasks.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/overview.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/icons/circle-help.svg",
+   "saved": "icons/circle-help.svg",
+   "status": 200,
+   "bytes": 404,
+   "type": "image/svg+xml",
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/user-round.svg",
+   "saved": "icons/user-round.svg",
+   "status": 200,
+   "bytes": 360,
+   "type": "image/svg+xml",
+   "kind": "ref"
+  },
+  {
+   "path": "/ai-assets/oscillator.png",
+   "saved": "ai-assets/oscillator.png",
+   "status": 200,
+   "bytes": 628070,
+   "type": "image/png",
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/ai.svg",
+   "status": 404,
+   "kind": "icon"
+  },
+  {
+   "path": "/application/json,.json",
+   "status": 404,
+   "kind": "ref"
+  },
+  {
+   "path": "/Node.js",
+   "status": 404,
+   "kind": "ref"
+  },
+  {
+   "path": "/icons/projects.svg",
+   "status": 404,
+   "kind": "icon"
+  }
+ ]
+}

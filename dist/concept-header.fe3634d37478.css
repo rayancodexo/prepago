@@ -1,0 +1,53 @@
+@layer prepago-legacy {
+/* Concept C: focused, compact workspace header. */
+.topbar{height:66px;background:#fff;border-bottom:1px solid #e8ecf2;box-shadow:none;color:#17233c}
+.topbar-brand{width:246px;flex:0 0 246px;padding-left:29px;background:#fff;border-right:1px solid #edf0f5}
+.topbar-content{display:flex;flex:1;gap:22px;padding:0 25px;min-width:0}
+.topbar-search{width:auto;max-width:700px;min-width:0;flex:1 1 440px}
+.topbar-search>img{left:15px;width:18px;height:18px;opacity:.75}
+.topbar-search input{height:42px;padding:0 78px 0 43px;border:1px solid #e9edf4;border-radius:12px;background:#f5f7fb;box-shadow:none;color:#17233c;font-size:var(--text-sm)}
+.topbar-search input::placeholder{color:#78859a}
+.topbar-search input:focus{background:#fff;border-color:#a7c4f7;outline:3px solid #dfeaff}
+.topbar-search input::-webkit-search-cancel-button{display:none}
+.topbar-shortcut{position:absolute;right:11px;top:50%;transform:translateY(-50%);padding:3px 6px;border:1px solid #e1e6ef;border-radius:5px;background:#fff;color:#8190a4;font:500 11px/1.2 var(--font-sans);pointer-events:none;white-space:nowrap}
+.topbar-search:focus-within .topbar-shortcut{display:none}
+.topbar-search-results{top:49px;z-index:3;box-shadow:0 14px 34px #17233c14}
+.topbar-actions{gap:12px;flex:0 0 auto;margin-left:auto}
+.topbar-actions .sync-indicator,#trialBadge{display:none!important}
+.topbar-create-wrap{position:relative}
+.topbar-create{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 14px;border:1px solid #0750e8;border-radius:12px;background:#0750e8;color:#fff;font:600 14px var(--font-sans);white-space:nowrap;cursor:pointer}
+.topbar-create:hover,.topbar-create[aria-expanded="true"]{background:#003fb9;border-color:#003fb9}
+.topbar-create-plus{font-size:var(--text-lg);line-height:1;font-weight:var(--font-regular);margin-top:-2px}
+.topbar-create>img{width:14px;height:14px;margin-left:6px;filter:brightness(0) invert(1)}
+.topbar-create-menu{position:absolute;top:50px;right:0;z-index:5;min-width:222px;padding:6px;border:1px solid #e5eaf2;border-radius:12px;background:#fff;box-shadow:0 16px 36px #17233c17}
+.topbar-create-menu[hidden]{display:none}
+.topbar-create-menu button{display:block;width:100%;padding:11px 12px;border:0;border-radius:8px;background:transparent;color:#26354c;text-align:left;font:500 14px var(--font-sans);cursor:pointer}
+.topbar-create-menu button:hover,.topbar-create-menu button:focus-visible{background:#f1f5fc;color:#0750e8}
+.topbar-icon-btn{width:42px;height:42px;border:1px solid #e9edf4;border-radius:12px;background:#fff}
+.topbar-icon-btn:hover{background:#f5f7fb}
+.topbar-divider{width:1px;height:24px;margin:0 3px;background:#e5eaf1}
+.topbar-profile{height:42px;min-width:0;gap:10px;padding:0 4px;border:0;border-radius:10px;background:transparent;color:#17233c;font-size:var(--text-sm);font-weight:var(--font-semibold)}
+.topbar-profile-wrap{position:relative}
+.topbar-profile-menu{position:absolute;top:50px;right:0;z-index:5;min-width:174px;padding:6px;border:1px solid #e5eaf2;border-radius:12px;background:#fff;box-shadow:0 16px 36px #17233c17}
+.topbar-profile-menu[hidden]{display:none}
+.topbar-profile-menu button{display:block;width:100%;padding:11px 12px;border:0;border-radius:8px;background:transparent;color:#26354c;text-align:left;font:500 14px var(--font-sans);cursor:pointer}
+.topbar-profile-menu button:hover,.topbar-profile-menu button:focus-visible{background:#f1f5fc;color:#0750e8}
+.topbar-profile:hover{background:#f5f7fb}
+.topbar-avatar{width:32px;height:32px;flex:0 0 32px;background:#7754c7;color:#fff;font-size:var(--text-sm)}
+.topbar-profile>img{width:15px;height:15px;margin-left:7px}
+.notification-panel{top:50px;z-index:5}
+.notification-panel .sync-recovery{display:block;margin-top:11px;padding:9px 0;border:0;background:transparent;color:#0750e8;font:600 13px var(--font-sans);cursor:pointer}
+@media(min-width:821px) and (max-width:1199px){
+  .topbar-brand{width:224px;flex-basis:224px;padding-left:25px}
+  .topbar-content{gap:14px;padding:0 16px}
+  .topbar-search{width:auto;flex-basis:260px}
+  .topbar-actions{gap:8px}
+}
+@media(min-width:821px) and (max-width:1020px){
+  .topbar-profile #topbarProfileName{display:none}
+  .topbar-profile>img{margin-left:0}
+  .topbar-search input{font-size:var(--text-label)}
+}
+@media(max-width:820px){.topbar{display:none}}
+
+}

@@ -17,10 +17,10 @@
  async function load(){
   if(!client||loading)return;loading=true;error='';const g=generation,c=client;
   try{
-   const role=await c.rpc('cnc_is_admin');if(role.error)throw role.error;
+   const role=await c.from('user_roles').select('role').eq('user_id',userId).maybeSingle();if(role.error)throw role.error;
    const result=await c.from('cnc_exams').select('*').order('year',{ascending:false}).limit(5000);
    if(result.error)throw result.error;if(g!==generation)return;
-   admin=role.data===true;rows=result.data||[];loaded=true;
+   admin=role.data?.role==='admin';rows=result.data||[];loaded=true;
   }catch(e){if(g===generation)error=message(e)}finally{
    if(g===generation){loading=false;controls();if(dialog.open)renderList();if(currentPage==='cnc')renderCnc()}
   }
@@ -43,13 +43,13 @@
   form.elements.subject_pdf.required=!row;
   dialog.querySelector('#cncEditorTitle').textContent=row?'Modifier cette annale':'Ajouter une annale';
   dialog.querySelector('#cncExistingFiles').textContent=row?`${row.filiere} · ${row.subject} · ${row.year}. Un nouveau fichier remplace le précédent sans modifier les notes des étudiants.`:'PDF uniquement · 20 Mo maximum par fichier.';
-  dialog.querySelector('#cncRemoveCorrection').hidden=!row?.correction_path;
+  dialog.querySelector('#cncRemoveCorrection').hidden=!(row?.correction_path||row?.correction_url);
   status('');
  }
  function renderList(){
   const target=dialog.querySelector('#cncAdminList');if(!target)return;
   const list=rows.filter(r=>r.archived===showArchived);
-  target.innerHTML=error?`<p role="alert">${esc(error)}</p>`:loading?'<p>Chargement…</p>':list.length?list.map(r=>`<article class="cnc-admin-entry"><strong>${esc(r.filiere)} · ${esc(r.subject)} · ${r.year}</strong><p>${r.archived?'Archivée':r.published?'Publiée · visible aux étudiants avec accès':'Brouillon · visible uniquement aux administrateurs'}${r.correction_path?' · Corrigé inclus':''}</p><div class="cnc-admin-actions">${!r.archived?`<button type="button" class="secondary-btn" data-cnc-edit="${r.id}">Modifier</button><button type="button" class="secondary-btn" data-cnc-publish="${r.id}">${r.published?'Dépublier':'Publier'}</button><button type="button" class="link-btn" data-cnc-archive="${r.id}">Archiver</button>`:`<button type="button" class="secondary-btn" data-cnc-restore="${r.id}">Restaurer en brouillon</button>`}</div></article>`).join(''):'<p>Aucune annale ici. Ajoutez votre premier PDF avec le formulaire.</p>';
+  target.innerHTML=error?`<p role="alert">${esc(error)}</p>`:loading?'<p>Chargement…</p>':list.length?list.map(r=>`<article class="cnc-admin-entry"><strong>${esc(r.filiere)} · ${esc(r.subject)} · ${r.year}</strong><p>${r.archived?'Archivée':r.published?'Publiée · visible aux étudiants avec accès':'Brouillon · visible uniquement aux administrateurs'}${(r.correction_path||r.correction_url)?' · Corrigé inclus':''}</p><div class="cnc-admin-actions">${!r.archived?`<button type="button" class="secondary-btn" data-cnc-edit="${r.id}">Modifier</button><button type="button" class="secondary-btn" data-cnc-publish="${r.id}">${r.published?'Dépublier':'Publier'}</button><button type="button" class="link-btn" data-cnc-archive="${r.id}">Archiver</button>`:`<button type="button" class="secondary-btn" data-cnc-restore="${r.id}">Restaurer en brouillon</button>`}</div></article>`).join(''):'<p>Aucune annale ici. Ajoutez votre premier PDF avec le formulaire.</p>';
   target.querySelectorAll('button').forEach(b=>b.disabled=busy);
  }
  function open(){
@@ -71,7 +71,11 @@
    if(subjectFile)await validatePdf(subjectFile);if(correctionFile)await validatePdf(correctionFile);
    const id=row?.id||crypto.randomUUID();status('Envoi des fichiers… Gardez cette fenêtre ouverte.');
    values.subject_path=subjectFile?await upload(subjectFile,id,c):row.subject_path;
+   values.subject_url=subjectFile?null:row?.subject_url||null;
    values.correction_path=correctionFile?await upload(correctionFile,id,c):removeCorrection?null:row?.correction_path||null;
+   values.correction_url=(correctionFile||removeCorrection)?null:row?.correction_url||null;
+   if(!values.subject_url&&!values.correction_url){values.source_url=null;values.source_label=null}
+   else if(values.subject_path&&values.correction_url&&row?.source_url){values.source_label=`${row.source_label?.replace(/ · corrigé$/,'')||'Source'} · corrigé`}
    if(g!==generation)return;status('Enregistrement…');
    if(row)await updateRow(row,values,c);else {const r=await c.from('cnc_exams').insert({id,...values});if(r.error)throw r.error}
    if(g!==generation)return;await load();editor();status(values.published?'Annale publiée. Les étudiants la verront dans Annales CNC.':'Brouillon enregistré. Il reste privé.');
@@ -97,10 +101,10 @@
   if(cncView.screen!=='paper')return;
   const p=getPaper(cncView.filiere,cncView.subject,cncView.year),record=find(p);if(!record)return;
   const viewer=shell.querySelector('.paper-viewer'),request=++documentRequest,g=generation;
-  viewer.innerHTML=`<div class="paper-toolbar"><h2>CNC ${esc(p.subject)} · ${p.year}</h2><span class="tag">Bibliothèque Prepago</span></div><div class="cnc-pdf-status" role="status">Chargement du PDF…</div>`;
-  Promise.all([pdfUrl(record.subject_path),record.correction_path?pdfUrl(record.correction_path):Promise.resolve(null)]).then(([subjectUrl,correctionUrl])=>{
+  viewer.innerHTML=`<div class="paper-toolbar"><h2>${cncContest(p.filiere)} ${esc(p.subject)} · ${p.year}</h2><span class="tag">Bibliothèque Prepago</span></div><div class="cnc-pdf-status" role="status">Chargement du PDF…</div>`;
+  window.PrepagoCncDocuments.resolve(record,pdfUrl).then(({subjectUrl,correctionUrl,previewUrl,sourceUrl,sourceLabel,external})=>{
    if(g!==generation||request!==documentRequest||!viewer.isConnected)return;
-   viewer.innerHTML=`<div class="paper-toolbar"><h2>CNC ${esc(p.subject)} · ${p.year}</h2><span class="tag">Bibliothèque Prepago</span></div><div class="cnc-pdf-actions"><a class="primary-btn" href="${esc(subjectUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le sujet PDF</a>${correctionUrl?`<a class="secondary-btn" href="${esc(correctionUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le corrigé PDF</a>`:''}</div><p class="cnc-pdf-caption">Si l’aperçu ne s’affiche pas sur votre appareil, utilisez « Ouvrir le sujet PDF ».</p><iframe class="paper-frame" src="${esc(subjectUrl)}" title="Sujet CNC ${esc(p.subject)} ${p.year}"></iframe>`;
+   viewer.innerHTML=`<div class="paper-toolbar"><h2>${cncContest(p.filiere)} ${esc(p.subject)} · ${p.year}</h2><span class="tag">Bibliothèque Prepago</span></div><div class="cnc-pdf-actions"><a class="primary-btn" href="${esc(subjectUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le sujet PDF</a>${correctionUrl?`<a class="secondary-btn" href="${esc(correctionUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le corrigé PDF</a>`:'<span class="helper">Corrigé non disponible pour cette édition.</span>'}<button type="button" class="link-btn" data-support-paper data-filiere="${esc(p.filiere)}" data-subject="${esc(p.subject)}" data-year="${p.year}">Signaler ce document</button></div><p class="cnc-pdf-caption">${sourceUrl?`Source : <a href="${esc(sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(sourceLabel)}</a>. `:''}${external?'Documents hébergés par la source. ':''}Si l’aperçu ne s’affiche pas, utilisez « Ouvrir le sujet PDF ».</p><iframe class="paper-frame" src="${esc(previewUrl)}" title="Sujet ${cncContest(p.filiere)} ${esc(p.subject)} ${p.year}"></iframe>`;
   }).catch(()=>{if(g===generation&&viewer.isConnected)viewer.querySelector('.cnc-pdf-status').innerHTML='Impossible de charger le document. <button class="link-btn" data-cnc-refresh>Réessayer</button>'});
  };
  const renderAccountBase=renderAccount;

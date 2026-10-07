@@ -1,15 +1,14 @@
 {
   "name": "prepago",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Prepago — static site (dist/) and Supabase backend (supabase/).",
   "scripts": {
     "dev": "vite dist --config vite.config.mjs",
-    "check": "node --check dist/redesign.js"
+    "test": "python3 tests/qa/qa.py check && python3 tests/qa/flows.py"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.chatgpt-team.site/b3df9c87-e377-4754-9975-09ca5ad62367/appgprj_6a9d32bb1b2081919a969c1355fbb342.git"
+    "url": "https://github.com/rayancodexo/prepago.git"
   },
   "keywords": [],
   "author": "",

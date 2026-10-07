@@ -59,6 +59,28 @@ document.querySelector('.topbar-actions').prepend(syncIndicator);
 function syncStatus(text) { syncIndicator.textContent = text; }
 let recoveryMode = callback.recovery;
 const pendingEmailKey = 'prepago_pending_confirmation_email';
+// An activation code typed at sign-up is stored with the account, so it is applied at the
+// first login even when the confirmation e-mail is opened on another device.
+const activationCodePattern = /^[A-Z0-9_-]{3,64}$/;
+const activationTried = new Set();
+const codeField = document.querySelector('#authCodeField');
+function pendingActivationCode(user) {
+  const code = String(user?.user_metadata?.activation_code || '').trim().toUpperCase();
+  return activationCodePattern.test(code) ? code : null;
+}
+async function redeemActivationCode(code) {
+  try {
+    const { data, error } = await supabase.rpc('redeem_promo_code', { input_code: code });
+    if (error) return { success: false, message: friendlyError(error) };
+    const result = Array.isArray(data) ? data[0] : data;
+    return { success: Boolean(result?.success), message: promoMessage(result?.message) };
+  } catch (error) {
+    return { success: false, message: friendlyError(error) };
+  } finally {
+    // One attempt only: the stored code is cleared whether or not it worked.
+    void supabase.auth.updateUser({ data: { activation_code: null } }).catch(() => {});
+  }
+}
 
 function setStatus(message = '', success = false) {
   status.textContent = message;
@@ -68,6 +90,7 @@ function setStatus(message = '', success = false) {
 function friendlyError(error) {
   const code = error?.code || '';
   if (code === 'invalid_track') return 'Choisis une filière CPGE : MPSI/MP, PCSI/PSI, TSI, ECS ou ECT.';
+  if (code === 'invalid_activation_code') return 'Ce code d’activation n’a pas le bon format. Vérifie-le, ou laisse le champ vide pour l’ajouter plus tard.';
   if (code === 'invalid_credentials') return 'E-mail ou mot de passe incorrect.';
   if (code === 'email_not_confirmed') return 'Confirme d’abord ton adresse e-mail.';
   if (code === 'user_already_exists') return 'Un compte existe déjà avec cette adresse.';
@@ -92,6 +115,7 @@ function setMode(nextMode) {
   signupFields.hidden = !signingUp;
   signupFields.querySelector('[name="full_name"]').required = signingUp;
   signupFields.querySelector('[name="filiere"]').required = signingUp;
+  if (codeField) codeField.hidden = !signingUp;
   form.elements.password.autocomplete = signingUp ? 'new-password' : 'current-password';
   form.elements.password.minLength = signingUp ? 8 : 1;
   document.querySelector('#authKicker').textContent = signingUp ? 'TON COMPTE ÉTUDIANT' : 'BON RETOUR';
@@ -179,7 +203,12 @@ function showAccess() {
   confirmCard.hidden = true;
   recoveryCard.hidden = true;
   accessCard.hidden = false;
-  document.querySelector('#accessStatus').textContent = `Statut : ${window.PrepagoAccount?.statusLabel(currentProfile) || 'Inactif'}`;
+  const accessLabel = window.PrepagoAccount?.statusLabel(currentProfile) || 'Inactif';
+  document.querySelector('#accessStatus').textContent = accessLabel === 'Expiré'
+    ? 'Ton accès a expiré. Saisis un nouveau code pour retrouver ton espace.'
+    : accessLabel === 'Résilié'
+      ? 'Ton accès est arrêté. Saisis un code pour le rouvrir.'
+      : 'Ton compte est prêt. Il reste à saisir ton code pour ouvrir ton espace.';
   promoStatus.textContent = '';
   promoStatus.classList.remove('success');
   trialBadge.hidden = true;
@@ -356,10 +385,34 @@ async function loadUserData(session) {
   window.PrepagoSupport?.connect(supabase,userId,roleResult.data?.role === 'admin');
   void window.PrepagoAILive?.connect(supabase,userId);
   accessAllowed = profileHasAccess(profile);
+  let activationNotice = null;
+  const pendingCode = accessAllowed ? null : pendingActivationCode(currentUser);
+  if (pendingCode && !activationTried.has(userId)) {
+    activationTried.add(userId);
+    const outcome = await redeemActivationCode(pendingCode);
+    if (generation !== sessionGeneration || currentUser?.id !== userId) return;
+    if (outcome.success) {
+      const refreshed = await supabase
+        .from('profiles')
+        .select('full_name,filiere,trial_started_at,trial_ends_at,subscription_status,subscription_ends_at,subscription_plan')
+        .eq('id', userId)
+        .single();
+      if (generation !== sessionGeneration || currentUser?.id !== userId) return;
+      if (refreshed.error) throw refreshed.error;
+      Object.assign(profile, refreshed.data);
+      accessAllowed = profileHasAccess(profile);
+    } else {
+      activationNotice = { code: pendingCode, message: outcome.message };
+    }
+  }
   if (!accessAllowed) {
     loadedUserId = userId;
     appState.onSave(null);
     showAccess();
+    if (activationNotice) {
+      promoCodeInput.value = activationNotice.code;
+      promoStatus.textContent = activationNotice.message;
+    }
     return;
   }
 
@@ -464,11 +517,13 @@ form.addEventListener('submit', async event => {
   try {
     if (mode === 'signup') {
       if(!window.PrepagoCurriculum.normalizeTrack(values.filiere))throw {code:'invalid_track'};
+      const activationCode = String(values.activation_code || '').trim().toUpperCase();
+      if (activationCode && !activationCodePattern.test(activationCode)) throw {code:'invalid_activation_code'};
       const { data, error } = await supabase.auth.signUp({
         email,
         password: values.password,
         options: {
-          data: { full_name: values.full_name.trim(), filiere: window.PrepagoCurriculum.normalizeTrack(values.filiere) },
+          data: { full_name: values.full_name.trim(), filiere: window.PrepagoCurriculum.normalizeTrack(values.filiere), ...(activationCode ? { activation_code: activationCode } : {}) },
           emailRedirectTo: 'https://prepago.site/verification/'
         }
       });
@@ -525,14 +580,6 @@ backToLogin.addEventListener('click', () => {
   setMode('login');
   form.elements.email.value = confirmEmail.textContent;
   form.elements.password.focus();
-});
-
-document.querySelectorAll('[data-plan]').forEach(button => {
-  button.addEventListener('click', () => {
-    promoStatus.textContent = 'Le paiement en ligne sera connecté prochainement. Tu peux déjà utiliser un code promo.';
-    promoStatus.classList.remove('success');
-    promoCodeInput.focus();
-  });
 });
 
 promoForm.addEventListener('submit', async event => {
@@ -695,7 +742,7 @@ function statusLabel(profile) {
   return {inactive:'Inactif',trial:'Essai',promo:'Accès promo',active:'Actif',expired:'Expiré',cancelled:'Résilié'}[profile?.subscription_status] || 'Inactif';
 }
 function promoMessage(message) {
-  return {'Authentication required':'Connecte-toi pour utiliser un code.', 'Enter a promo code':'Saisis un code promo.', 'A promo code has already been used on this account':'Un code promo a déjà été utilisé sur ce compte.', 'Invalid promo code':'Ce code promo est invalide.', 'This promo code is inactive':'Ce code promo est désactivé.', 'This promo code has expired':'Ce code promo a expiré.', 'This promo code has reached its usage limit':'Ce code a atteint sa limite d’utilisation.'}[message] || message || 'Code indisponible. Réessaie.';
+  return {'Authentication required':'Connecte-toi pour utiliser un code.', 'Enter a promo code':'Saisis un code promo.', 'A promo code has already been used on this account':'Un code promo a déjà été utilisé sur ce compte.', 'Invalid promo code':'Ce code promo est invalide.', 'This promo code is inactive':'Ce code promo est désactivé.', 'This promo code has expired':'Ce code promo a expiré.', 'This promo code has reached its usage limit':'Ce code a atteint sa limite d’utilisation.'}[message] || String(message || 'Code indisponible. Réessaie.').replace(/code promo/g, 'code');
 }
 
 supabase.auth.onAuthStateChange((event, session) => {

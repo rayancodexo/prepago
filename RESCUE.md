@@ -21,7 +21,7 @@ Access to the tool that built and deployed Prepago was lost. This branch is a co
 - **Three pages were recovered by probing**, because nothing links to them but the confirmation and password-reset emails send people there: `/verification/`, `/nouveau-mot-de-passe/` and `/mot-de-passe-oublie/`. Each is a small redirect into the app; their rebuilt length matches the live pages character for character.
 - **Six icons were recovered by probing**, because the site builds their file names at run time and no page links to them directly: `circle-dot`, `expand`, `flask-conical`, `minus`, `paperclip`, `send`.
 - **Not included:** the database contents, the private PDF in Supabase Storage, the Edge Function's secrets (`OPENAI_API_KEY`, `PREPAGO_AI_MODEL`, `PREPAGO_AI_LIVE`), and Supabase Auth settings (email templates, redirect URLs, SMTP). Those live in the Supabase project.
-- **`tests/` and the QA preview in `vite.config.mjs` are stale.** They were written for the 16 September code and do not match these files. `db/` holds the older hand-kept SQL notes; `supabase/migrations/` is the complete record.
+- **Tests:** the September browser fixtures no longer matched and were replaced by `tests/qa/`, which runs the site locally against a stand-in backend (`npm test`). The two SQL test files in `tests/` are kept. `db/` holds the older hand-kept SQL notes; `supabase/migrations/` is the complete record.
 
 ## Checks done on this copy
 

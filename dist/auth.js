@@ -1,9 +1,9 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/+esm';
+const { createClient } = window.supabase;
 
 const supabase = createClient(
   'https://szrrrqqpmjourdbckojw.supabase.co',
   'sb_publishable_sHZmN-PcQfQSomxWKJo3IA_BrvYYbh-',
-  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } }
 );
 
 const appState = window.PrepagoState;
@@ -38,8 +38,18 @@ let syncTimer = null;
 let syncChain = Promise.resolve();
 let syncRevision = null;
 let syncConflict = false;
+let syncRefreshing = false;
 let currentProfile = null;
 let sessionGeneration = 0;
+let loadingUser = null;
+let authReady = false;
+let authBusy = false;
+let recoverySessionReady = false;
+let recoveryCallbackInvalid = false;
+let signOutBusy = false;
+const callback = window.PrepagoAuthCore.readCallback(window.location.href);
+const resetRequestForm = document.querySelector('#resetRequestForm');
+const resetRequestStatus = document.querySelector('#resetRequestStatus');
 const syncIndicator = document.createElement('button');
 syncIndicator.className = 'sync-indicator';
 syncIndicator.type = 'button';
@@ -47,7 +57,7 @@ syncIndicator.textContent = 'Synchronisation…';
 syncIndicator.setAttribute('aria-live', 'polite');
 document.querySelector('.topbar-actions').prepend(syncIndicator);
 function syncStatus(text) { syncIndicator.textContent = text; }
-let recoveryMode = window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery');
+let recoveryMode = callback.recovery;
 const pendingEmailKey = 'prepago_pending_confirmation_email';
 
 function setStatus(message = '', success = false) {
@@ -57,13 +67,18 @@ function setStatus(message = '', success = false) {
 
 function friendlyError(error) {
   const code = error?.code || '';
+  if (code === 'invalid_track') return 'Choisis une filière CPGE : MPSI/MP, PCSI/PSI, TSI, ECS ou ECT.';
   if (code === 'invalid_credentials') return 'E-mail ou mot de passe incorrect.';
-  if (code === 'email_not_confirmed') return 'Confirmez d’abord votre adresse e-mail.';
+  if (code === 'email_not_confirmed') return 'Confirme d’abord ton adresse e-mail.';
   if (code === 'user_already_exists') return 'Un compte existe déjà avec cette adresse.';
-  if (code === 'weak_password') return 'Choisissez un mot de passe plus sécurisé.';
-  if (code === 'over_request_rate_limit') return 'Trop de tentatives. Réessayez dans quelques minutes.';
-  if (/fetch|network|offline/i.test(error?.message || '')) return 'Connexion indisponible. Vérifiez votre réseau et réessayez.';
-  return 'Impossible de terminer cette action. Réessayez dans quelques instants.';
+  if (code === 'weak_password') return 'Choisis un mot de passe plus sécurisé.';
+  if (code === 'same_password') return 'Choisis un mot de passe différent de l’ancien.';
+  if (['otp_expired','bad_code_verifier','flow_state_not_found','flow_state_expired'].includes(code)) return 'Ce lien a expiré ou a déjà été utilisé. Demande un nouvel e-mail.';
+  if (['session_not_found','refresh_token_not_found','refresh_token_already_used'].includes(code)) return 'Ta session a expiré. Reconnecte-toi.';
+  if (['over_request_rate_limit','over_email_send_rate_limit','email_rate_limit_exceeded'].includes(code) || error?.status === 429) return 'Trop de tentatives. Patiente quelques minutes avant de réessayer.';
+  if (['email_address_not_authorized','email_address_invalid'].includes(code)) return 'L’envoi d’e-mails est indisponible pour cette adresse. Contacte le support.';
+  if (/fetch|network|offline/i.test(error?.message || '')) return 'Connexion indisponible. Vérifie ton réseau et réessaie.';
+  return 'Impossible de terminer cette action. Réessaie dans quelques instants.';
 }
 
 function setMode(nextMode) {
@@ -79,9 +94,9 @@ function setMode(nextMode) {
   signupFields.querySelector('[name="filiere"]').required = signingUp;
   form.elements.password.autocomplete = signingUp ? 'new-password' : 'current-password';
   form.elements.password.minLength = signingUp ? 8 : 1;
-  document.querySelector('#authKicker').textContent = signingUp ? 'VOTRE COMPTE ÉTUDIANT' : 'BON RETOUR';
-  document.querySelector('#authTitle').textContent = signingUp ? 'Créez votre espace' : 'Connectez-vous';
-  document.querySelector('#authSubtitle').textContent = signingUp ? 'Organisez votre prépa dès aujourd’hui.' : 'Continuez là où vous vous êtes arrêté.';
+  document.querySelector('#authKicker').textContent = signingUp ? 'TON COMPTE ÉTUDIANT' : 'BON RETOUR';
+  document.querySelector('#authTitle').textContent = signingUp ? 'Crée ton espace' : 'Connecte-toi';
+  document.querySelector('#authSubtitle').textContent = signingUp ? 'Organise ta prépa dès aujourd’hui.' : 'Reprends là où tu t’es arrêté.';
   submit.textContent = signingUp ? 'Créer mon compte' : 'Se connecter';
   forgot.hidden = signingUp;
   setStatus();
@@ -126,6 +141,7 @@ function showLogin() {
 }
 
 function showConfirmation(email) {
+  document.body.classList.remove('landing-view');
   const normalizedEmail = email.trim().toLowerCase();
   localStorage.setItem(pendingEmailKey, normalizedEmail);
   document.body.classList.add('auth-pending');
@@ -142,15 +158,21 @@ function showConfirmation(email) {
 }
 
 function showRecovery() {
+  document.body.classList.remove('landing-view');
   document.body.classList.add('auth-pending');
   gate.hidden = false;
   authCard.hidden = true;
   confirmCard.hidden = true;
   recoveryCard.hidden = false;
   accessCard.hidden = true;
+  recoveryForm.hidden = !recoverySessionReady;
+  resetRequestForm.hidden = recoverySessionReady;
+  document.querySelector('#recoveryTitle').textContent = recoverySessionReady ? 'Choisis un nouveau mot de passe' : 'Réinitialise ton mot de passe';
+  document.querySelector('#recoveryHelp').textContent = recoverySessionReady ? 'Utilise au moins 8 caractères.' : 'Saisis ton adresse e-mail pour recevoir un nouveau lien.';
 }
 
 function showAccess() {
+  document.body.classList.remove('landing-view');
   document.body.classList.add('auth-pending');
   gate.hidden = false;
   authCard.hidden = true;
@@ -165,6 +187,7 @@ function showAccess() {
 }
 
 function showApp(profile) {
+  document.body.classList.remove('landing-view');
   localStorage.removeItem(pendingEmailKey);
   updateTrialBadge(profile);
   document.querySelector('#signOutBtn').hidden = false;
@@ -198,6 +221,7 @@ function flushCloudState() {
     const result = Array.isArray(data) ? data[0] : data;
     if (!result?.saved) { syncConflict = true; throw new Error('state_conflict'); }
     syncRevision = result.server_updated_at;
+    window.dispatchEvent(new Event('prepago:xp-synced'));
     if (currentUser?.id === userId && !pendingState) {
       localStorage.removeItem(`prepago-unsynced-${userId}`);
       syncStatus('Enregistré');
@@ -206,18 +230,85 @@ function flushCloudState() {
     if (currentUser?.id === userId) {
       pendingState ||= snapshot;
       syncStatus(syncConflict ? 'Conflit · Voir les options' : 'Non synchronisé · Réessayer');
+      void window.PrepagoSupport?.record(syncConflict ? 'sync_conflict' : 'cloud_sync_failure');
     }
   });
   return syncChain;
 }
 
+function workspaceIsBusy() {
+  return document.hidden || (typeof focusRun === 'object' && focusRun.running)
+    || (typeof cncTimer === 'object' && cncTimer.running) || Boolean(window.PrepagoFocus?.snapshot?.().active)
+    || document.querySelector('#modalBackdrop')?.hidden === false || Boolean(document.querySelector('dialog[open]'))
+    || ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+}
+async function refreshCloudState(manual=false) {
+  if (!currentUser || !accessAllowed || pendingState || syncConflict || syncRefreshing || workspaceIsBusy()) return false;
+  syncRefreshing=true;
+  const userId=currentUser.id,generation=sessionGeneration,revision=syncRevision;
+  try {
+    await syncChain;
+    if (pendingState || syncConflict || currentUser?.id!==userId || generation!==sessionGeneration) return false;
+    const [workspaceResult,profileResult]=await Promise.all([
+      supabase.from('student_app_state').select('data,updated_at').eq('user_id',userId).maybeSingle(),
+      supabase.from('profiles').select('full_name,filiere,trial_started_at,trial_ends_at,subscription_status,subscription_ends_at,subscription_plan').eq('id',userId).single()
+    ]);
+    if (workspaceResult.error || profileResult.error) throw workspaceResult.error || profileResult.error;
+    const data=workspaceResult.data;
+    if (currentUser?.id!==userId || generation!==sessionGeneration || syncRevision!==revision || pendingState || syncConflict || workspaceIsBusy()) return false;
+    const previousTrack=currentProfile.filiere,previousName=currentProfile.full_name,previousPlan=currentProfile.subscription_plan;
+    Object.assign(currentProfile,profileResult.data);
+    if(!profileHasAccess(currentProfile)){accessAllowed=false;appState.onSave(null);showAccess();return false;}
+    if(previousPlan!==currentProfile.subscription_plan)void window.PrepagoAILive?.connect(supabase,userId);
+    if (data?.data && (data.updated_at!==syncRevision || previousTrack!==currentProfile.filiere || previousName!==currentProfile.full_name)) {
+      syncRevision=data.updated_at;
+      const next=window.PrepagoCurriculum.prepare(data.data,currentProfile.filiere,window.PrepagoCurriculumCatalog).state;
+      if(currentProfile.full_name)next.profileName=currentProfile.full_name;
+      (appState.refresh || appState.replace)(next);
+      syncStatus('Mis à jour depuis ton compte');
+      window.dispatchEvent(new Event('prepago:workspace-refreshed'));
+      return true;
+    }
+    if(manual)syncStatus('Enregistré');
+    return false;
+  } catch { if(manual&&currentUser?.id===userId)syncStatus('Vérification impossible · Réessayer'); return false; }
+  finally {syncRefreshing=false;}
+}
+window.PrepagoSync={
+ async flush(){await flushCloudState();if(pendingState||syncConflict)throw Error('Workspace not synchronized');},
+ refresh:()=>refreshCloudState(true),
+ async restore(next){
+  if(!currentUser||!accessAllowed)throw Error('Authentication required');
+  const userId=currentUser.id,generation=sessionGeneration;
+  await this.flush();if(currentUser?.id!==userId||generation!==sessionGeneration)throw Error('Account changed');
+  const prepared=window.PrepagoCurriculum.prepare(next,currentProfile.filiere,window.PrepagoCurriculumCatalog).state;
+  prepared.profileName=currentProfile.full_name;appState.replace(prepared);window.PrepagoFocus?.refreshMirror?.();
+  scheduleCloudSave(appState.snapshot());await this.flush();
+ }
+};
+
 async function loadUser(session) {
+  if (!session?.user) return;
+  if (loadingUser?.id === session.user.id) return loadingUser.promise;
+  const pending = {id:session.user.id,promise:null};
+  pending.promise = loadUserData(session).finally(() => { if (loadingUser === pending) loadingUser = null; });
+  loadingUser = pending;
+  return pending.promise;
+}
+
+async function loadUserData(session) {
   if (!session?.user || loadedUserId === session.user.id) return;
+  if (currentUser?.id !== session.user.id) sessionGeneration++;
   currentUser = session.user;
   window.PrepagoCncLibrary?.clear();
+  window.PrepagoFocus?.clear();
+  window.PrepagoLeaderboard?.clear();
   const userId = currentUser.id;
+  window.PrepagoAdmin?.clear();
+  window.PrepagoPromos?.clear();
+  window.PrepagoSupport?.clear();
+  window.PrepagoAILive?.clear();
   const generation = sessionGeneration;
-  loadedUserId = currentUser.id;
   const cached = appState.useUser(currentUser.id);
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
@@ -229,18 +320,44 @@ async function loadUser(session) {
   if (generation !== sessionGeneration || currentUser?.id !== userId) return;
   currentProfile = profile;
   window.PrepagoCncLibrary?.connect(supabase, userId);
-  window.PrepagoAccount = { profile, email: currentUser.email, statusLabel,
+  const roleResult = await supabase.from('user_roles').select('role').eq('user_id',userId).maybeSingle();
+  if (roleResult.error) throw roleResult.error;
+  if (generation !== sessionGeneration || currentUser?.id !== userId) return;
+  window.PrepagoPromos?.connect(supabase, userId, roleResult.data?.role === 'admin');
+  window.PrepagoAccount = { profile, email: currentUser.email, isAdmin:roleResult.data?.role === 'admin', statusLabel, friendlyError,
+    async changePassword(values) {
+      if (values.password.length < 8) throw {code:'weak_password'};
+      if (values.password !== values.confirmation) throw {code:'password_mismatch'};
+      // Use a separate, nonpersistent session to verify the current password
+      // without replacing the user's workspace session or firing its listeners.
+      const verifier=createClient('https://szrrrqqpmjourdbckojw.supabase.co','sb_publishable_sHZmN-PcQfQSomxWKJo3IA_BrvYYbh-',{
+        auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'prepago-password-check'}
+      });
+      try {
+        const verified=await verifier.auth.signInWithPassword({email:currentUser.email,password:values.current_password});
+        if(verified.error)throw verified.error;
+        const {error}=await supabase.auth.updateUser({password:values.password,current_password:values.current_password});
+        if(error)throw error;
+      } finally { await verifier.auth.signOut({scope:'local'}).catch(()=>{}); }
+    },
     signOut, async update(values) {
       const full_name = values.full_name.trim();
       if (!full_name) throw new Error('Nom requis');
-      const {error} = await supabase.from('profiles').update({full_name, filiere: values.filiere}).eq('id', userId);
+      const filiere=window.PrepagoCurriculum.normalizeTrack(values.filiere);
+      if(!filiere)throw {code:'invalid_track'};
+      const {error} = await supabase.from('profiles').update({full_name, filiere}).eq('id', userId);
       if (error) throw error;
-      Object.assign(profile, {full_name, filiere: values.filiere});
-      const next = appState.snapshot(); next.profileName = full_name; appState.replace(next); scheduleCloudSave(next);
+      Object.assign(profile, {full_name, filiere});
+      const next=window.PrepagoCurriculum.prepare(appState.snapshot(),filiere,window.PrepagoCurriculumCatalog).state;
+      next.profileName=full_name;appState.replace(next);scheduleCloudSave(appState.snapshot());
     }
   };
+  window.PrepagoAdmin?.connect(supabase,roleResult.data?.role === 'admin');
+  window.PrepagoSupport?.connect(supabase,userId,roleResult.data?.role === 'admin');
+  void window.PrepagoAILive?.connect(supabase,userId);
   accessAllowed = profileHasAccess(profile);
   if (!accessAllowed) {
+    loadedUserId = userId;
     appState.onSave(null);
     showAccess();
     return;
@@ -261,31 +378,41 @@ async function loadUser(session) {
   if ((!nextState.profileName || nextState.profileName === 'Préparationnaire') && profile.full_name) {
     nextState.profileName = profile.full_name;
   }
-  appState.replace(nextState);
+  const programme=window.PrepagoCurriculum.prepare(nextState,profile.filiere,window.PrepagoCurriculumCatalog,{fresh:!stored&&!cached});
+  appState.replace(programme.state);
   appState.onSave(scheduleCloudSave);
 
   syncStatus('Enregistré');
   const unsynced = localStorage.getItem(`prepago-unsynced-${userId}`);
-  if (unsynced) {
+  const recoverableDraft = unsynced ? window.PrepagoSupportCore?.draft(unsynced) : null;
+  if (unsynced && !recoverableDraft) {
+    syncStatus('Copie locale illisible · Version du compte chargée');
+    void window.PrepagoSupport?.record('invalid_local_draft');
+  }
+  if (recoverableDraft) {
     // Preserve a failed write across refresh without silently overwriting another device.
     syncStatus('Brouillon local à récupérer');
     window.PrepagoRecoverDraft = () => {
-      if (!confirm('Restaurer le brouillon de cet appareil ? Il remplacera les données chargées depuis votre compte.')) return;
-      appState.replace(JSON.parse(unsynced)); scheduleCloudSave(appState.snapshot());
+      if (!confirm('Restaurer le brouillon de cet appareil ? Il remplacera les données chargées depuis ton compte.')) return;
+      appState.replace(recoverableDraft); scheduleCloudSave(appState.snapshot());
       window.PrepagoRecoverDraft = null;
     };
   }
 
-  if (!stored) {
+  if (!stored || programme.changed) {
     pendingState = appState.snapshot();
     await flushCloudState();
   }
   showApp(profile);
+  loadedUserId = userId;
+  window.PrepagoFocus?.connect(supabase, userId);
+  window.PrepagoLeaderboard?.connect(supabase, userId);
 }
 
 async function handleSession(session) {
-  if (recoveryMode && session) {
-    currentUser = session.user;
+  if (recoveryMode) {
+    recoverySessionReady = !recoveryCallbackInvalid && Boolean(session?.user);
+    currentUser = recoverySessionReady ? session.user : null;
     showRecovery();
     return;
   }
@@ -296,7 +423,13 @@ async function handleSession(session) {
     currentUser = null;
     currentProfile = null;
     window.PrepagoAccount = null;
+    window.PrepagoPromos?.clear();
+    window.PrepagoAdmin?.clear();
+    window.PrepagoSupport?.clear();
+    window.PrepagoAILive?.clear();
     window.PrepagoCncLibrary?.clear();
+    window.PrepagoFocus?.clear();
+    window.PrepagoLeaderboard?.clear();
     window.PrepagoRecoverDraft = null;
     accessAllowed = false;
     appState.onSave(null);
@@ -307,9 +440,11 @@ async function handleSession(session) {
   try {
     await loadUser(session);
   } catch (error) {
+    if (currentUser?.id !== session.user.id) return;
     loadedUserId = null;
     showLogin();
-    setStatus(friendlyError(error));
+    document.body.classList.remove('landing-view');
+    setStatus('Impossible de charger ton compte. Vérifie ta connexion puis reconnecte-toi.');
   }
 }
 
@@ -319,6 +454,8 @@ document.querySelectorAll('[data-auth-mode]').forEach(button => {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
+  if (authBusy || !authReady) return;
+  authBusy = true;
   setStatus();
   submit.disabled = true;
   submit.textContent = mode === 'signup' ? 'Création…' : 'Connexion…';
@@ -326,12 +463,13 @@ form.addEventListener('submit', async event => {
   const email = values.email.trim().toLowerCase();
   try {
     if (mode === 'signup') {
+      if(!window.PrepagoCurriculum.normalizeTrack(values.filiere))throw {code:'invalid_track'};
       const { data, error } = await supabase.auth.signUp({
         email,
         password: values.password,
         options: {
-          data: { full_name: values.full_name.trim(), filiere: values.filiere },
-          emailRedirectTo: window.location.origin
+          data: { full_name: values.full_name.trim(), filiere: window.PrepagoCurriculum.normalizeTrack(values.filiere) },
+          emailRedirectTo: 'https://prepago.site/verification/'
         }
       });
       if (error) throw error;
@@ -355,6 +493,7 @@ form.addEventListener('submit', async event => {
   } catch (error) {
     setStatus(friendlyError(error));
   } finally {
+    authBusy = false;
     submit.disabled = false;
     submit.textContent = mode === 'signup' ? 'Créer mon compte' : 'Se connecter';
   }
@@ -371,11 +510,11 @@ resendConfirmation.addEventListener('click', async () => {
   const { error } = await supabase.auth.resend({
     type: 'signup',
     email,
-    options: { emailRedirectTo: window.location.origin }
+    options: { emailRedirectTo: 'https://prepago.site/verification/' }
   });
   resendConfirmation.disabled = false;
   resendConfirmation.textContent = 'Renvoyer l’e-mail';
-  confirmStatus.textContent = error ? friendlyError(error) : 'E-mail renvoyé. Vérifiez aussi vos spams.';
+  confirmStatus.textContent = error ? friendlyError(error) : 'E-mail renvoyé. Vérifie aussi tes spams.';
   confirmStatus.classList.toggle('success', !error);
   } catch (error) { confirmStatus.textContent = friendlyError(error); }
   finally { resendConfirmation.disabled = false; resendConfirmation.textContent = 'Renvoyer l’e-mail'; }
@@ -390,7 +529,7 @@ backToLogin.addEventListener('click', () => {
 
 document.querySelectorAll('[data-plan]').forEach(button => {
   button.addEventListener('click', () => {
-    promoStatus.textContent = 'Le paiement en ligne sera connecté prochainement. Vous pouvez déjà utiliser un code promo.';
+    promoStatus.textContent = 'Le paiement en ligne sera connecté prochainement. Tu peux déjà utiliser un code promo.';
     promoStatus.classList.remove('success');
     promoCodeInput.focus();
   });
@@ -401,6 +540,7 @@ promoForm.addEventListener('submit', async event => {
   const code = promoCodeInput.value.trim().toUpperCase();
   if (!code) return;
   const button = promoForm.querySelector('button[type="submit"]');
+  if (button.disabled) return;
   button.disabled = true;
   promoStatus.textContent = 'Vérification du code…';
   promoStatus.classList.remove('success');
@@ -411,7 +551,7 @@ promoForm.addEventListener('submit', async event => {
     promoStatus.textContent = error ? friendlyError(error) : promoMessage(result?.message);
     return;
   }
-  promoStatus.textContent = 'Code activé. Votre accès est débloqué.';
+  promoStatus.textContent = 'Code activé. Ton accès est débloqué.';
   promoStatus.classList.add('success');
   promoCodeInput.value = '';
   loadedUserId = null;
@@ -422,15 +562,18 @@ promoForm.addEventListener('submit', async event => {
 });
 
 forgot.addEventListener('click', async () => {
-  const email = form.elements.email.value.trim();
+  const email = form.elements.email.value.trim().toLowerCase();
   if (!email) {
-    setStatus('Saisissez d’abord votre adresse e-mail.');
+    setStatus('Saisis d’abord ton adresse e-mail.');
     form.elements.email.focus();
     return;
   }
+  if (!form.elements.email.checkValidity()) { form.elements.email.reportValidity(); return; }
   forgot.disabled = true;
   try {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://prepago.site/nouveau-mot-de-passe/'
+  });
   forgot.disabled = false;
   setStatus(error ? friendlyError(error) : 'Lien de réinitialisation envoyé par e-mail.', !error);
   } catch(error) { setStatus(friendlyError(error)); }
@@ -439,13 +582,15 @@ forgot.addEventListener('click', async () => {
 
 recoveryForm.addEventListener('submit', async event => {
   event.preventDefault();
+  if (!recoverySessionReady || !currentUser) { showRecovery(); return; }
   const values = Object.fromEntries(new FormData(recoveryForm));
   recoveryStatus.classList.remove('success');
   if (values.password !== values.confirmation) {
     recoveryStatus.textContent = 'Les deux mots de passe ne correspondent pas.';
     return;
   }
-  const button = recoveryForm.querySelector('button');
+  const button = recoveryForm.querySelector('button[type="submit"]');
+  if (button.disabled) return;
   button.disabled = true;
   try {
   const { error } = await supabase.auth.updateUser({ password: values.password });
@@ -457,7 +602,9 @@ recoveryForm.addEventListener('submit', async event => {
   recoveryStatus.textContent = 'Mot de passe mis à jour.';
   recoveryStatus.classList.add('success');
   recoveryMode = false;
-  history.replaceState({}, document.title, `${location.pathname}${location.search.replace(/([?&])type=recovery(&|$)/, '$1').replace(/[?&]$/, '')}`);
+  recoverySessionReady = false;
+  recoveryForm.reset();
+  history.replaceState({}, document.title, '/#dashboard');
   loadedUserId = null;
   const { data: { session } } = await supabase.auth.getSession();
   await handleSession(session);
@@ -465,7 +612,32 @@ recoveryForm.addEventListener('submit', async event => {
   finally { button.disabled = false; }
 });
 
+resetRequestForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = resetRequestForm.querySelector('button');
+  if (button.disabled) return;
+  button.disabled = true;
+  resetRequestStatus.textContent = 'Envoi…';
+  try {
+    const {error} = await supabase.auth.resetPasswordForEmail(resetRequestForm.elements.email.value.trim().toLowerCase(),{redirectTo:'https://prepago.site/nouveau-mot-de-passe/'});
+    if (error) throw error;
+    resetRequestStatus.textContent = 'Si un compte existe avec cette adresse, un lien a été envoyé. Vérifie aussi tes spams.';
+    resetRequestStatus.classList.add('success');
+  } catch(error) { resetRequestStatus.classList.remove('success'); resetRequestStatus.textContent = friendlyError(error); }
+  finally { button.disabled = false; }
+});
+document.querySelector('#recoveryBack').addEventListener('click', async () => {
+  recoveryMode = false; recoverySessionReady = false;
+  history.replaceState({},document.title,'/#connexion');
+  const {data:{session}} = await supabase.auth.getSession();
+  await handleSession(session);
+});
+
 async function signOut() {
+  if (signOutBusy) return;
+  signOutBusy = true;
+  try {
+  await window.PrepagoFocus?.pauseForSignOut();
   window.dispatchEvent(new Event('prepago:pause-timers'));
   await flushCloudState();
   const {error} = await supabase.auth.signOut();
@@ -478,7 +650,13 @@ async function signOut() {
   loadedUserId = null;
   currentProfile = null;
   window.PrepagoAccount = null;
+  window.PrepagoPromos?.clear();
+  window.PrepagoAdmin?.clear();
+  window.PrepagoSupport?.clear();
+  window.PrepagoAILive?.clear();
   window.PrepagoCncLibrary?.clear();
+  window.PrepagoFocus?.clear();
+  window.PrepagoLeaderboard?.clear();
   window.PrepagoRecoverDraft = null;
   appState.onSave(null);
   appState.reset();
@@ -486,21 +664,27 @@ async function signOut() {
   form.reset();
   setMode('login');
   showLogin();
+  document.body.classList.remove('landing-view');
+  history.replaceState({},document.title,'/#connexion');
+  } catch(error) { window.showToast?.(friendlyError(error)); }
+  finally { signOutBusy = false; }
 }
 
 signOutButtons.forEach(button => button?.addEventListener('click', signOut));
 window.addEventListener('pagehide', flushCloudState);
-window.addEventListener('online', flushCloudState);
+window.addEventListener('online', async()=>{await flushCloudState();void refreshCloudState();});
 syncIndicator.addEventListener('click', () => {
   if (syncConflict) {
-    window.showToast?.('Un autre appareil a enregistré des changements. Votre brouillon est conservé sur cet appareil. Rechargez pour récupérer la version en ligne.');
+    window.showToast?.('Un autre appareil a enregistré des changements. Ton brouillon est conservé sur cet appareil. Recharge la page pour récupérer la version en ligne.');
     return;
   }
-  return window.PrepagoRecoverDraft ? window.PrepagoRecoverDraft() : flushCloudState();
+  return window.PrepagoRecoverDraft ? window.PrepagoRecoverDraft() : pendingState ? flushCloudState() : refreshCloudState(true);
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) flushCloudState(); });
-setInterval(() => {
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushCloudState(); else void refreshCloudState(); });
+setInterval(()=>void refreshCloudState(),45000);
+setInterval(async () => {
   if (currentProfile && accessAllowed && !profileHasAccess(currentProfile)) {
+    await window.PrepagoFocus?.pauseForSignOut();
     window.dispatchEvent(new Event('prepago:pause-timers'));
     accessAllowed = false; appState.onSave(null); showAccess();
   }
@@ -511,14 +695,16 @@ function statusLabel(profile) {
   return {inactive:'Inactif',trial:'Essai',promo:'Accès promo',active:'Actif',expired:'Expiré',cancelled:'Résilié'}[profile?.subscription_status] || 'Inactif';
 }
 function promoMessage(message) {
-  return {'Authentication required':'Connectez-vous pour utiliser un code.', 'Enter a promo code':'Saisissez un code promo.', 'A promo code has already been used on this account':'Un code promo a déjà été utilisé sur ce compte.', 'Invalid promo code':'Ce code promo est invalide.', 'This promo code is inactive':'Ce code promo est désactivé.', 'This promo code has expired':'Ce code promo a expiré.', 'This promo code has reached its usage limit':'Ce code a atteint sa limite d’utilisation.'}[message] || message || 'Code indisponible. Réessayez.';
+  return {'Authentication required':'Connecte-toi pour utiliser un code.', 'Enter a promo code':'Saisis un code promo.', 'A promo code has already been used on this account':'Un code promo a déjà été utilisé sur ce compte.', 'Invalid promo code':'Ce code promo est invalide.', 'This promo code is inactive':'Ce code promo est désactivé.', 'This promo code has expired':'Ce code promo a expiré.', 'This promo code has reached its usage limit':'Ce code a atteint sa limite d’utilisation.'}[message] || message || 'Code indisponible. Réessaie.';
 }
 
 supabase.auth.onAuthStateChange((event, session) => {
+  if (!authReady) return;
   setTimeout(() => {
     if (event === 'PASSWORD_RECOVERY') {
       recoveryMode = true;
       currentUser = session?.user || null;
+      recoverySessionReady = Boolean(session?.user);
       showRecovery();
       return;
     }
@@ -526,8 +712,17 @@ supabase.auth.onAuthStateChange((event, session) => {
   }, 0);
 });
 
-setMode('login');
+setMode(location.hash === '#inscription' ? 'signup' : 'login');
+submit.disabled = true;
 try {
-  const { data: { session } } = await supabase.auth.getSession();
+  const session = await window.PrepagoAuthCore.resolveCallback(supabase.auth,callback);
+  if (callback.hasCallback) history.replaceState({},document.title,window.PrepagoAuthCore.cleanCallback(location.href,recoveryMode));
+  if (callback.forgot) recoveryMode = true;
+  authReady = true;
   await handleSession(session);
-} catch(error) { showLogin(); setStatus(friendlyError(error)); }
+} catch(error) {
+  authReady = true;
+  if (callback.hasCallback) history.replaceState({},document.title,window.PrepagoAuthCore.cleanCallback(location.href,recoveryMode));
+  if (recoveryMode) { recoveryCallbackInvalid = true; recoverySessionReady = false; showRecovery(); resetRequestStatus.textContent = friendlyError(error); }
+  else { showLogin(); document.body.classList.remove('landing-view'); setStatus(friendlyError(error)); }
+} finally { submit.disabled = false; }

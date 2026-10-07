@@ -22,6 +22,15 @@ window.PrepagoState={
   legacyKey:STORAGE_KEY,
   useUser(userId){cloudSaveHandler=null;activeStorageKey=`prepago-user-${userId}`;const cached=localStorage.getItem(activeStorageKey)?loadState(activeStorageKey):null;state=cached||structuredClone(defaultState);window.dispatchEvent(new Event('prepago:state-replaced'));return cached},
   replace(next){state={...structuredClone(defaultState),...(next||{})};try{localStorage.setItem(activeStorageKey,JSON.stringify(state))}catch{}window.dispatchEvent(new Event('prepago:state-replaced'));render()},
+  refresh(next){
+    state={...structuredClone(defaultState),...(next||{})};
+    // An idle cloud update is not an account switch: preserve navigation and selections.
+    if(typeof restoreRuntimeState==='function')restoreRuntimeState({preserveView:true});
+    if(typeof learningSubjectId==='string'&&!state.subjects.some(subject=>subject.id===learningSubjectId))resetLearningSelection();
+    window.PrepagoFocus?.refreshMirror?.();
+    try{localStorage.setItem(activeStorageKey,JSON.stringify(state))}catch{}
+    render();
+  },
   reset(){cloudSaveHandler=null;activeStorageKey=STORAGE_KEY;state=structuredClone(defaultState);window.dispatchEvent(new Event('prepago:state-replaced'));render()},
   onSave(handler){cloudSaveHandler=handler}
 };
@@ -45,7 +54,7 @@ const pageNames={overview:'Vue d’ensemble',subjects:'Mes matières',tasks:'Tâ
 function navigate(page){currentPage=page;document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelector('#breadcrumb').textContent=pageNames[page];document.querySelector('#sidebar').classList.remove('open');render()}
 function render(){({overview:renderOverview,subjects:renderSubjects,tasks:renderTasks,focus:renderFocus,progress:renderProgress}[currentPage]||renderOverview)();updateSidebar()}
 
-function header(title,subtitle,action=''){return `<div class="section-head"><div><span class="eyebrow">MON ESPACE PRÉPA</span><h1>${title}</h1><p>${subtitle}</p></div>${action}</div>`}
+function header(title,subtitle,action=''){return `<header class="section-head page-header"><div><span class="eyebrow">MON ESPACE PRÉPA</span><h1>${title}</h1><p>${subtitle}</p></div>${action}</header>`}
 function renderOverview(){
   const total=allChapters().length, done=doneChapters(), p=progressPercent(), lev=level(), focus=focusToday();
   const subjects=state.subjects.slice(0,4).map(s=>{const d=s.chapters.filter(c=>c.done).length,t=s.chapters.length,sp=t?Math.round(d/t*100):0;return `<div class="subject-mini"><div class="subject-symbol" style="background:${s.color}18;color:${s.color}">${esc(s.symbol)}</div><div><h3>${esc(s.name)}</h3><p>${t} chapitre${t!==1?'s':''} · ${d} validé${d!==1?'s':''}</p><div class="progress-bar" style="margin-top:12px"><div class="progress-fill" style="width:${sp}%;background:${s.color}"></div></div></div><div class="subject-progress">${sp}%</div></div>`}).join('');
@@ -61,6 +70,7 @@ function renderOverview(){
 }
 
 function emptyBlock(title,text){return `<div class="empty"><div class="empty-icon">＋</div><h3>${title}</h3><p>${text}</p></div>`}
+function emptyState(icon,title,text,action=''){const graphic=typeof uiIcon==='function'?uiIcon(icon):'＋';return `<div class="empty-state"><span class="empty-state-icon">${graphic}</span><div><h3>${title}</h3><p>${text}</p></div>${action}</div>`}
 function renderSubjects(){
   const cards=state.subjects.map(s=>{const done=s.chapters.filter(c=>c.done).length,total=s.chapters.length,p=total?Math.round(done/total*100):0;return `<article class="card subject-card"><div class="subject-color" style="background:${s.color}"></div><div class="card-head"><div><h3>${esc(s.symbol)} &nbsp;${esc(s.name)}</h3><p>${done}/${total} chapitres validés</p></div><button class="icon-btn" data-delete-subject="${s.id}" title="Supprimer">×</button></div><div class="progress-bar"><div class="progress-fill" style="width:${p}%;background:${s.color}"></div></div><div class="chapters">${s.chapters.map(c=>`<label class="chapter ${c.done?'done':''}"><input type="checkbox" data-chapter="${c.id}" data-subject="${s.id}" ${c.done?'checked':''}><span>${esc(c.name)}</span><button type="button" class="icon-btn" data-delete-chapter="${c.id}" data-subject="${s.id}">×</button></label>`).join('')||'<p style="color:var(--muted)">Aucun chapitre</p>'}</div><div class="card-actions"><button class="secondary-btn" data-add-chapter="${s.id}">+ Chapitre</button></div></article>`}).join('');
   document.querySelector('#page').innerHTML=header('Mes matières','Créez votre programme et validez vos chapitres.',`<div class="section-head-actions"><button class="primary-btn" id="addSubject">+ Ajouter une matière</button></div>`)+`<div class="subjects-grid">${cards||`<div class="card" style="grid-column:1/-1">${emptyBlock('Votre programme est vide','Ajoutez une matière puis ses chapitres.')}</div>`}</div>`;
@@ -100,8 +110,8 @@ document.addEventListener('click',e=>{
   if(e.target.id==='menuBtn')return document.querySelector('#sidebar').classList.toggle('open');
   if(e.target.id==='modalClose'||e.target.id==='modalBackdrop')return closeModal();
   if(e.target.id==='addSubject')return openModal('Ajouter une matière',field('Nom de la matière','name')+field('Symbole court','symbol','text','maxlength="2" placeholder="∑"')+`<div class="field"><label for="color">Couleur</label><input id="color" name="color" type="color" value="${COLORS[state.subjects.length%COLORS.length]}"></div>`,d=>state.subjects.push({id:uid('s'),name:d.name,symbol:d.symbol||'•',color:d.color,chapters:[]}));
-  const addCh=e.target.closest('[data-add-chapter]');if(addCh)return openModal('Ajouter un chapitre',field('Nom du chapitre','name'),d=>state.subjects.find(s=>s.id===addCh.dataset.addChapter)?.chapters.push({id:uid('c'),name:d.name,done:false}));
-  const delS=e.target.closest('[data-delete-subject]');if(delS&&confirm('Supprimer cette matière et tous ses chapitres ?')){const subject=state.subjects.find(s=>s.id===delS.dataset.deleteSubject);if(typeof chapterEarnedXp==='function')state.xp=Math.max(0,state.xp-(subject?.chapters||[]).reduce((sum,c)=>sum+chapterEarnedXp(c),0));state.subjects=state.subjects.filter(s=>s.id!==delS.dataset.deleteSubject);save();render()}
+  const addCh=e.target.closest('[data-add-chapter]');if(addCh)return editLearningChapter(addCh.dataset.addChapter);
+  const delS=e.target.closest('[data-delete-subject]');if(delS&&confirm('Supprimer cette matière et tous ses chapitres ?')){const subject=state.subjects.find(s=>s.id===delS.dataset.deleteSubject);if(typeof chapterEarnedXp==='function')state.xp=Math.max(0,state.xp-(subject?.chapters||[]).reduce((sum,c)=>sum+chapterEarnedXp(c),0));window.PrepagoCurriculum?.dismissSubject(state,subject);state.subjects=state.subjects.filter(s=>s.id!==delS.dataset.deleteSubject);save();render()}
   const delC=e.target.closest('[data-delete-chapter]');if(delC){const s=state.subjects.find(s=>s.id===delC.dataset.subject);s.chapters=s.chapters.filter(c=>c.id!==delC.dataset.deleteChapter);save();render()}
   if(e.target.id==='addTask')return openModal('Nouvelle tâche',field('Titre','title')+field('Date','date','date',`value="${todayISO()}"`)+field('Heure','time','time')+`<div class="field"><label for="subject">Matière</label><select name="subject" id="subject">${subjectOptions()}</select></div><div class="field"><label for="priority">Priorité</label><select name="priority" id="priority"><option value="high">Prioritaire</option><option value="medium" selected>Normale</option><option value="low">Flexible</option></select></div>`,d=>state.tasks.push({id:uid('t'),...d,done:false}));
   if(e.target.id==='addEvent')return openModal('Ajouter au planning',field('Titre','title')+field('Date','date','date',`value="${todayISO()}"`)+field('Heure','time','time')+`<div class="field"><label for="color">Couleur</label><input id="color" name="color" type="color" value="#6558df"></div>`,d=>state.events.push({id:uid('e'),...d}));

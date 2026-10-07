@@ -130,6 +130,58 @@ with Site() as site:
     check('"Créer mon espace" from /tarifs/ opens sign-up', page.url.endswith('/#inscription') and page.is_visible('#authCodeField'))
     page.context.close()
 
+# ---------------------------------------------------------------- loading
+with Site() as site:
+    # 11. Reading the landing page runs none of the workspace.
+    page, problems = site.open('/', 'phone', {'mode': 'signed-out'}, wait=2500)
+    check('landing runs no workspace code', page.evaluate('typeof window.PrepagoState === "undefined" && typeof window.supabase === "undefined"'))
+    check('landing has three scripts of its own', page.evaluate('document.querySelectorAll("script[src]").length') == 3)
+    check('landing holds first paint for 10 stylesheets only', page.evaluate('document.querySelectorAll(\'link[rel="stylesheet"]:not([data-app-style])\').length') == 10)
+    check('workspace styles arrive afterwards', page.evaluate('!document.documentElement.classList.contains("app-styles-pending") && [...document.querySelectorAll("link[data-app-style]")].every(l => l.media === "all")'))
+    check('no errors on the light landing page', not problems, '; '.join(problems[:3]))
+    # 12. Going to login from there loads the workspace and the form works.
+    page.click('.public-menu')
+    page.click('.public-actions a[href="/#connexion"]')
+    page.wait_for_function('!document.documentElement.classList.contains("app-booting")', timeout=8000)
+    check('login form appears once it is wired up', page.is_visible('#authForm input[name="email"]') and page.evaluate('getComputedStyle(document.querySelector(".auth-form-panel")).visibility') == 'visible')
+    page.fill('#authForm input[name="email"]', 'qa@example.invalid')
+    page.fill('#authForm input[name="password"]', 'motdepasse123')
+    page.click('#authSubmit')
+    page.wait_for_timeout(1800)
+    check('login from the landing page opens the workspace', page.evaluate('!document.body.classList.contains("auth-pending")') and len([c for c in calls(page, 'auth') if c['auth'] == 'signIn']) == 1)
+    check('no errors after lazy start', not problems, '; '.join(problems[:3]))
+    page.context.close()
+
+    # 13. A returning student on the bare address goes straight to the workspace.
+    page, problems = site.open('/', 'desktop', {'mode': 'active'}, wait=2000)
+    check('stored session opens the workspace from /', page.evaluate('!document.body.classList.contains("auth-pending") && !document.body.classList.contains("landing-view")'), '; '.join(problems[:3]))
+    page.context.close()
+
+    # 14. E-mail links still land where they should.
+    page, problems = site.open('/nouveau-mot-de-passe/?code=abc123', 'desktop', {'mode': 'active'}, wait=2000)
+    check('password-reset link opens the new-password form', page.is_visible('#recoveryForm') and 'recovery=1' in page.url, page.url)
+    page.context.close()
+    page, problems = site.open('/mot-de-passe-oublie/', 'desktop', {'mode': 'signed-out'}, wait=2000)
+    check('forgotten-password page opens the request form', page.is_visible('#resetRequestForm'), page.url)
+    page.context.close()
+    page, problems = site.open('/verification/?code=abc123', 'desktop', {'mode': 'inactive'}, wait=2200)
+    check('confirmation link signs in and reaches activation', page.is_visible('#accessGate') and 'code=' not in page.url, page.url)
+    page.context.close()
+    page, problems = site.open('/activation/', 'desktop', {'mode': 'signed-out'}, wait=2000)
+    check('/activation/ opens the login form', page.is_visible('#authForm') and not problems, page.url)
+    page.context.close()
+
+    # 15. If the workspace scripts never arrive, pressing Enter must not submit the form natively.
+    ctx = site.browser.new_context(viewport={'width': 1366, 'height': 900})
+    ctx.route('**/*', lambda r: r.abort() if (not r.request.url.startswith(site.base) or r.request.url.split('?')[0].endswith('/auth.js')) else r.continue_())
+    page = ctx.new_page()
+    page.goto(site.base + '/#connexion', wait_until='load')
+    page.wait_for_timeout(600)
+    page.evaluate("""() => { const f = document.querySelector('#authForm'); f.elements.email.value = 'a@b.co'; f.elements.password.value = 'secret-password'; f.requestSubmit(); }""")
+    page.wait_for_timeout(500)
+    check('password never reaches the address bar', 'secret' not in page.url and 'password' not in page.url and page.url == site.base + '/#connexion', page.url)
+    ctx.close()
+
 failed = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(('ok  ' if ok else 'FAIL') + ' ' + name + (f'  [{detail}]' if detail and not ok else ''))

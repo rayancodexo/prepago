@@ -103,27 +103,10 @@ body .dashboard-layout .dashboard-study-chart .study-chart-day.is-today > small 
   body .dashboard-reference .dashboard-metric strong { font-size: 32px; }
   body .dashboard-reference .dashboard-metric small { margin-top: 6px; }
 
-  /* Left column: what to study next, then the week. */
-  body .dashboard-reference .next-action {
-    min-height: 0;
-    padding: 20px 24px;
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-card);
-    background: var(--surface);
-    box-shadow: var(--shadow-card);
-  }
-  body .dashboard-reference .next-action > .primary-btn { margin-top: 0; }
-  body .dashboard-reference .dashboard-resume-kicker {
-    font-size: var(--text-xs);
-    line-height: 1.5;
-    font-weight: var(--font-medium);
-    letter-spacing: 0;
-    text-transform: lowercase;
-  }
-  body .dashboard-reference .dashboard-resume-kicker::first-letter { text-transform: uppercase; }
+  /* Left column: the week. */
   body .dashboard-reference .dashboard-study-chart {
-    --study-plot-height: clamp(200px, calc(100dvh - 590px), 300px);
-    margin: 20px 0 0;
+    --study-plot-height: clamp(220px, calc(100dvh - 500px), 340px);
+    margin: 0;
     padding: 24px;
     border: 1px solid var(--hairline);
     border-radius: var(--radius-card);

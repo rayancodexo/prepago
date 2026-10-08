@@ -1,0 +1,281 @@
+/* Accueil — the home dashboard (markup in home.js). Calm light surfaces: page background,
+   white cards with hairline borders, one accent colour. Loaded after dashboard-cards.css. */
+
+body[data-page="overview"] .main { background: transparent; }
+
+body .home {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  line-height: 20px;
+}
+body .home :is(h1, h2, p) { margin: 0; }
+body .home :is(.home-ring strong, .home-count, .home-event-time, .home-progress-value, .home-hours-total strong) { font-variant-numeric: tabular-nums; }
+body .home button { font: inherit; color: inherit; }
+
+/* ---- Header ------------------------------------------------------------------------ */
+body .home .home-date { color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); }
+body .home .home-title { margin-top: 4px; font-size: 28px; line-height: 40px; font-weight: var(--font-bold); letter-spacing: -.03em; }
+body .home .home-summary { margin-top: 4px; color: var(--secondary); font-size: var(--text-sm); line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- Cards ------------------------------------------------------------------------- */
+body .home .home-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 24px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: none;
+}
+body .home .home-card > h2 { font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body .home .home-card-title {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+body .home .home-card-title:hover { color: var(--brand); }
+body .home .home-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+body .home .home-row > .home-card { min-height: 216px; }
+body .home .home-row > :is(.home-progress, .home-cnc) { min-height: 196px; }
+body .home .home-progress { grid-column: span 2; }
+body .home .home-empty { margin-top: 12px; color: var(--secondary); }
+
+body .home :is(.home-link, .home-inline-link) {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font-size: var(--text-sm);
+  line-height: 20px;
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  cursor: pointer;
+}
+body .home .home-link { margin-top: 12px; }
+body .home :is(.home-link, .home-inline-link):hover { color: var(--brand-hover); text-decoration: underline; text-underline-offset: 3px; }
+body .home .home-inline-link { font-size: inherit; line-height: inherit; }
+body .home :is(button, input):focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 6px; }
+
+body .home .home-bar { display: block; flex: 1 1 auto; height: 4px; border-radius: 2px; background: var(--hairline); overflow: hidden; }
+body .home .home-bar > i { display: block; height: 4px; border-radius: 2px; background: var(--brand-solid); }
+
+/* ---- Hero -------------------------------------------------------------------------- */
+body .home .home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "copy ring" "action ring";
+  align-items: center;
+  gap: 20px 40px;
+  min-height: 192px;
+  padding: 24px 40px 24px 32px;
+}
+body .home .home-hero-copy { grid-area: copy; align-self: end; min-width: 0; }
+body .home .home-hero-label { color: var(--secondary); font-size: 11px; line-height: 16px; font-weight: var(--font-semibold); letter-spacing: .08em; text-transform: uppercase; }
+body .home .home-hero h2 { margin-top: 8px; font-size: 24px; line-height: 30px; font-weight: var(--font-bold); letter-spacing: -.025em; text-wrap: balance; }
+body .home .home-hero-line { margin-top: 2px; color: var(--secondary); }
+body .home .home-hero-button {
+  grid-area: action;
+  align-self: start;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  margin: 0;
+  padding: 0 24px 0 20px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand-solid);
+  color: #fff;
+  font-size: 15px;
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: background-color var(--motion);
+}
+body .home .home-hero-button:hover { background: var(--brand-solid-hover); }
+body .home .home-hero-button:focus-visible { border-radius: 12px; }
+body .home .home-ring { grid-area: ring; position: relative; width: 120px; height: 120px; }
+body .home .home-ring svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+body .home .home-ring circle { fill: none; stroke-width: 2.5; }
+body .home .home-ring-track { stroke: var(--hairline); }
+body .home .home-ring-value { stroke: var(--brand-solid); stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+body .home .home-ring strong {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: var(--font-semibold);
+  letter-spacing: -.02em;
+}
+
+/* ---- First steps ------------------------------------------------------------------- */
+body .home .home-onboarding { margin: 0; padding: 20px 24px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); }
+body .home .home-onboarding h2 { margin: 0 0 12px; font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-semibold); }
+
+/* ---- Today ------------------------------------------------------------------------- */
+body .home .home-tasks { display: flex; flex-direction: column; margin-top: 12px; }
+body .home .home-task { display: flex; align-items: center; gap: 12px; min-height: 32px; margin: 0; padding: 0; color: var(--ink); font-size: var(--text-sm); font-weight: var(--font-regular); cursor: pointer; }
+body .home .home-task-title { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body .home .home-task.is-done .home-task-title { color: var(--secondary); text-decoration: line-through; }
+body .home .home-check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid #B7C2D3;
+  border-radius: 50%;
+  background: var(--surface) center / 20px 20px no-repeat;
+  cursor: pointer;
+  transition: background-color var(--motion), border-color var(--motion);
+}
+body .home .home-check:hover { border-color: var(--brand); }
+body .home .home-check:checked {
+  border-color: var(--brand-solid);
+  background-color: var(--brand-solid);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 10.3 2.7 2.7L14.2 7.5'/%3E%3C/svg%3E");
+}
+body .home .home-check:focus-visible { border-radius: 50%; }
+body .home .home-chip {
+  flex: 0 0 auto;
+  max-width: 104px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #F1F4F9;
+  color: var(--secondary);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: var(--font-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body .home .home-card-foot { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 16px; }
+body .home .home-count { color: var(--secondary); font-size: 12px; line-height: 20px; font-weight: var(--font-medium); }
+
+/* ---- Next event -------------------------------------------------------------------- */
+body .home .home-event {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+body .home .home-event-bar { flex: 0 0 3px; border-radius: 2px; background: var(--brand-solid); }
+body .home .home-event-copy { display: flex; flex-direction: column; min-width: 0; padding: 2px 0; }
+body .home .home-event-time { color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); }
+body .home .home-event strong { margin-top: 4px; font-size: 17px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.015em; overflow-wrap: anywhere; }
+body .home .home-event:hover strong { color: var(--brand); }
+body .home .home-event-place { margin-top: 2px; color: var(--secondary); font-size: 13px; line-height: 20px; }
+
+/* ---- Study hours ------------------------------------------------------------------- */
+body .home .home-hours-total { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+body .home .home-hours-total strong { font-size: 28px; line-height: 36px; font-weight: var(--font-bold); letter-spacing: -.03em; }
+body .home .home-hours-total span { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body .home .home-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; margin-top: auto; padding-top: 16px; }
+body .home .home-day { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+body .home .home-day-track { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 56px; }
+body .home .home-day-track i { display: block; width: 22px; max-width: 100%; border-radius: 6px 6px 2px 2px; background: #C6D8FB; }
+body .home .home-day.is-today .home-day-track i { background: var(--brand-solid); }
+body .home .home-day.is-zero .home-day-track i { border-radius: 2px; background: var(--hairline); }
+body .home .home-day small { color: var(--secondary); font-size: 12px; line-height: 16px; }
+body .home .home-day.is-today small { color: var(--ink); font-weight: var(--font-semibold); }
+
+/* ---- Progress ---------------------------------------------------------------------- */
+body .home .home-progress-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+body .home .home-progress-row { display: flex; align-items: center; gap: 16px; min-height: 20px; }
+body .home .home-progress-name { flex: 0 0 184px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body .home .home-progress-value { flex: 0 0 44px; color: var(--secondary); font-size: 13px; font-weight: var(--font-medium); text-align: right; }
+
+/* ---- CNC --------------------------------------------------------------------------- */
+body .home .home-cnc-count { margin-top: 8px; font-size: 36px; line-height: 44px; font-weight: var(--font-bold); letter-spacing: -.03em; }
+body .home :is(.home-cnc-date, .home-cnc-note) { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body .home .home-cnc-date { margin-top: 2px; }
+body .home .home-cnc-link { margin-top: auto; padding-top: 12px; }
+
+/* ---- Below the dashboard: weekly ranking ------------------------------------------- */
+body .home .home-extra:empty { display: none; }
+body .home .home-extra > .weekly-xp-card { margin-top: 0; }
+
+/* ---- Sidebar: compact level line ---------------------------------------------------- */
+body[data-page] #sidebar .sidebar-progress { padding: 12px; border: 1px solid var(--hairline); border-radius: 12px; background: transparent; }
+body[data-page] #sidebar .sidebar-level { display: block; margin: 0; padding: 0; line-height: 20px; }
+body[data-page] #sidebar .sidebar-level > :not(:has(#sideLevel)) { display: none; }
+body[data-page] #sidebar .sidebar-level > span:has(#sideLevel) { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body[data-page] #sidebar #sideLevel { display: inline; font-size: 13px; line-height: 20px; font-weight: var(--font-semibold); color: var(--ink); }
+body[data-page] #sidebar #sideXp { display: inline; font-size: 13px; line-height: 20px; font-weight: var(--font-regular); color: var(--secondary); }
+body[data-page] #sidebar #sideXp::before { content: " · "; white-space: pre; }
+body[data-page] #sidebar .sidebar-xp { display: block; margin: 10px 0 0; padding: 0; }
+body[data-page] #sidebar .sidebar-xp-track { height: 4px; border-radius: 2px; background: var(--hairline); overflow: hidden; }
+body[data-page] #sidebar #sideXpFill { display: block; height: 4px; border-radius: 2px; background: var(--brand-solid); }
+body[data-page] #sidebar #sideXpRatio { display: none; }
+
+@media (min-width: 768px) {
+  body[data-page="overview"]:not(.landing-view):not(.auth-pending) #page { padding: 32px 32px 40px; }
+
+  /* Top bar: compact search, outlined bell, quiet avatar. */
+  body[data-page] .topbar .topbar-search { max-width: 360px; }
+  body[data-page] .topbar #notificationBtn { width: 40px; height: 40px; border: 1px solid var(--hairline); border-radius: 10px; background: var(--surface); }
+  body[data-page] .topbar #notificationBtn:hover { background: var(--surface-hover); }
+  body[data-page] .topbar .topbar-avatar { background: var(--brand-tint); color: var(--brand); font-weight: var(--font-semibold); }
+}
+
+/* Narrow desktops and tablets: two columns, the chart and the bottom cards take a full row. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  body .home .home-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body .home :is(.home-hours, .home-progress, .home-cnc) { grid-column: span 2; }
+  body .home .home-row > :is(.home-progress, .home-cnc) { min-height: 0; }
+  body .home .home-cnc-link { padding-top: 16px; }
+}
+
+/* Phones: one column, the timer ring sits beside the title, the button spans the card. */
+@media (max-width: 767px) {
+  body .home { gap: 16px; }
+  body .home .home-title { font-size: 26px; line-height: 34px; }
+  body .home .home-summary { white-space: normal; }
+  body .home .home-card { padding: 20px; }
+  body .home .home-row { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  body .home .home-progress { grid-column: auto; }
+  body .home .home-row > .home-card,
+  body .home .home-row > :is(.home-progress, .home-cnc) { min-height: 0; }
+  body .home .home-hero { grid-template-areas: "copy ring" "action action"; align-items: start; gap: 20px 16px; min-height: 0; padding: 20px; }
+  body .home .home-hero-copy { align-self: start; }
+  body .home .home-hero h2 { font-size: 20px; line-height: 26px; }
+  body .home .home-hero-button { justify-self: stretch; justify-content: center; }
+  body .home .home-ring { width: 72px; height: 72px; }
+  body .home .home-ring circle { stroke-width: 4; }
+  body .home .home-ring strong { font-size: 16px; line-height: 20px; }
+  body .home .home-task { min-height: 44px; }
+  body .home .home-progress-row { gap: 12px; min-height: 28px; }
+  body .home .home-progress-name { flex-basis: 50%; }
+  body .home .home-cnc-link, body .home .home-card-foot, body .home .home-week { padding-top: 20px; }
+  body .home :is(.home-link, .home-inline-link) { min-height: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .home .home-ring-value, body .home .home-check, body .home .home-hero-button { transition: none; }
+}

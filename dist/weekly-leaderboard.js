@@ -31,7 +31,7 @@
    if(control)document.querySelector('.weekly-xp-card '+control)?.focus();
    return;
   }
-  if(currentPage==='overview')document.querySelector('.desk-main')?.insertAdjacentHTML('beforeend',card());
+  if(currentPage==='overview')document.querySelector('.home-extra')?.insertAdjacentHTML('beforeend',card());
   else {
    const first=document.querySelector('.progress-section');
    if(first)first.insertAdjacentHTML('afterend',card());else document.querySelector('#page')?.insertAdjacentHTML('beforeend',card());

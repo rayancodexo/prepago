@@ -42,14 +42,13 @@ def live_session():
 
 
 with Site() as site:
-    # 1. The page is made of the hero, three cards, progress and the CNC countdown.
+    # 1. The page is made of the greeting, the hero, three cards, progress and the CNC countdown.
     page, problems = site.workspace('desktop')
     page.wait_for_timeout(500)
-    parts = page.evaluate("['.home-head', '.home-hero', '.home-today', '.home-next', '.home-hours', '.home-progress', '.home-cnc'].filter(s => !document.querySelector(s))")
+    parts = page.evaluate("['.home-title', '.home-hero', '.home-today', '.home-next', '.home-hours', '.home-progress', '.home-cnc'].filter(s => !document.querySelector(s))")
     check('every block of the dashboard is present', not parts, parts)
     check('greeting uses the first name', text(page, '.home-title') == 'Bonjour, Yasmine', text(page, '.home-title'))
-    check('date line shows today', text(page, '.home-date') == page.evaluate('formatDate()'), text(page, '.home-date'))
-    check('summary counts the open tasks', (text(page, '.home-summary') or '').startswith('2 tâches restantes'), text(page, '.home-summary'))
+    check('the header is the greeting alone, in a small size', page.evaluate("!document.querySelector('.home-date, .home-summary, .home-onboarding, .studio-onboarding') && getComputedStyle(document.querySelector('.home-title')).fontSize === '22px'"))
     check('hero proposes the next chapter', text(page, '.home-hero-label') == 'À FAIRE MAINTENANT' and ' · ' in (text(page, '#homeHeroTitle') or ''), text(page, '#homeHeroTitle'))
     check('ring shows the planned duration', text(page, '.home-ring strong') == '25:00', text(page, '.home-ring strong'))
     check('old dashboard blocks are gone', page.evaluate("!document.querySelector('.dashboard-metrics, .dashboard-date-pager, .next-action, .dashboard-study-chart')"))
@@ -61,7 +60,6 @@ with Site() as site:
     page.click('.home-task:not(.is-done) .home-check')
     page.wait_for_timeout(400)
     check('ticking a task updates the count', text(page, '.home-count') == '2 / 3', text(page, '.home-count'))
-    check('ticking a task updates the summary', (text(page, '.home-summary') or '').startswith('1 tâche restante'), text(page, '.home-summary'))
 
     # 3. Next event and study hours come from the workspace.
     check('next event is one of the planned ones', text(page, '.home-event strong') in ('Colle de physique', 'DS de mathématiques'), text(page, '.home-event strong'))
@@ -119,12 +117,11 @@ with Site() as site:
     check('no errors with a running session', not problems, '; '.join(problems[:3]))
     page.context.close()
 
-    # 7. First visit: nothing planned yet, the dashboard still guides.
+    # 7. First visit: nothing planned yet, the cards say what to add.
     page, problems = site.workspace('desktop', state={'tasks': [], 'events': [], 'focusSessions': [], 'xp': 0, 'profileName': 'Yasmine'}, sessions=[])
     page.wait_for_timeout(500)
-    check('first visit shows the first-steps list', page.is_visible('.home-onboarding'))
     check('first visit offers to add a task and an event', page.is_visible('.home-today [data-task-new]') and page.is_visible('.home-next [data-dashboard-new-event]'))
-    check('first visit summary is calm', text(page, '.home-summary') == 'Aucune tâche prévue aujourd’hui', text(page, '.home-summary'))
+    check('first visit still proposes something to study', text(page, '.home-hero-label') == 'À FAIRE MAINTENANT' and page.is_visible('.home-hero-button'))
     page.click('.home-next [data-dashboard-new-event]')
     page.wait_for_timeout(300)
     check('"Planifier un rendez-vous" opens the event form', page.evaluate("!document.querySelector('#modalBackdrop').hidden"))
@@ -140,6 +137,19 @@ with Site() as site:
         check(f'{viewport}: hero and CNC countdown are shown', page.is_visible('.home-hero-button') and page.evaluate("!!document.querySelector('.home-cnc-count')?.offsetParent"))
         check(f'{viewport}: no errors', not problems, '; '.join(problems[:3]))
         page.context.close()
+
+    # 9. On a laptop window the whole dashboard fits one screen; the ranking starts below it.
+    for name, size in (('1536x730', (1536, 730)), ('1366x650', (1366, 650)), ('1440x900', (1440, 900))):
+        qa.VIEWPORTS[name] = {'width': size[0], 'height': size[1]}
+        for label, extra in (('', {}), (' (first visit)', {'state': {'tasks': [], 'events': [], 'focusSessions': [], 'xp': 0, 'profileName': 'Yasmine'}, 'sessions': []})):
+            page, problems = site.workspace(name, **extra)
+            page.wait_for_timeout(600)
+            fit = page.evaluate('''() => { const box = s => document.querySelector(s)?.getBoundingClientRect();
+              return { bottom: Math.round(box('.home-screen').bottom), height: innerHeight, ranking: Math.round(box('.home-extra')?.top ?? 1e6),
+                clipped: [...document.querySelectorAll('.home-card')].filter(c => c.scrollHeight > c.clientHeight + 1 || c.scrollWidth > c.clientWidth + 1).length }; }''')
+            check(f'{name}{label}: dashboard fits one screen', fit['bottom'] <= fit['height'] and not fit['clipped'], fit)
+            check(f'{name}{label}: ranking starts below the screen', fit['ranking'] >= fit['height'], fit)
+            page.context.close()
 
 failed = [r for r in results if not r[1]]
 for name, ok, detail in results:

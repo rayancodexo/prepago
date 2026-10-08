@@ -36,7 +36,7 @@
  function readForm(){const form=document.querySelector('#cockpitSetup');if(!form)return true;if(!form.reportValidity())return false;const d=Object.fromEntries(new FormData(form));settings=safeSettings({...settings,...d,sound:form.elements.sound.checked});return true}
  async function start(kind='work',previous=null){
   if(busy||!ready)return;const gen=generation;if(!previous&&!readForm())return;
-  try{await window.PrepagoSync?.flush();await persistSettings()}catch{error='Réglages non enregistrés. Réessaie quand la connexion est rétablie.';renderFocus();return}
+  try{try{await window.PrepagoSync?.flush()}catch{await window.PrepagoSync?.flush()}await persistSettings()}catch{error='Réglages non enregistrés. Réessaie quand la connexion est rétablie.';renderFocus();return}
   if(gen!==generation)return;if(!state.tasks.some(t=>t.id===settings.taskId))settings.taskId='';if(!state.events.some(t=>t.id===settings.eventId))settings.eventId='';lastSettleAttempt=0;const payload=previous?{...settings,work:previous.focus_duration/60,break:previous.break_duration/60,cycles:previous.cycles,subjectId:previous.subject_id||'',chapterId:previous.chapter_id||'',goal:previous.session_goal,notes:previous.notes,projectId:previous.project_id||'',taskId:previous.task_id||'',eventId:previous.event_id||'',kind,cycleIndex:kind==='break'?previous.cycle_index:previous.cycle_index<previous.cycles?previous.cycle_index+1:1}:{...settings,kind,cycleIndex:1};
   pendingStart||={id:crypto.randomUUID?crypto.randomUUID(): '10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(Number(c)^crypto.getRandomValues(new Uint8Array(1))[0]&15>>Number(c)/4).toString(16))};unlockFocusSound();const ok=await act('start',pendingStart,payload);if(ok){pendingStart=null;breakSkipped=false}
  }

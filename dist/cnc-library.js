@@ -97,7 +97,9 @@
  const renderCncBase=renderCnc;
  renderCnc=function(){
   renderCncBase();const shell=document.querySelector('.cnc-shell');
-  shell.insertAdjacentHTML('afterbegin',`<div class="cnc-library-notice"><span role="status">${error?esc(error):loading?'Chargement de la bibliothèque…':loaded?'Les sujets publiés sont partagés. Vos notes et résultats restent privés.':'Bibliothèque en attente de connexion.'}</span><div><button type="button" class="link-btn" data-cnc-refresh ${loading?'disabled':''}>Actualiser</button>${admin?'<button type="button" class="secondary-btn" data-cnc-manage>Gestion des annales</button>':''}</div></div>`);
+  // The privacy line belongs to the first screen; inside a filière it only shows while loading or on error.
+  const settled=loaded&&!loading&&!error;
+  if(!settled||cncView.screen==='filieres')shell.insertAdjacentHTML('afterbegin',`<div class="cnc-library-note${settled?'':' is-status'}"><span role="status">${error?esc(error):loading?'Chargement de la bibliothèque…':loaded?'Les sujets publiés sont partagés. Vos notes et résultats restent privés.':'Bibliothèque en attente de connexion.'}</span><div><button type="button" class="link-btn" data-cnc-refresh ${loading?'disabled':''}>Actualiser</button>${admin?'<button type="button" class="secondary-btn" data-cnc-manage>Gestion des annales</button>':''}</div></div>`);
   if(cncView.screen!=='paper')return;
   const p=getPaper(cncView.filiere,cncView.subject,cncView.year),record=find(p);if(!record)return;
   const viewer=shell.querySelector('.paper-viewer'),request=++documentRequest,g=generation;

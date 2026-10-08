@@ -1,7 +1,7 @@
 /* Planned and recorded work share one 24-hour calendar. Recorded time is read-only. */
 (() => {
   const core=window.PrepagoCalendarCore;
-  let view=innerWidth<=767?'day':'week',mode='planned',category='all',tipeOnly=false,scrollTop=6*52;
+  let view=innerWidth<=767?'day':'week',mode='planned',category='all',tipeOnly=false,scrollTop=6*52-14;
   const categories={study:'Révisions',class:'Cours',exam:'Examens',sport:'Sport',personal:'Personnel',task:'Tâches'};
   const shortDate=day=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'short'}).format(new Date(day+'T12:00:00'));
   const weekday=day=>new Intl.DateTimeFormat('fr-FR',{weekday:'short'}).format(new Date(day+'T12:00:00'));
@@ -110,7 +110,7 @@
     if('calAddTask' in d){taskEditor();const form=document.querySelector('#modalForm');form.elements.date.value=selectedDay;if(tipeOnly)form.elements.projectId.value=window.PrepagoTipe.ensure().id;}
     if(d.calSession){if(d.calSessionDay&&selectedDay!==d.calSessionDay){selectedDay=d.calSessionDay;render();}const detail=document.getElementById('cal-session-'+d.calSession);if(detail){detail.scrollIntoView({block:'nearest',behavior:'smooth'});detail.classList.add('cal-highlight');setTimeout(()=>detail.classList.remove('cal-highlight'),1500);}}
   });
-  window.addEventListener('prepago:state-replaced',()=>{view=innerWidth<=767?'day':'week';mode='planned';category='all';tipeOnly=false;selectedDay=todayISO();calendarDate=new Date();scrollTop=6*52;});
+  window.addEventListener('prepago:state-replaced',()=>{view=innerWidth<=767?'day':'week';mode='planned';category='all';tipeOnly=false;selectedDay=todayISO();calendarDate=new Date();scrollTop=6*52-14;});
   setInterval(()=>{if(currentPage!=='calendar')return;const now=new Date();document.querySelectorAll('.cal-now-line').forEach(line=>{line.hidden=line.dataset.calNowDay!==todayISO();line.style.top=(now.getHours()*60+now.getMinutes())*52/60+'px';});},60000);
   window.PrepagoCalendar={open(options={}){mode=options.mode || 'planned';tipeOnly=!!options.tipe;category='all';selectedDay=options.day || todayISO();calendarDate=new Date(selectedDay+'T12:00:00');navigate('calendar');},render};
 })();

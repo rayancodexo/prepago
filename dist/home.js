@@ -38,21 +38,6 @@
     return Math.min(180, Math.max(1, minutes || 25));
   }
 
-  /* ---- Header ------------------------------------------------------------------------- */
-  function summaryLine() {
-    const today = todayISO();
-    const tasks = state.tasks.filter(task => task.date === today);
-    const open = tasks.filter(task => !task.done).length;
-    const parts = [];
-    if (!tasks.length) parts.push('Aucune tâche prévue aujourd’hui');
-    else if (!open) parts.push('Toutes tes tâches sont terminées');
-    else parts.push(`${plural(open, 'tâche')} restante${open > 1 ? 's' : ''}`);
-    const events = dashboardUpcomingEvents(today).filter(event => event.date <= today && (event.endDate || event.date) >= today);
-    if (events.length === 1) parts.push(`${events[0].title}${events[0].time && !events[0].allDay ? ` à ${events[0].time}` : ''}`);
-    else if (events.length > 1) parts.push(`${events.length} rendez-vous aujourd’hui`);
-    return parts.join(' · ');
-  }
-
   /* ---- Hero: what to work on now ------------------------------------------------------ */
   function heroModel() {
     const active = window.PrepagoFocus?.snapshot?.().active;
@@ -139,35 +124,20 @@
     </section>`;
   }
 
-  /* ---- First steps (only until the three are done) ------------------------------------ */
-  function onboarding() {
-    const done = [
-      state.subjects.length > 0,
-      state.focusSessions.some(session => Number(session.minutes) > 0),
-      Object.values(state.cnc?.papers || {}).some(paper => paper.done || paper.notes || paper.score !== '' || paper.timerLeft < 14400)
-    ];
-    if (done.every(Boolean)) return '';
-    const steps = [['subjects', 'Ajouter une matière'], ['focus', 'Lancer une session'], ['cnc', 'Ouvrir une annale CNC']];
-    return `<section class="studio-onboarding home-onboarding" aria-labelledby="homeOnboardingTitle">
-      <h2 id="homeOnboardingTitle">Prends tes repères <span class="helper">· ${done.filter(Boolean).length}/3</span></h2>
-      <div class="studio-checklist">${steps.map(([page, label], index) => `<button type="button" data-go="${page}" class="${done[index] ? 'done' : ''}"><span>${done[index] ? '✓' : String(index + 1).padStart(2, '0')}</span>${label}</button>`).join('')}</div>
-    </section>`;
-  }
-
   /* ---- Today's tasks ------------------------------------------------------------------ */
   function todayCard() {
     const tasks = state.tasks.filter(task => task.date === todayISO()).sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
     const done = tasks.filter(task => task.done).length;
-    const rows = tasks.slice(0, 4).map(task => {
+    const rows = tasks.slice(0, 3).map(task => {
       const subject = task.subject ? `<span class="home-chip">${esc(SHORT_SUBJECTS[task.subject] || task.subject)}</span>` : '';
       return `<label class="home-task ${task.done ? 'is-done' : ''}"><input type="checkbox" class="home-check" data-task="${esc(task.id)}" ${task.done ? 'checked' : ''} aria-label="Terminer : ${esc(task.title)}"><span class="home-task-title">${esc(task.title)}</span>${subject}</label>`;
     }).join('');
     const body = tasks.length
-      ? `<div class="home-tasks">${rows}</div>${tasks.length > 4 ? `<button type="button" class="home-link" data-go="tasks">Voir les ${tasks.length} tâches</button>` : ''}
+      ? `<div class="home-tasks">${rows}</div>
          <div class="home-card-foot"><span class="home-bar" role="progressbar" aria-label="Tâches terminées aujourd’hui" aria-valuemin="0" aria-valuemax="${tasks.length}" aria-valuenow="${done}"><i style="width:${done / tasks.length * 100}%"></i></span><span class="home-count">${done} / ${tasks.length}</span></div>`
       : `<p class="home-empty">Aucune tâche prévue aujourd’hui.</p><button type="button" class="home-link" data-task-new>+ Ajouter une tâche</button>`;
     return `<section class="home-card home-today" aria-labelledby="homeTodayTitle">
-      <h2 id="homeTodayTitle"><button type="button" class="home-card-title" data-go="tasks">Aujourd’hui</button></h2>
+      <div class="home-card-head"><h2 id="homeTodayTitle"><button type="button" class="home-card-title" data-go="tasks">Aujourd’hui</button></h2>${tasks.length > 3 ? `<button type="button" class="home-link" data-go="tasks">Voir les ${tasks.length} tâches</button>` : ''}</div>
       ${body}
     </section>`;
   }
@@ -200,9 +170,9 @@
     const peak = Math.max(60, ...values);
     const bars = dates.map((date, index) => {
       const minutes = values[index];
-      const height = minutes > 0 ? Math.max(6, Math.round(minutes / peak * 56)) : 4;
+      const height = minutes > 0 ? `max(6px, ${Math.round(minutes / peak * 100)}%)` : '4px';
       const state_ = date === today ? 'is-today' : date > today ? 'is-future' : '';
-      return `<div class="home-day ${state_} ${minutes > 0 ? 'has-time' : 'is-zero'}" title="${esc(formatDate(dateFromISO(date)))} : ${studyHours(minutes * 60)}"><span class="home-day-track"><i style="height:${height}px"></i></span><small>${DAY_LETTERS[index]}</small></div>`;
+      return `<div class="home-day ${state_} ${minutes > 0 ? 'has-time' : 'is-zero'}" title="${esc(formatDate(dateFromISO(date)))} : ${studyHours(minutes * 60)}"><span class="home-day-track"><i style="height:${height}"></i></span><small>${DAY_LETTERS[index]}</small></div>`;
     }).join('');
     return `<section class="home-card home-hours" aria-labelledby="homeHoursTitle">
       <h2 id="homeHoursTitle"><button type="button" class="home-card-title" data-go="progress">Heures d’étude</button></h2>
@@ -219,10 +189,10 @@
       return `<div class="home-progress-row"><span class="home-progress-name">${esc(subject.name)}</span><span class="home-bar" role="progressbar" aria-label="Progression en ${esc(subject.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${value}"><i style="width:${value}%"></i></span><span class="home-progress-value">${value} %</span></div>`;
     }).join('');
     const body = subjects.length
-      ? `<div class="home-progress-list">${rows}</div>${subjects.length > 4 ? `<button type="button" class="home-link" data-go="progress">Voir les ${subjects.length} matières</button>` : ''}`
+      ? `<div class="home-progress-list">${rows}</div>`
       : `<p class="home-empty">Ajoute une matière pour suivre ta progression.</p><button type="button" class="home-link" data-go="subjects">+ Ajouter une matière</button>`;
     return `<section class="home-card home-progress" aria-labelledby="homeProgressTitle">
-      <h2 id="homeProgressTitle"><button type="button" class="home-card-title" data-go="progress">Progression</button></h2>
+      <div class="home-card-head"><h2 id="homeProgressTitle"><button type="button" class="home-card-title" data-go="progress">Progression</button></h2>${subjects.length > 4 ? `<button type="button" class="home-link" data-go="progress">Voir les ${subjects.length} matières</button>` : ''}</div>
       ${body}
     </section>`;
   }
@@ -266,15 +236,12 @@
   renderOverview = function () {
     const name = firstName();
     document.querySelector('#page').innerHTML = `<div class="home">
-      <header class="home-head">
-        <p class="home-date">${esc(formatDate())}</p>
+      <div class="home-screen">
         <h1 class="home-title">Bonjour${name ? `, ${esc(name)}` : ''}</h1>
-        <p class="home-summary">${esc(summaryLine())}</p>
-      </header>
-      ${onboarding()}
-      ${hero()}
-      <div class="home-row">${todayCard()}${nextCard()}${hoursCard()}</div>
-      <div class="home-row">${progressCard()}${cncCard()}</div>
+        ${hero()}
+        <div class="home-row">${todayCard()}${nextCard()}${hoursCard()}</div>
+        <div class="home-row">${progressCard()}${cncCard()}</div>
+      </div>
       <div class="home-extra"></div>
     </div>`;
   };

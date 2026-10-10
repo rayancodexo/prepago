@@ -387,8 +387,13 @@ body[data-page] #page .matieres-overview .subject-hub-open {
 }
 body[data-page] #page .matieres-overview .subject-hub-open > * { grid-column: 1 / -1; min-width: 0; }
 body[data-page] #page .matieres-overview .subject-hub-top { grid-column: 1; grid-row: 1 / span 2; align-self: center; margin: 0; }
-body[data-page] #page .matieres-overview .subject-hub-top .subject-symbol { width: 40px; height: 40px; border-radius: 10px; background: var(--brand-tint) !important; color: var(--brand-hover) !important; font-size: 17px; }
-body[data-page] #page .matieres-overview .subject-hub-top .subject-symbol .icon-svg { width: 18px; height: 18px; filter: invert(24%) sepia(98%) saturate(4300%) hue-rotate(218deg) brightness(92%); }
+body[data-page] #page .matieres-overview .subject-hub-top .subject-symbol { width: 40px; height: 40px; border-radius: 10px; background: color-mix(in srgb, var(--subject-accent, var(--brand)) 13%, var(--surface)) !important; color: var(--subject-accent, var(--brand)) !important; font-size: 17px; }
+/* The icon takes the subject's colour: the SVG is used as a mask over that colour. */
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg { width: 20px; height: 20px; filter: none; opacity: 1; object-position: -999px 0; background: var(--subject-accent, var(--brand)); -webkit-mask: var(--sym-icon) center / contain no-repeat; mask: var(--sym-icon) center / contain no-repeat; }
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg[src$="book-open.svg"] { --sym-icon: url("/icons/book-open.svg"); }
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg[src$="sigma.svg"] { --sym-icon: url("/icons/sigma.svg"); }
+/* Cards stay simple: name, chapters and progress. The whole card opens the subject. */
+body[data-page] #page .matieres-overview :is(.studio-next-chapter, .subject-card-link) { display: none !important; }
 body[data-page] #page .matieres-overview .subject-hub-open > h2 { grid-column: 2; grid-row: 1; margin: 0; padding-right: 32px; color: var(--ink); font-size: 16px; line-height: 22px; font-weight: var(--font-semibold); letter-spacing: -.015em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 body[data-page] #page .matieres-overview .subject-hub-open > p { grid-column: 2; grid-row: 2; margin: 0; color: var(--secondary); font-size: 13px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 body[data-page] #page .matieres-overview .subject-separator { margin: 0; padding: 0 6px; color: var(--secondary); }
@@ -404,7 +409,7 @@ body[data-page] #page .matieres-overview .subject-menu { top: 20px; right: 16px;
 /* List view: one subject per line. */
 @media (min-width: 768px) {
   body[data-page] #page .matieres-overview .subject-hub-grid.is-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(150px, 1.1fr) minmax(130px, 1fr) minmax(0, 1.5fr) auto; align-items: center; gap: 0 20px; padding: 14px 64px 14px 20px; }
+  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(180px, 1fr) minmax(200px, 1.2fr); align-items: center; gap: 0 24px; padding: 14px 64px 14px 20px; }
   body[data-page] #page .matieres-overview .is-list .subject-hub-open > h2 { padding-right: 0; }
   body[data-page] #page .matieres-overview .is-list .subject-progress-line { grid-column: 3; grid-row: 1 / span 2; margin: 0; }
   body[data-page] #page .matieres-overview .is-list .studio-next-chapter { grid-column: 4; grid-row: 1 / span 2; margin: 0; }
@@ -412,7 +417,7 @@ body[data-page] #page .matieres-overview .subject-menu { top: 20px; right: 16px;
   body[data-page] #page .matieres-overview .is-list .subject-menu { top: 50%; right: 16px; transform: translateY(-50%); }
 }
 @media (min-width: 768px) and (max-width: 1099px) {
-  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(150px, 1.2fr) minmax(120px, 1fr) auto; }
+  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(150px, 1fr) minmax(140px, 1fr); }
   body[data-page] #page .matieres-overview .is-list .studio-next-chapter { display: none; }
   body[data-page] #page .matieres-overview .is-list .subject-card-link { grid-column: 4; }
 }

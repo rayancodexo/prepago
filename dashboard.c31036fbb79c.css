@@ -1,0 +1,209 @@
+/* Dashboard presentation. All figures come from the existing study workspace. */
+body .dashboard-layout {
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 28px;
+  align-items: start;
+}
+body .dashboard-heading { margin: 0 0 26px; padding: 0; }
+body .dashboard-heading .dashboard-panel-kicker {
+  display: block;
+  color: var(--secondary);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  margin: 0 0 8px;
+  text-transform: capitalize;
+}
+body .dashboard-heading h1 {
+  margin: 0;
+  font-size: clamp(28px, 2.8vw, 36px);
+  line-height: 1.2;
+  font-weight: var(--font-semibold);
+  letter-spacing: -.04em;
+}
+body .dashboard-heading > p { margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: var(--secondary); }
+body .dashboard-study-chart {
+  --study-plot-height: 248px;
+  padding: 26px;
+  margin: 0 0 16px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+}
+body .study-chart-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin: 0; }
+body .study-chart-head h2 { margin: 0; font-size: var(--text-panel); font-weight: var(--font-semibold); line-height: 1.4; letter-spacing: -.025em; }
+.study-chart-period { margin: 5px 0 0; font-size: var(--text-label); color: var(--secondary); line-height: 1.5; text-transform: capitalize; }
+body .study-chart-actions { display: block; flex-shrink: 0; width: auto; margin: 0; }
+body .dashboard-study-chart .chart-range {
+  display: flex;
+  width: auto;
+  padding: 3px;
+  gap: 2px;
+  background: var(--background);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+}
+body .dashboard-study-chart .chart-range button {
+  min-width: 70px;
+  min-height: 36px;
+  height: auto;
+  padding: 7px 10px;
+  font-size: var(--text-label);
+  color: var(--secondary);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+body .dashboard-study-chart .chart-range button.active { background: var(--surface); color: var(--brand); box-shadow: 0 1px 3px #0b12200d; }
+.study-chart-total { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.study-chart-total > strong { color: var(--ink); font-size: 38px; font-weight: var(--font-semibold); line-height: 1.15; letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+.study-chart-total > span { color: var(--secondary); font-size: var(--text-label); line-height: 1.5; }
+.study-chart-total .study-chart-legend { margin-left: auto; display: flex; align-items: center; gap: 7px; }
+.study-chart-legend i { width: 7px; height: 7px; background: var(--brand); border-radius: 2px; }
+.study-chart-plot { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 8px; position: relative; margin-top: 22px; }
+.study-chart-axis { display: flex; flex-direction: column; justify-content: space-between; height: calc(var(--study-plot-height) - 52px); margin-top: 24px; color: var(--secondary); font-size: var(--text-xs); line-height: 0; text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.study-chart-guides { position: absolute; inset: 24px 0 28px 50px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.study-chart-guides i { display: block; width: 100%; border-top: 1px dashed var(--hairline); }
+.study-chart-guides i:last-child { border-top-style: solid; }
+body .dashboard-study-chart .study-chart-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--study-days, 7), minmax(0, 1fr));
+  align-items: stretch;
+  height: var(--study-plot-height);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+body .dashboard-study-chart .study-chart-day { display: grid; grid-template-rows: 24px minmax(0, 1fr) 28px; height: 100%; justify-items: center; align-items: end; min-width: 0; }
+body .dashboard-study-chart .study-chart-value { font-size: var(--text-xs); line-height: 20px; font-variant-numeric: tabular-nums; color: var(--secondary); white-space: nowrap; }
+body .dashboard-study-chart .study-chart-track { height: 100%; width: 100%; max-width: 38px; border: 0; border-radius: 0; background: none; }
+body .dashboard-study-chart .study-chart-track i { min-height: 0; max-width: none; width: 100%; background: #b8cef9; border-radius: 5px 5px 0 0; }
+body .dashboard-study-chart .is-today .study-chart-track i { background: var(--brand); }
+body .dashboard-study-chart .study-chart-day:hover .study-chart-track i { background: #6f9dea; }
+body .dashboard-study-chart .study-chart-day.is-today:hover .study-chart-track i { background: var(--brand-hover); }
+body .dashboard-study-chart .study-chart-day > small { align-self: end; display: block; font-size: var(--text-xs); line-height: 22px; color: var(--secondary); text-transform: capitalize; padding: 0 3px; border-radius: 5px; }
+body .dashboard-study-chart .study-chart-day.is-today > small { color: var(--brand); font-weight: var(--font-semibold); background: var(--brand-tint); }
+body .dashboard-study-chart .study-chart-day > .is-unlabelled { visibility: hidden; }
+body .dashboard-study-chart .study-chart-grid.is-month { gap: 4px; }
+body .dashboard-study-chart .is-month .study-chart-value { visibility: hidden; }
+body .dashboard-study-chart .is-month .study-chart-track { max-width: 14px; }
+body .dashboard-study-chart .is-month .study-chart-track i { border-radius: 3px 3px 0 0; }
+.study-chart-insights { display: flex; gap: 28px; align-items: center; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hairline); }
+.study-chart-insights > div > span { display: block; color: var(--secondary); font-size: var(--text-xs); line-height: 1.5; }
+.study-chart-insights strong { display: block; margin-top: 5px; color: var(--ink); font-size: var(--text-panel); font-weight: var(--font-semibold); line-height: 1.4; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.study-chart-insights strong small { font-size: var(--text-sm); color: var(--secondary); font-weight: var(--font-regular); }
+body .study-chart-insights .link-btn { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: var(--text-label); min-height: 40px; }
+.study-chart-insights .icon-svg { width: 16px; height: 16px; }
+.study-chart-empty-note { font-size: var(--text-label); line-height: 1.5; margin: 12px 0 0; color: var(--secondary); }
+.study-chart-details { margin-top: 12px; color: var(--secondary); font-size: var(--text-label); line-height: 1.5; }
+.study-chart-details summary { cursor: pointer; min-height: 32px; padding: 6px 0; width: fit-content; }
+.study-chart-table-wrap { max-height: 280px; overflow: auto; margin-top: 8px; border: 1px solid var(--hairline); border-radius: 8px; }
+.study-chart-details table { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--text-sm); text-align: left; }
+.study-chart-details caption { padding: 10px 12px; text-align: left; color: var(--secondary); font-size: var(--text-xs); border-bottom: 1px solid var(--hairline); }
+.study-chart-details th, .study-chart-details td { padding: 10px 12px; font-weight: var(--font-regular); border-bottom: 1px solid var(--hairline); }
+.study-chart-details thead th { font-weight: var(--font-medium); background: var(--background); }
+.study-chart-details td, .study-chart-details th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.study-chart-details .is-today { background: var(--brand-tint); }
+.study-chart-details tbody tr:last-child > * { border-bottom: 0; }
+body .dashboard-layout .dashboard-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 0 0 20px; border: 0; border-radius: 0; background: none; overflow: visible; }
+body .dashboard-layout .dashboard-metric { display: block; padding: 18px 16px; min-height: 122px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+body .dashboard-layout .dashboard-metric:hover { border-color: #b8cef9; background: #f8faff; }
+body .dashboard-layout .dashboard-metric small { min-height: 0; margin: 0; font-size: var(--text-label); line-height: 1.5; color: var(--secondary); }
+body .dashboard-layout .dashboard-metric strong { font-size: 27px; font-weight: var(--font-semibold); line-height: 1.25; letter-spacing: -.035em; margin: 10px 0 0; font-variant-numeric: tabular-nums; }
+body .dashboard-layout .dashboard-metric-unit { font-size: .65em; color: var(--secondary); font-weight: var(--font-regular); letter-spacing: 0; }
+body .dashboard-layout .dashboard-metric em { display: block; margin-top: 5px; font-size: var(--text-xs); line-height: 1.5; color: var(--secondary); }
+body .dashboard-layout .next-action { margin: 0; padding: 22px; gap: 20px; border-radius: 14px; border: 1px solid #d7e3fb; background: #f0f5ff; }
+body .dashboard-layout .next-action > div { min-width: 0; }
+body .dashboard-layout .next-action h2 { font-size: var(--text-lg); line-height: 1.35; margin: 6px 0; overflow-wrap: anywhere; }
+body .dashboard-layout .next-action .dashboard-panel-kicker { color: var(--brand); font-size: var(--text-label); }
+body .dashboard-layout .next-action p { font-size: var(--text-sm); line-height: 1.5; }
+body .dashboard-layout .next-action > .primary-btn { font-size: var(--text-sm); }
+body .dashboard-layout .day-rail { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 0; margin: 0; border: 0; }
+body .dashboard-layout .dashboard-panel { padding: 22px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); margin: 0; }
+body .dashboard-layout .dashboard-panel-head { display: flex; align-items: start; gap: 12px; margin: 0 0 14px; }
+body .dashboard-layout .dashboard-panel-head .dashboard-panel-kicker { display: block; font-size: var(--text-xs); font-weight: var(--font-medium); letter-spacing: .06em; color: var(--secondary); line-height: 1.5; margin-bottom: 7px; }
+body .dashboard-layout .dashboard-panel-head h2 { font-size: 17px; line-height: 1.4; font-weight: var(--font-semibold); letter-spacing: -.025em; }
+body .dashboard-layout .dashboard-panel-head h2 small { font-size: var(--text-xs); color: var(--secondary); background: var(--background); border-radius: 5px; padding: 2px 6px; margin-left: 4px; }
+body .dashboard-layout .dashboard-panel-head > .link-btn { min-height: 32px; padding: 0; font-size: var(--text-xs); color: var(--secondary); }
+body .dashboard-layout .dashboard-task { padding: 15px 0; gap: 12px; align-items: start; }
+body .dashboard-layout .dashboard-task input { width: 18px; height: 18px; flex: 0 0 18px; margin: 2px 0 0; accent-color: var(--brand); }
+body .dashboard-layout .dashboard-task-copy { min-width: 0; }
+body .dashboard-layout .dashboard-task-copy strong { font-size: var(--text-sm); line-height: 1.5; font-weight: var(--font-medium); overflow-wrap: anywhere; }
+body .dashboard-layout .dashboard-task-copy small { margin-top: 5px; font-size: var(--text-xs); line-height: 1.5; flex-wrap: wrap; gap: 6px; }
+body .dashboard-layout .dashboard-task.is-done strong { color: var(--muted); }
+body .dashboard-layout .dashboard-event { gap: 12px; padding: 14px 0; }
+body .dashboard-layout .dashboard-event-date { min-width: 42px; width: 42px; flex-basis: 42px; border-radius: 8px; background: var(--background); border-color: transparent; }
+body .dashboard-layout .dashboard-event-copy { min-width: 0; }
+body .dashboard-layout .dashboard-event-copy strong { font-size: var(--text-sm); line-height: 1.5; overflow-wrap: anywhere; }
+body .dashboard-layout .dashboard-event-copy small { font-size: var(--text-xs); margin-top: 4px; }
+body .dashboard-layout .dashboard-panel-list > :last-child { border-bottom: 0; }
+body .dashboard-layout .dashboard-add { display: block; width: 100%; min-height: 44px; margin-top: 8px; padding: 12px 0 0; border-top: 1px solid var(--hairline); text-align: left; font-size: var(--text-label); }
+body .dashboard-layout .dashboard-panel-empty { padding: 14px 0 4px; }
+body .dashboard-layout .dashboard-panel-empty p { font-size: var(--text-sm); line-height: 1.6; margin: 6px 0 12px; }
+body .dashboard-layout .dashboard-panel-empty .link-btn { min-height: 36px; font-size: var(--text-sm); }
+body .dashboard-layout .studio-onboarding { margin: 22px 0 0; padding: 20px 0 0; }
+body .dashboard-layout .weekly-xp-card { margin-top: 24px; }
+body .dashboard-layout :is(button, input, summary):focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+@media (min-width: 1536px) {
+  body .dashboard-layout { grid-template-columns: minmax(0, 1fr) 340px; gap: 32px; }
+}
+@media (max-width: 1279px) {
+  body .dashboard-layout { grid-template-columns: minmax(0, 1fr) 280px; gap: 20px; }
+  body .dashboard-layout .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body .dashboard-layout .dashboard-metric { min-height: 112px; }
+  body .dashboard-layout .dashboard-panel { padding: 18px; }
+  body .dashboard-layout .next-action { flex-wrap: wrap; }
+  body .dashboard-layout .next-action > .primary-btn { flex-shrink: 1; }
+  body .dashboard-study-chart { padding: 22px; }
+  .study-chart-insights { gap: 20px; flex-wrap: wrap; }
+}
+@media (max-width: 1023px) and (min-width: 768px) {
+  body .dashboard-layout { grid-template-columns: 1fr; gap: 24px; }
+  body .dashboard-layout .day-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  body .dashboard-layout .dashboard-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body .dashboard-layout .dashboard-metric { padding: 16px 12px; }
+  body .dashboard-layout .dashboard-metric strong { font-size: 24px; }
+}
+@media (max-width: 767px) {
+  body .dashboard-layout { display: flex; gap: 0; }
+  body .dashboard-layout > .desk-main, body .dashboard-layout > .day-rail { display: contents; }
+  body .dashboard-heading { order: 0; margin-bottom: 22px; }
+  body .dashboard-heading h1 { font-size: clamp(30px, 9.2vw, 38px); line-height: 1.12; }
+  body .dashboard-heading > p { display: none; }
+  body .dashboard-study-chart { order: 1; --study-plot-height: 214px; padding: 18px 16px; margin: 0 0 18px; border-radius: 14px; }
+  body .study-chart-head { flex-wrap: wrap; gap: 12px; }
+  body .study-chart-head h2 { font-size: 17px; }
+  body .dashboard-study-chart .chart-range button { min-width: 62px; min-height: 40px; padding: 6px 9px; font-size: var(--text-xs); }
+  .study-chart-total { margin-top: 18px; }
+  .study-chart-total > strong { font-size: var(--text-greeting); }
+  .study-chart-total .study-chart-legend { font-size: var(--text-xs); }
+  body .dashboard-study-chart .study-chart-grid { gap: 8px; }
+  body .dashboard-study-chart .study-chart-grid.is-month { gap: 2px; }
+  body .dashboard-study-chart .study-chart-value { visibility: hidden; }
+  .study-chart-insights { gap: 14px 24px; margin-top: 18px; padding-top: 16px; }
+  body .study-chart-insights .link-btn { margin-left: 0; min-height: 44px; font-size: var(--text-sm); flex: 1 0 100%; }
+  .study-chart-details summary { min-height: 40px; padding: 10px 0; }
+  body .dashboard-layout .dashboard-metrics { order: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 0 20px; }
+  body .dashboard-layout .dashboard-metric { padding: 14px; min-height: 104px; }
+  body .dashboard-layout .dashboard-metric:nth-child(even) { padding-left: 14px; }
+  body .dashboard-layout .dashboard-metric strong { font-size: 27px; margin-top: 7px; }
+  body .dashboard-layout .dashboard-metric em { display: none; }
+  body .dashboard-layout .next-action { display: none; }
+  body .mobile-focus-card { order: 3; margin-bottom: 20px; }
+  body .mobile-revisions { order: 4; margin: 0 0 20px; padding-bottom: 20px; }
+  body .dashboard-layout .dashboard-tasks { order: 5; margin: 0 0 20px; padding: 18px; }
+  body .dashboard-layout .dashboard-events { order: 6; margin: 0 0 20px; padding: 18px; }
+  body .dashboard-layout .studio-onboarding { order: 7; margin: 0 0 24px; padding-top: 4px; border: 0; }
+  body .dashboard-layout .weekly-xp-card { order: 8; margin-top: 0; }
+}
+@media (max-width: 359px) {
+  .study-chart-total .study-chart-legend { flex-basis: 100%; margin-top: 4px; }
+  body .dashboard-layout .dashboard-metric { padding: 12px; }
+  body .dashboard-layout .dashboard-metric:nth-child(even) { padding-left: 12px; }
+  body .dashboard-layout .dashboard-metric strong { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .dashboard-study-chart .study-chart-track i { transition: none; }
+}

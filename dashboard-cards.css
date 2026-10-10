@@ -1,0 +1,22 @@
+/* Workspace shell details shared by every page. The Accueil layout itself lives in home.css. */
+
+/* ---- Sidebar: the current page is a tinted pill, not a solid block ------------------ */
+body #sidebar .nav-item.active,
+body[data-page] #sidebar .nav-item.active {
+  background: var(--brand-tint);
+  color: var(--brand-hover);
+  font-weight: var(--font-semibold);
+}
+body #sidebar .nav-item.active:hover,
+body[data-page] #sidebar .nav-item.active:hover { background: #E1EBFF; color: var(--brand-hover); }
+body #sidebar .nav-item.active .icon-svg,
+body[data-page] #sidebar .nav-item.active .icon-svg {
+  /* Black strokes recoloured to the brand blue. */
+  filter: invert(24%) sepia(98%) saturate(4300%) hue-rotate(218deg) brightness(92%);
+  opacity: 1;
+}
+body #sidebar .nav-item:not(.active):hover { background: var(--surface-hover); color: var(--ink); }
+
+/* ---- Phone header: one wordmark, no white patch behind it --------------------------- */
+body[data-page] .topbar-brand { background: transparent; }
+body[data-page] .topbar-brand .prepago-wordmark { text-transform: none; }

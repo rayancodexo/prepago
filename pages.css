@@ -1,0 +1,651 @@
+/* Workspace pages in the Accueil language (see home.css): page background, white cards with a
+   16px radius and a hairline border, 22px page titles, one accent colour. Loaded last, so the
+   `body[data-page] #page` prefix is enough to win over the older page stylesheets. */
+
+/* ==== Shared ============================================================================ */
+body[data-page] #page {
+  --text-title: 22px;
+  --leading-title: 28px;
+  --tracking-title: -.025em;
+  --text-panel: 15px;
+  --leading-heading: 24px;
+  --tracking-heading: -.01em;
+  --card-radius: 16px;
+  --control-radius: 10px;
+  --chip: #F1F4F9;
+  --bar-soft: #C6D8FB;
+}
+[data-theme="dark"] body[data-page] #page { --chip: var(--surface-hover); --bar-soft: #34518A; }
+
+/* Page header: the title alone, actions on the right. */
+body[data-page] #page :is(.fc-heading, .cal-header, .matieres-hero, .section-head, .work-heading) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  min-height: 40px;
+  margin: 0 0 20px;
+  padding: 0;
+}
+body[data-page] #page :is(.fc-heading, .cal-header, .matieres-hero, .section-head, .work-heading) h1 { margin: 0; color: var(--ink); }
+body[data-page] #page :is(.fc-heading, .cal-header, .section-head, .work-heading) > div > p,
+body[data-page] #page .matieres-hero-copy > p { display: none; }
+
+/* Buttons. */
+body[data-page]:not(.focus-cockpit-immersive) #page :is(.primary-btn, .secondary-btn) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--control-radius);
+  font-size: var(--text-sm);
+  line-height: 20px;
+  box-shadow: none;
+  transition: background-color var(--motion), border-color var(--motion);
+}
+body[data-page]:not(.focus-cockpit-immersive) #page .primary-btn { border: 1px solid var(--brand-solid); background: var(--brand-solid); color: #fff; font-weight: var(--font-semibold); }
+body[data-page]:not(.focus-cockpit-immersive) #page .primary-btn:hover { border-color: var(--brand-solid-hover); background: var(--brand-solid-hover); }
+body[data-page] #page .secondary-btn { border: 1px solid var(--hairline); background: var(--surface); color: var(--ink); font-weight: var(--font-medium); }
+body[data-page] #page .secondary-btn:hover { background: var(--surface-hover); }
+body[data-page] #page .link-btn { color: var(--brand); font-weight: var(--font-medium); }
+body[data-page] #page .link-btn:hover { color: var(--brand-hover); }
+
+/* Cards. */
+body[data-page] #page :is(.card, .fc-card, .activity-panel, .connected-panel, .month-card, .task-work-card, .project-card) {
+  border: 1px solid var(--hairline);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+/* Segmented switches. */
+body[data-page] #page :is(.cal-mode-switch, .cal-view-switch, .matieres-tabs, .matieres-view) {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--control-radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+body[data-page] #page :is(.cal-mode-switch, .cal-view-switch, .matieres-tabs, .matieres-view) button {
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--secondary);
+  font-size: var(--text-sm);
+  line-height: 20px;
+  font-weight: var(--font-medium);
+}
+body[data-page] #page :is(.cal-mode-switch, .cal-view-switch, .matieres-tabs, .matieres-view) button:hover { color: var(--ink); }
+body[data-page] #page :is(.cal-mode-switch, .cal-view-switch, .matieres-tabs, .matieres-view) button.active { background: var(--brand-tint); color: var(--brand-hover); font-weight: var(--font-semibold); box-shadow: none; }
+[data-theme="dark"] body[data-page] #page :is(.cal-mode-switch, .cal-view-switch, .matieres-tabs, .matieres-view) button.active { color: var(--brand); }
+
+/* Selects and small icon buttons. */
+body[data-page] #page .studio-select-trigger { min-height: 40px; border-color: var(--hairline); border-radius: var(--control-radius); }
+body[data-page] #page .icon-btn { border-color: var(--hairline); border-radius: var(--control-radius); background: var(--surface); }
+body[data-page] #page .icon-btn:hover { background: var(--surface-hover); }
+
+/* Thin progress lines, as on Accueil. */
+body[data-page] #page :is(.progress-bar, .fc-progress) { height: 4px; border-radius: 2px; background: var(--hairline); overflow: hidden; }
+body[data-page] #page :is(.progress-fill, .fc-progress > span) { height: 4px; border-radius: 2px; background: var(--brand-solid); }
+
+/* ==== Concentration ===================================================================== */
+body[data-page] #page .focus-cockpit { color: var(--ink); font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .fc-connection { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .fc-workspace { grid-template-columns: minmax(0, 1fr) 328px; gap: 24px; align-items: stretch; }
+body[data-page] #page .fc-main-column { display: flex; flex-direction: column; align-items: stretch; gap: 24px; min-width: 0; }
+body[data-page] #page .focus-cockpit .fc-card { padding: 24px; }
+body[data-page] #page .fc-card-title { margin: 0 0 12px; }
+body[data-page] #page .fc-card-title h2 { margin: 0; color: var(--ink); }
+body[data-page] #page .focus-cockpit .fc-eyebrow { display: none; }
+body[data-page] #page .focus-cockpit .fc-caption { color: var(--secondary); font-size: 12px; line-height: 18px; }
+
+/* Timer card: label, subject, ring, one clear action. */
+body[data-page] #page .focus-cockpit .fc-timer { display: flex; flex: 1 1 auto; flex-direction: column; padding: 24px 32px; }
+body[data-page] #page .fc-mode { color: var(--secondary); font-size: 11px; line-height: 16px; font-weight: var(--font-semibold); letter-spacing: .08em; text-transform: uppercase; }
+body[data-page] #page .fc-immersive {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--secondary);
+  font-size: 13px !important;
+  font-weight: var(--font-medium);
+}
+body[data-page] #page .fc-immersive:hover { background: var(--surface-hover); color: var(--ink); }
+body[data-page] #page .fc-immersive .icon-svg { width: 16px; height: 16px; opacity: .7; }
+body[data-page] #page .fc-session-context { margin: 8px 0 0; text-align: center; }
+body[data-page] #page .fc-session-context > span { color: var(--brand); font-size: 13px; line-height: 20px; font-weight: var(--font-semibold); }
+body[data-page] #page .fc-session-context h2 { margin: 2px 0 0; color: var(--ink); font-size: 20px; line-height: 26px; font-weight: var(--font-bold); letter-spacing: -.02em; text-wrap: balance; }
+body[data-page] #page .fc-clock-wrap { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; padding: 16px 0 0; }
+body[data-page] #page .fc-dial { position: relative; width: clamp(168px, calc(100vh - 536px), 232px); aspect-ratio: 1; }
+body[data-page] #page .fc-dial svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+body[data-page] #page .fc-dial circle { fill: none; stroke-width: 3; }
+body[data-page] #page .fc-dial-track { stroke: var(--hairline); }
+body[data-page] #page .fc-dial-value { stroke: var(--brand-solid); stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+body[data-page] #page .fc-dial .fc-clock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(40px, calc((100vh - 536px) * .25), 56px);
+  line-height: 1;
+  font-weight: var(--font-semibold);
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+body[data-page] #page #fcTimerState { margin: 12px 0 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .fc-timer-actions { gap: 12px; margin-top: 12px; }
+body[data-page]:not(.focus-cockpit-immersive) #page .fc-timer-actions :is(.primary-btn, .secondary-btn) { min-width: 160px; min-height: 48px; padding: 0 24px; border-radius: 12px; font-size: 15px; }
+body[data-page]:not(.focus-cockpit-immersive) #page .fc-timer-actions .primary-btn { border-color: var(--brand-solid); background: var(--brand-solid); color: #fff; }
+body[data-page]:not(.focus-cockpit-immersive) #page .fc-timer-actions .primary-btn:hover { border-color: var(--brand-solid-hover); background: var(--brand-solid-hover); }
+body[data-page] #page .fc-goal { margin-top: 16px; padding: 14px 0 0; border-top: 1px solid var(--hairline); }
+body[data-page] #page .fc-goal > span { color: var(--secondary); font-size: 11px; line-height: 16px; font-weight: var(--font-semibold); letter-spacing: .08em; text-transform: uppercase; }
+body[data-page] #page .fc-goal > p { margin-top: 4px; color: var(--ink); font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .fc-timer-foot { margin: 6px auto 0 !important; color: var(--secondary); font-size: 12px !important; line-height: 18px; }
+body[data-page] #page .fc-timer.is-break { border-color: var(--hairline); background: var(--surface); }
+body[data-page] #page .fc-timer.is-break .fc-clock { color: var(--ink); }
+body[data-page] #page .fc-timer.is-break .fc-dial-value { stroke: var(--success); }
+body[data-page] #page .fc-timer.is-break .fc-session-context > span { color: var(--success); }
+
+/* Today. */
+body[data-page] #page .fc-today { flex: 0 0 auto; }
+body[data-page] #page .fc-today .fc-card-title { margin-bottom: 4px; }
+body[data-page] #page .fc-streak { padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .fc-today-number { gap: 8px; color: var(--ink); font-size: 28px; line-height: 36px; font-weight: var(--font-bold); letter-spacing: -.03em; }
+body[data-page] #page .fc-today-number > span { color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-regular); letter-spacing: 0; }
+body[data-page] #page .fc-today-meta { margin: 12px 0 8px; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .fc-today-meta strong { color: var(--secondary); font-weight: var(--font-medium); font-variant-numeric: tabular-nums; }
+body[data-page] #page .fc-text-button { padding: 12px 0 0; color: var(--brand); font-size: 13px !important; line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page .fc-text-button:hover { color: var(--brand-hover); text-decoration: underline; text-underline-offset: 3px; }
+body[data-page] #page .fc-text-button .icon-svg { display: none; }
+body[data-page] #page .fc-today > .fc-caption { margin-top: 4px; }
+
+/* Session set-up. */
+body[data-page] #page .fc-setup .fc-card-title { align-items: center; margin-bottom: 16px; }
+body[data-page] #page .focus-cockpit legend,
+body[data-page] #page .focus-cockpit label { margin-bottom: 12px; color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page .focus-cockpit legend { margin-bottom: 8px; }
+body[data-page] #page .fc-presets { gap: 8px; margin-bottom: 16px; }
+body[data-page] #page .fc-presets button { padding: 10px 12px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--ink); }
+body[data-page] #page .fc-presets button:hover { background: var(--surface-hover); }
+body[data-page] #page .fc-presets button.selected { border-color: var(--brand-solid); background: var(--brand-tint); color: var(--brand-hover); }
+body[data-page] #page .fc-presets strong { font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-semibold); }
+body[data-page] #page .fc-presets button span { margin-top: 0; color: var(--secondary); font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; }
+body[data-page] #page .focus-cockpit :is(input:not([type=checkbox]), select, textarea) { min-height: 40px; margin-top: 4px; border: 1px solid var(--hairline); border-radius: var(--control-radius); color: var(--ink); }
+body[data-page] #page .focus-cockpit .studio-control { margin-top: 4px; }
+body[data-page] #page .fc-note { margin-bottom: 12px; padding-bottom: 12px; border-color: var(--hairline); }
+body[data-page] #page .fc-note summary { color: var(--secondary); font-size: 13px; }
+body[data-page] #page .focus-cockpit .fc-sound { margin: 0 0 12px; color: var(--ink); font-size: 13px; }
+body[data-page] #page .fc-setup .fc-caption { margin-top: 12px; }
+
+/* Week chart and breakdown: the same bars as "Heures d'étude" on Accueil. */
+body[data-page] #page .fc-analytics { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+body[data-page] #page .fc-analytics > .fc-card { display: flex; flex-direction: column; }
+body[data-page] #page .fc-analytics .fc-card-title { margin-bottom: 4px; }
+body[data-page] #page .fc-analytics .fc-card-title > .icon-svg { display: none; }
+body[data-page] #page .fc-week-total { gap: 8px; }
+body[data-page] #page .fc-week-total strong { color: var(--ink); font-size: 28px; line-height: 36px; font-weight: var(--font-bold); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+body[data-page] #page .fc-week-total > span { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .fc-chart { height: auto; gap: 12px; margin-top: 16px; }
+body[data-page] #page .fc-bar { gap: 6px; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .fc-bar-value { color: var(--secondary); font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; }
+body[data-page] #page .fc-bar-track { justify-content: center; width: 100%; max-width: none; height: 96px; border: 0; border-radius: 0; background: transparent; }
+body[data-page] #page .fc-bar-track > span { width: 22px; max-width: 100%; min-height: 2px; border-radius: 6px 6px 2px 2px; background: var(--bar-soft); }
+body[data-page] #page .fc-bar-track > span.today { background: var(--brand-solid); }
+body[data-page] #page .fc-bar-track > span[style*="height:0%"] { border-radius: 2px; background: var(--hairline); }
+body[data-page] #page .fc-bar:has(.today) > span:last-child { color: var(--ink); font-weight: var(--font-semibold); }
+body[data-page] #page .fc-breakdown { gap: 12px; margin-top: 12px; }
+body[data-page] #page .fc-breakdown-label { margin-bottom: 6px; font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .fc-breakdown-label strong { color: var(--ink); font-weight: var(--font-regular); }
+body[data-page] #page .fc-breakdown-label > span { color: var(--secondary); font-size: 13px; font-weight: var(--font-medium); font-variant-numeric: tabular-nums; }
+body[data-page] #page .fc-breakdown + .fc-caption { margin-top: auto; padding-top: 16px; }
+
+/* History. */
+body[data-page] #page .fc-history { margin-top: 24px; }
+body[data-page] #page .fc-history .fc-card-title { margin-bottom: 16px; }
+body[data-page] #page .fc-history-metrics { gap: 24px; margin: 0; padding: 20px 0; }
+body[data-page] #page .fc-history-metrics > div { border-color: var(--hairline); }
+body[data-page] #page .fc-history-metrics strong { color: var(--ink); font-size: 22px; line-height: 28px; font-weight: var(--font-bold); letter-spacing: -.02em; }
+body[data-page] #page .fc-history-metrics span { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .fc-session { min-height: 56px; padding: 10px 0; border-color: var(--hairline); }
+body[data-page] #page .fc-session-symbol { display: none; }
+body[data-page] #page .fc-session-copy > strong { color: var(--ink); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page .fc-session-copy > span,
+body[data-page] #page .fc-session-time span { margin-top: 0; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .fc-session-time strong { color: var(--ink); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-medium); font-variant-numeric: tabular-nums; }
+body[data-page] #page .fc-status { padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .fc-status.completed { background: var(--success-tint); color: var(--success); }
+body[data-page] #page .fc-session .icon-btn { width: 32px; height: 32px; border-color: transparent; background: transparent; opacity: .6; }
+body[data-page] #page .fc-session .icon-btn:hover { background: var(--surface-hover); opacity: 1; }
+body[data-page] #page .fc-history > .fc-caption { margin-top: 12px; }
+
+@media (max-width: 1099px) {
+  body[data-page] #page .fc-workspace { display: flex; flex-direction: column; }
+  body[data-page] #page .fc-analytics { grid-template-columns: minmax(0, 1fr); }
+  body[data-page] #page .fc-dial { width: 208px; }
+  body[data-page] #page .fc-dial .fc-clock { font-size: 50px; }
+}
+@media (max-width: 767px) {
+  body[data-page] #page :is(.fc-heading, .cal-header, .matieres-hero, .section-head, .work-heading) { margin-bottom: 16px; }
+  body[data-page] #page .fc-workspace, body[data-page] #page .fc-main-column { gap: 16px; }
+  body[data-page] #page .fc-analytics, body[data-page] #page .fc-history { gap: 16px; margin-top: 16px; }
+  body[data-page] #page .focus-cockpit .fc-card, body[data-page] #page .focus-cockpit .fc-timer { padding: 20px !important; }
+  body[data-page] #page .fc-dial { width: 192px; }
+  body[data-page] #page .fc-dial .fc-clock { font-size: 46px; }
+  body[data-page]:not(.focus-cockpit-immersive) #page .fc-timer-actions :is(.primary-btn, .secondary-btn) { flex: 1 1 140px; min-width: 0; }
+  body[data-page] #page .fc-history-metrics { gap: 16px; }
+  body[data-page] #page .fc-bar-value { font-size: 11px; }
+}
+
+
+/* ==== Calendrier ======================================================================== */
+body[data-page] #page .calendar-workspace { max-width: none; }
+body[data-page] #page .cal-toolbar { gap: 12px; padding: 0 0 12px; border-bottom: 0; }
+body[data-page] #page .cal-range { gap: 8px; }
+body[data-page] #page .cal-range h2 { display: inline-block; min-width: 0; margin: 0 4px; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; text-transform: none; }
+body[data-page] #page .cal-range h2::first-letter { text-transform: uppercase; }
+body[data-page] #page .cal-range .icon-btn { width: 40px; min-width: 40px; height: 40px; min-height: 40px; padding: 0; }
+body[data-page] #page .cal-range .secondary-btn { min-height: 40px; margin-left: 4px; padding: 0 14px; font-size: var(--text-sm); }
+body[data-page] #page .cal-filterbar { gap: 12px; padding: 0 0 16px; }
+body[data-page] #page .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+body[data-page] #page .cal-legend { gap: 16px; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .cal-legend i { width: 8px; height: 8px; border-radius: 3px; }
+body[data-page] #page .cal-tipe-toggle { min-height: 40px; padding: 0 14px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--secondary); font-size: var(--text-sm); font-weight: var(--font-medium); }
+body[data-page] #page .cal-tipe-toggle:hover { color: var(--ink); }
+body[data-page] #page .cal-tipe-toggle.active { border-color: var(--brand-solid); background: var(--brand-tint); color: var(--brand-hover); }
+
+body[data-page] #page .cal-workspace-grid { grid-template-columns: minmax(0, 1fr) 328px; gap: 24px; align-items: start; }
+body[data-page] #page .cal-surface { border: 1px solid var(--hairline); border-radius: var(--card-radius); background: var(--surface); }
+body[data-page] #page .cal-days { border-color: var(--hairline); }
+body[data-page] #page .cal-day-head { padding: 10px 4px; }
+body[data-page] #page .cal-day-head span { margin-bottom: 4px; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .cal-day-head strong { width: 32px; height: 32px; border-radius: 50%; color: var(--ink); font-size: 15px; font-weight: var(--font-semibold); }
+body[data-page] #page .cal-day-head.is-today strong { background: var(--brand-solid); color: #fff; }
+body[data-page] #page .cal-day-head.is-selected:not(.is-today) strong { background: var(--brand-tint); color: var(--brand-hover); }
+body[data-page] #page .cal-day-column.is-selected { background: color-mix(in srgb, var(--brand-tint) 35%, transparent); }
+body[data-page] #page .cal-hour-slot { border-top-color: var(--hairline); }
+body[data-page] #page .cal-hour-slot::before { border-top-color: color-mix(in srgb, var(--hairline) 55%, transparent); }
+/* The agenda grows with its content and scrolls with the page; hours before --cal-start are clipped. */
+body[data-page] #page .cal-timeline-scroll { min-height: 0; max-height: none; display: flow-root; position: relative; padding-top: 10px; overflow: clip; overscroll-behavior: auto; }
+body[data-page] #page .cal-timeline-scroll > .cal-timeline { margin-top: calc(var(--cal-start, 0) * -52px); }
+body[data-page] #page .cal-event { border: 0; border-left: 3px solid var(--cal-color); border-radius: 8px; padding: 6px 8px; }
+body[data-page] #page .cal-event { gap: 1px; }
+body[data-page] #page .cal-event strong { max-height: none; color: var(--ink); font-size: 13px; line-height: 18px; font-weight: var(--font-semibold); }
+body[data-page] #page .cal-event :is(span, small) { color: var(--secondary); font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; }
+/* An event of an hour or less keeps its time visible: the title takes one line. */
+body[data-page] #page .cal-day-column > .cal-event { container-type: size; }
+@container (max-height: 62px) {
+  body[data-page] #page .cal-day-column > .cal-event strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@container (max-height: 40px) {
+  body[data-page] #page .cal-day-column > .cal-event :is(span, small) { display: none; }
+}
+body[data-page] #page .cal-event.is-done strong { color: var(--secondary); font-weight: var(--font-medium); }
+body[data-page] #page .cal-unscheduled .cal-event { border-left-width: 3px; padding: 4px 8px; }
+body[data-page] #page .cal-unscheduled .cal-event strong { font-size: 12px; line-height: 16px; }
+body[data-page] #page :is(.cal-study, .cal-task) { --cal-color: var(--brand-solid); --cal-bg: var(--brand-tint); }
+body[data-page] #page .cal-month-weekdays { padding: 12px 0; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .cal-month-day { min-height: clamp(68px, calc((100vh - 364px) / 6), 116px); padding: 8px; gap: 3px; }
+body[data-page] #page .cal-month-day > strong { margin-bottom: 0; }
+body[data-page] #page .cal-month-day > strong { width: 26px; height: 26px; border-radius: 50%; font-size: 13px; }
+body[data-page] #page .cal-month-day.is-today > strong { background: var(--brand-solid); color: #fff; }
+body[data-page] #page .cal-month-day.is-selected { box-shadow: inset 0 0 0 2px var(--brand-solid); }
+body[data-page] #page .cal-month-item { padding: 2px 6px; border-radius: 4px; color: var(--ink); font-size: 12px; line-height: 16px; }
+
+/* Day programme: a card like the others. */
+body[data-page] #page .cal-agenda { padding: 24px; border: 1px solid var(--hairline); border-radius: var(--card-radius); background: var(--surface); }
+body[data-page] #page .cal-agenda > header > span { display: block; color: var(--secondary); font-size: 11px; line-height: 16px; font-weight: var(--font-semibold); letter-spacing: .08em; text-transform: uppercase; }
+body[data-page] #page .cal-agenda h2 { margin: 4px 0 16px; color: var(--ink); font-size: 17px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.015em; }
+body[data-page] #page .cal-day-totals { gap: 16px; padding: 0 0 16px; border-color: var(--hairline); }
+body[data-page] #page .cal-day-totals strong { color: var(--ink); font-size: 22px; line-height: 28px; font-weight: var(--font-bold); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+body[data-page] #page .cal-day-totals span { margin-top: 2px; color: var(--secondary); font-size: 12px; line-height: 16px; }
+body[data-page] #page .cal-agenda-item { padding: 14px 0; border-color: var(--hairline); }
+body[data-page] #page .cal-agenda-tag { display: flex; align-items: center; gap: 6px; color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .cal-agenda-tag::before { content: ""; width: 8px; height: 8px; border-radius: 3px; background: var(--cal-color, var(--secondary)); }
+body[data-page] #page .cal-agenda-item h3 { margin: 4px 0 0; color: var(--ink); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-semibold); }
+body[data-page] #page .cal-agenda-item p { margin: 0 0 6px; color: var(--secondary); font-size: 13px; line-height: 20px; font-variant-numeric: tabular-nums; }
+body[data-page] #page .cal-agenda-actions { gap: 4px 12px; }
+body[data-page] #page .cal-agenda-actions .link-btn { min-height: 28px; padding: 0; font-size: 13px; }
+body[data-page] #page .cal-task-check { gap: 8px; color: var(--secondary); font-size: 13px; }
+body[data-page] #page .cal-empty { padding: 16px 0; font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .cal-agenda > .secondary-btn { width: 100%; margin-top: 16px; }
+body[data-page] #page .cal-footnote { margin: 12px 0 0; }
+
+/* ==== Matières ========================================================================== */
+body[data-page] #page .matieres-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 24px; color: var(--ink); }
+body[data-page] #page .matieres-overview > * { grid-column: 1 / -1; min-width: 0; }
+body[data-page] #page .matieres-overview > .matieres-hero { order: -3; }
+body[data-page] #page .matieres-overview > .programme-banner { order: -2; grid-column: 1; }
+body[data-page] #page .matieres-overview > .matieres-stats { order: -1; grid-column: 2; }
+body[data-page] #page .matieres-hero-copy { min-width: 0; }
+body[data-page] #page .matieres-add > span { font-size: 18px; line-height: 1; }
+
+/* Programme card (also at the top of a subject). */
+body[data-page] #page .programme-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 0 0 24px;
+  padding: 20px 24px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+body[data-page] #page .programme-icon { display: none; }
+body[data-page] #page .programme-banner-copy { flex: 1 1 200px; min-width: 0; }
+body[data-page] #page .programme-banner-copy strong { display: block; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .programme-banner-copy p { margin: 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .programme-source-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+body[data-page] #page .programme-source-links :is(a, .link-btn) { min-height: 28px; padding: 4px 0; border: 0; color: var(--brand); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); text-decoration: none; }
+body[data-page] #page .programme-source-links :is(a, .link-btn):hover { color: var(--brand-hover); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Three figures. */
+body[data-page] #page .matieres-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 24px; border: 1px solid var(--hairline); border-radius: var(--card-radius); background: var(--surface); overflow: hidden; }
+body[data-page] #page .matieres-stat { display: flex; align-items: center; min-height: 0; padding: 16px 24px; border: 0; border-right: 1px solid var(--hairline); border-radius: 0; background: transparent; }
+body[data-page] #page .matieres-stat:last-child { border-right: 0; }
+body[data-page] #page .matieres-stat strong { display: block; color: var(--ink); font-size: 24px; line-height: 30px; font-weight: var(--font-bold); letter-spacing: -.025em; }
+body[data-page] #page .matieres-stat b { display: block; color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-regular); }
+
+body[data-page] #page .matieres-toolbar { align-items: center; gap: 12px; margin: 0 0 16px; }
+body[data-page] #page .matieres-tools { gap: 12px; }
+body[data-page] #page .matieres-view button { width: 34px; padding: 0; font-size: 16px; }
+
+/* Subject cards: symbol and name on one line, then progress and the next chapter. */
+body[data-page] #page .matieres-overview .subject-hub-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+body[data-page] #page .matieres-overview .subject-hub-card { border: 1px solid var(--hairline); border-radius: var(--card-radius); background: var(--surface); box-shadow: none; transition: border-color var(--motion); }
+body[data-page] #page .matieres-overview .subject-hub-card:hover { border-color: #C9D5E6; }
+body[data-page] #page .matieres-overview .subject-hub-open {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: 0 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 24px;
+  border-radius: var(--card-radius);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+body[data-page] #page .matieres-overview .subject-hub-open > * { grid-column: 1 / -1; min-width: 0; }
+body[data-page] #page .matieres-overview .subject-hub-top { grid-column: 1; grid-row: 1 / span 2; align-self: center; margin: 0; }
+body[data-page] #page .matieres-overview .subject-hub-top .subject-symbol { width: 40px; height: 40px; border-radius: 10px; background: color-mix(in srgb, var(--subject-accent, var(--brand)) 13%, var(--surface)) !important; color: var(--subject-accent, var(--brand)) !important; font-size: 17px; }
+/* The icon takes the subject's colour: the SVG is used as a mask over that colour. */
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg { width: 20px; height: 20px; filter: none; opacity: 1; object-position: -999px 0; background: var(--subject-accent, var(--brand)); -webkit-mask: var(--sym-icon) center / contain no-repeat; mask: var(--sym-icon) center / contain no-repeat; }
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg[src$="book-open.svg"] { --sym-icon: url("/icons/book-open.svg"); }
+body[data-page] #page .matieres-overview .subject-symbol .icon-svg[src$="sigma.svg"] { --sym-icon: url("/icons/sigma.svg"); }
+/* Cards stay simple: name, chapters and progress. The whole card opens the subject. */
+body[data-page] #page .matieres-overview :is(.studio-next-chapter, .subject-card-link) { display: none !important; }
+body[data-page] #page .matieres-overview .subject-hub-open > h2 { grid-column: 2; grid-row: 1; margin: 0; padding-right: 32px; color: var(--ink); font-size: 16px; line-height: 22px; font-weight: var(--font-semibold); letter-spacing: -.015em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body[data-page] #page .matieres-overview .subject-hub-open > p { grid-column: 2; grid-row: 2; margin: 0; color: var(--secondary); font-size: 13px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body[data-page] #page .matieres-overview .subject-separator { margin: 0; padding: 0 6px; color: var(--secondary); }
+body[data-page] #page .matieres-overview .subject-progress-line { display: flex; align-items: center; gap: 12px; margin: 16px 0 0; }
+body[data-page] #page .matieres-overview .subject-progress-line .progress-bar { flex: 1 1 auto; }
+body[data-page] #page .matieres-overview .subject-progress-line strong { flex: 0 0 auto; min-width: 36px; color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); text-align: right; font-variant-numeric: tabular-nums; }
+body[data-page] #page .matieres-overview .studio-next-chapter { display: block; margin: 12px 0 0; color: var(--secondary); font-size: 13px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body[data-page] #page .matieres-overview .studio-next-chapter b { color: var(--ink); font-weight: var(--font-medium); }
+body[data-page] #page .matieres-overview .subject-card-link { display: inline-flex; align-items: center; justify-content: flex-start; min-height: 20px; margin: 12px 0 0; padding: 0; border: 0; background: transparent; color: var(--brand); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page .matieres-overview .subject-hub-card:hover .subject-card-link { color: var(--brand-hover); text-decoration: underline; text-underline-offset: 3px; }
+body[data-page] #page .matieres-overview .subject-menu { top: 20px; right: 16px; }
+
+/* List view: one subject per line. */
+@media (min-width: 768px) {
+  body[data-page] #page .matieres-overview .subject-hub-grid.is-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(180px, 1fr) minmax(200px, 1.2fr); align-items: center; gap: 0 24px; padding: 14px 64px 14px 20px; }
+  body[data-page] #page .matieres-overview .is-list .subject-hub-open > h2 { padding-right: 0; }
+  body[data-page] #page .matieres-overview .is-list .subject-progress-line { grid-column: 3; grid-row: 1 / span 2; margin: 0; }
+  body[data-page] #page .matieres-overview .is-list .studio-next-chapter { grid-column: 4; grid-row: 1 / span 2; margin: 0; }
+  body[data-page] #page .matieres-overview .is-list .subject-card-link { grid-column: 5; grid-row: 1 / span 2; margin: 0; white-space: nowrap; }
+  body[data-page] #page .matieres-overview .is-list .subject-menu { top: 50%; right: 16px; transform: translateY(-50%); }
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  body[data-page] #page .matieres-overview .is-list .subject-hub-open { grid-template-columns: 40px minmax(150px, 1fr) minmax(140px, 1fr); }
+  body[data-page] #page .matieres-overview .is-list .studio-next-chapter { display: none; }
+  body[data-page] #page .matieres-overview .is-list .subject-card-link { grid-column: 4; }
+}
+body[data-page] #page .action-menu > summary { width: 32px; height: 32px; border-color: transparent; border-radius: 8px; background: transparent; color: var(--secondary); }
+body[data-page] #page .action-menu > summary:hover,
+body[data-page] #page .action-menu[open] > summary { background: var(--surface-hover); color: var(--ink); }
+
+/* A subject: breadcrumb, year choice, chapters. */
+body[data-page] #page :is(.learning-breadcrumb, .cnc-breadcrumb) { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 28px; margin: 0 0 8px; padding: 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page :is(.learning-breadcrumb, .cnc-breadcrumb) button { min-height: 28px; padding: 0; border: 0; background: none; color: var(--secondary); font-size: 13px; line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page :is(.learning-breadcrumb, .cnc-breadcrumb) button:hover { color: var(--brand); }
+body[data-page] #page :is(.learning-breadcrumb, .cnc-breadcrumb) > :last-child { color: var(--ink); }
+body[data-page] #page .subject-learning-workspace { display: flex; flex-direction: column; }
+body[data-page] #page .subject-learning-workspace > .section-head { order: -1; }
+body[data-page] #page .subject-learning-workspace > .learning-breadcrumb { order: -2; }
+body[data-page] #page .learning-section-label { margin: 0 0 12px; }
+body[data-page] #page .learning-section-label h2 { margin: 0; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .learning-section-label p { margin: 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .subject-level-grid { gap: 24px; }
+body[data-page] #page .learning-choice-card { padding: 24px; border: 1px solid var(--hairline); border-radius: var(--card-radius); background: var(--surface); box-shadow: none; }
+body[data-page] #page .learning-choice-card:hover { border-color: var(--brand-solid); }
+body[data-page] #page .learning-choice-top { min-height: 0; height: auto; margin: 0; }
+body[data-page] #page .learning-year-badge { height: auto; padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .learning-choice-number { display: none; }
+body[data-page] #page .learning-choice-card > h2 { margin: 12px 0 0; color: var(--ink); font-size: 22px; line-height: 28px; font-weight: var(--font-bold); letter-spacing: -.025em; }
+body[data-page] #page .learning-choice-card > p { margin: 2px 0 0; color: var(--secondary); font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .learning-choice-stats { margin: 20px 0 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .learning-choice-stats strong { color: var(--ink); font-size: 15px; font-weight: var(--font-semibold); }
+body[data-page] #page .learning-choice-progress { margin: 8px 0 0; }
+body[data-page] #page .learning-choice-progress strong { color: var(--secondary); font-size: 13px; font-weight: var(--font-medium); font-variant-numeric: tabular-nums; }
+body[data-page] #page .learning-choice-footer { margin: 16px 0 0; padding: 12px 0 0; border-top: 1px solid var(--hairline); color: var(--brand); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-medium); }
+body[data-page] #page .learning-choice-footer .icon-svg { opacity: .5; }
+body[data-page] #page .learning-total { margin: 16px 0 0; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .learning-total strong { color: var(--secondary); font-weight: var(--font-medium); }
+
+body[data-page] #page .subject-detail-summary { display: flex; align-items: center; gap: 24px; margin: 0 0 16px; padding: 20px 24px; }
+body[data-page] #page .subject-detail-summary > div:not(.detail-percent) { flex: 1 1 auto; min-width: 0; }
+body[data-page] #page .detail-percent { flex: 0 0 auto; text-align: right; }
+body[data-page] #page .subject-detail-summary .subject-symbol { display: none; }
+body[data-page] #page .subject-detail-summary h2 { margin: 0; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .subject-detail-summary p { margin: 0 0 10px; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .detail-percent strong { display: block; color: var(--ink); font-size: 28px; line-height: 36px; font-weight: var(--font-bold); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+body[data-page] #page .detail-percent small { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .chapter-toolbar { gap: 12px; margin: 0 0 8px; }
+body[data-page] #page .experience-search { min-height: 40px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); }
+body[data-page] #page .experience-search input { min-height: 38px; border: 0; background: transparent; }
+body[data-page] #page .chapter-help { margin: 0 0 16px; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .chapter-stack { gap: 16px; }
+body[data-page] #page .chapter-mastery-card { padding: 24px; }
+body[data-page] #page .chapter-card-head h3 { margin: 0; color: var(--ink); font-size: 16px; line-height: 22px; font-weight: var(--font-semibold); letter-spacing: -.015em; }
+body[data-page] #page .chapter-card-head p { margin: 2px 0 0; color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .chapter-classification > span { padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .chapter-programme-reference { color: var(--secondary); font-size: 13px; }
+body[data-page] #page .chapter-programme-reference:hover { color: var(--brand); }
+body[data-page] #page .chapter-resources { border-color: var(--hairline); }
+body[data-page] #page .chapter-resources summary { color: var(--brand); font-size: 13px; font-weight: var(--font-medium); }
+body[data-page] #page .chapter-direction { color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .chapter-direction strong { color: var(--ink); font-weight: var(--font-semibold); }
+body[data-page] #page .chapter-steps { gap: 8px; }
+body[data-page] #page .stage-btn { min-height: 40px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--ink); font-size: var(--text-sm); font-weight: var(--font-medium); }
+body[data-page] #page .stage-btn:hover:not(:disabled) { background: var(--surface-hover); }
+body[data-page] #page .stage-btn.next-step { border-color: var(--brand-solid); background: var(--brand-tint); color: var(--brand-hover); font-weight: var(--font-semibold); }
+body[data-page] #page .stage-btn.final { border-color: var(--hairline); background: var(--chip); color: var(--secondary); }
+body[data-page] #page .chapter-checkpoints { border-radius: 12px; background: var(--background); }
+body[data-page] #page .chapter-notes { border-color: var(--hairline); }
+body[data-page] #page .chapter-notes summary { color: var(--secondary); font-size: 13px; }
+
+/* ==== Annales CNC ======================================================================= */
+body[data-page] #page .cnc-shell { display: flex; flex-direction: column; gap: 0; }
+body[data-page] #page .cnc-shell > .cnc-breadcrumb { order: -3; }
+body[data-page] #page .cnc-shell > .section-head { order: -2; }
+body[data-page] #page .cnc-library-note { order: -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 16px; color: var(--secondary); font-size: 13px; line-height: 20px; }
+body[data-page] #page .cnc-library-note > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+body[data-page] #page .cnc-library-note .link-btn { min-height: 28px; padding: 0; font-size: 13px; }
+body[data-page] #page .cnc-library-note.is-status { color: var(--ink); }
+body[data-page] #page .cnc-shell:has(> .cnc-library-note) > .section-head { min-height: 0; margin-bottom: 4px; }
+body[data-page] #page :is(.filiere-grid, .cnc-subject-grid) { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+body[data-page] #page .cnc-subject-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+body[data-page] #page .cnc-shell .choice-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2px 14px;
+  min-height: 0;
+  padding: 20px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  box-shadow: none;
+  color: var(--ink);
+  text-align: left;
+  transition: border-color var(--motion);
+}
+body[data-page] #page .cnc-shell .choice-card:hover { border-color: var(--brand-solid); }
+body[data-page] #page .cnc-shell .choice-code { grid-row: 1 / span 2; display: grid; place-items: center; width: 48px; height: 48px; margin: 0; border: 0; border-radius: 12px; background: var(--brand-tint); color: var(--brand-hover); font-size: 15px; font-weight: var(--font-bold); letter-spacing: -.01em; }
+body[data-page] #page .cnc-shell .choice-card > strong { grid-column: 2; align-self: end; margin: 0; color: var(--ink); font-size: 15px; line-height: 20px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .cnc-shell .choice-card > small { grid-column: 2; align-self: start; margin: 0; color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .filiere-grid .choice-card { border-left: 0; }
+body[data-page] #page .filiere-grid .choice-card:hover { border-color: var(--filiere-accent, var(--brand-solid)); }
+body[data-page] #page .filiere-grid .choice-code { background: color-mix(in srgb, var(--filiere-accent, var(--brand)) 13%, var(--surface)); color: var(--filiere-accent, var(--brand-hover)); }
+body[data-page] #page .cnc-subject-grid .choice-code { width: 36px; height: 36px; border-radius: 10px; background: var(--chip); color: var(--secondary); font-size: 13px; font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+body[data-page] #page .mini-stat-row { gap: 8px; }
+body[data-page] #page .mini-stat { padding: 3px 8px; border: 0; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+body[data-page] #page .paper-list { gap: 12px 24px; }
+body[data-page] #page .paper-row { align-items: center; gap: 14px; min-height: 0; padding: 16px 20px; transition: border-color var(--motion); }
+body[data-page] #page .paper-row:hover { border-color: var(--brand-solid); }
+body[data-page] #page .paper-year { width: auto; min-width: 60px; height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: var(--brand-tint); color: var(--brand-hover); font-size: 15px; font-weight: var(--font-bold); font-variant-numeric: tabular-nums; }
+body[data-page] #page .paper-row strong { color: var(--ink); font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-semibold); }
+body[data-page] #page .paper-row small { color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .paper-status { padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--secondary); font-size: 12px; line-height: 16px; font-weight: var(--font-medium); }
+
+body[data-page] #page .paper-workspace { grid-template-columns: minmax(0, 1fr) 328px; gap: 24px; }
+body[data-page] #page .paper-toolbar { padding: 16px 24px; border-color: var(--hairline); }
+body[data-page] #page .paper-toolbar h2 { margin: 0; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .paper-empty { background: transparent; }
+body[data-page] #page .paper-empty .empty-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--brand-tint); }
+body[data-page] #page .paper-empty h3 { margin: 12px 0 4px; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); }
+body[data-page] #page .paper-empty p { margin: 0 0 16px; color: var(--secondary); font-size: var(--text-sm); line-height: 20px; }
+body[data-page] #page .exam-side { gap: 16px; }
+body[data-page] #page .exam-side > .card { padding: 24px; }
+body[data-page] #page .exam-side .eyebrow { display: block; color: var(--secondary); font-size: 11px; line-height: 16px; font-weight: var(--font-semibold); letter-spacing: .08em; text-transform: uppercase; }
+body[data-page] #page .exam-clock { margin: 4px 0 16px; color: var(--ink); font-size: 36px; line-height: 44px; font-weight: var(--font-bold); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+body[data-page] #page .exam-clock { margin-bottom: 12px; }
+body[data-page] #page .exam-duration { display: grid; gap: 8px; margin: 0 0 16px; padding-top: 12px; border-top: 1px solid var(--hairline); }
+body[data-page] #page .exam-duration-label { color: var(--secondary); font-size: 13px; line-height: 18px; font-weight: var(--font-medium); }
+body[data-page] #page .exam-duration-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 3px; border-radius: 10px; background: var(--chip); }
+body[data-page] #page .exam-duration-presets button { min-height: 32px; border: 0; border-radius: 8px; background: transparent; color: var(--secondary); font: inherit; font-size: 13px; font-weight: var(--font-semibold); cursor: pointer; }
+body[data-page] #page .exam-duration-presets button.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(15, 23, 42, .08); }
+body[data-page] #page .exam-duration-custom { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+body[data-page] #page .exam-duration-custom label { display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--secondary); font-size: 13px; }
+body[data-page] #page .exam-duration-custom label:focus-within { border-color: var(--brand-solid); }
+body[data-page] #page .exam-duration-custom input { width: 100%; min-width: 0; min-height: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; box-shadow: none; }
+body[data-page] #page .exam-duration :disabled { opacity: .5; cursor: not-allowed; }
+body[data-page] #page .exam-side h2 { margin: 0 0 12px; color: var(--ink); font-size: 15px; line-height: 24px; font-weight: var(--font-semibold); letter-spacing: -.01em; }
+body[data-page] #page .score-line input { min-height: 40px; border: 1px solid var(--hairline); border-radius: var(--control-radius); }
+body[data-page] #page .attempt-card .primary-btn { width: 100%; margin-top: 12px; }
+body[data-page] #page .cnc-notes { border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); }
+body[data-page] #page .save-line { margin: 8px 0 0; color: var(--secondary); font-size: 12px; line-height: 16px; }
+
+@media (max-width: 1099px) {
+  body[data-page] #page .cal-workspace-grid { grid-template-columns: minmax(0, 1fr); }
+  body[data-page] #page .cal-month-day { min-height: 96px; }
+  body[data-page] #page .matieres-overview .subject-hub-grid:not(.is-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body[data-page] #page .paper-workspace { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  body[data-page] #page .cal-agenda { padding: 20px; }
+  body[data-page] #page .cal-month-day { min-height: 72px; padding: 4px; }
+  body[data-page] #page .cal-legend { gap: 8px 12px; font-size: 12px; }
+  body[data-page] #page .matieres-overview { grid-template-columns: minmax(0, 1fr); }
+  body[data-page] #page .matieres-overview > :is(.programme-banner, .matieres-stats) { grid-column: 1; }
+  body[data-page] #page :is(.programme-banner, .matieres-stats) { margin-bottom: 16px; }
+  body[data-page] #page .programme-banner { padding: 16px 20px; }
+  body[data-page] #page .matieres-stat { padding: 12px 16px; }
+  body[data-page] #page .matieres-overview .subject-hub-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  body[data-page] #page .matieres-overview .subject-hub-open { padding: 20px; }
+  body[data-page] #page .subject-level-grid { gap: 12px; }
+  body[data-page] #page .learning-choice-card, body[data-page] #page .chapter-mastery-card { padding: 20px; }
+  body[data-page] #page :is(.filiere-grid, .cnc-subject-grid) { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  body[data-page] #page .cnc-shell .choice-card { padding: 16px; }
+  body[data-page] #page .paper-list { gap: 12px; }
+  body[data-page] #page .exam-side > .card { padding: 20px; }
+}
+
+/* Full-screen timer: the ring grows, nothing else on screen. */
+body.focus-cockpit-immersive[data-page] #page .fc-dial { width: clamp(220px, 44vh, 340px); }
+body.focus-cockpit-immersive[data-page] #page .fc-dial .fc-clock { font-size: clamp(52px, 11vh, 84px); }
+body.focus-cockpit-immersive[data-page] #page .focus-cockpit .fc-timer { border: 0; background: transparent; }
+body.focus-cockpit-immersive[data-page] #page .fc-timer-actions :is(.primary-btn, .secondary-btn) { min-width: 160px; min-height: 48px; padding: 0 24px; border-radius: 12px; font-size: 15px; }
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page] #page .fc-dial-value { transition: none; }
+}
+
+/* TIPE — one step at a time: problématique + progress, a 5-step path, then only the active step. */
+body[data-page] #page .tipe-v2 .tipe-header { margin-bottom: 20px; align-items: center; }
+body[data-page] #page .tipe-v2 .tipe-header h1 { margin: 0; color: var(--ink); font-size: 22px; line-height: 28px; font-weight: var(--font-bold); letter-spacing: -.025em; }
+body[data-page] #page .tipe-overview { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; margin-bottom: 16px; }
+body[data-page] #page .tipe-question-card { display: grid; align-content: start; gap: 8px; min-width: 0; padding: 24px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: border-color .15s; }
+body[data-page] #page .tipe-question-card:hover { border-color: var(--brand-solid); }
+body[data-page] #page .tipe-question-card:focus-visible { outline: 2px solid var(--brand-solid); outline-offset: 2px; }
+body[data-page] #page .tipe-question-card > strong { color: var(--ink); font-size: 20px; line-height: 28px; font-weight: var(--font-semibold); letter-spacing: -.02em; overflow-wrap: anywhere; }
+body[data-page] #page .tipe-question-card > strong.is-empty { color: var(--secondary); font-weight: var(--font-medium); }
+body[data-page] #page .tipe-question-meta { color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .tipe-progress-card { display: grid; align-content: center; gap: 12px; padding: 24px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); }
+body[data-page] #page .tipe-progress-top { display: flex; align-items: baseline; gap: 8px; }
+body[data-page] #page .tipe-progress-top strong { color: var(--ink); font-size: 28px; line-height: 32px; font-weight: var(--font-bold); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+body[data-page] #page .tipe-progress-top span { color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .tipe-progress-bar { display: block; height: 8px; overflow: hidden; border-radius: 999px; background: var(--chip); }
+body[data-page] #page .tipe-progress-bar > span { display: block; height: 100%; min-width: 4px; border-radius: inherit; background: var(--brand-solid); transition: width .3s; }
+body[data-page] #page .tipe-progress-facts { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--secondary); font-size: 13px; line-height: 18px; }
+body[data-page] #page .tipe-progress-facts b { color: var(--ink); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+
+body[data-page] #page .tipe-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 0 0 24px; padding: 8px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); }
+body[data-page] #page .tipe-steps > button { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--secondary); font: inherit; text-align: left; cursor: pointer; }
+body[data-page] #page .tipe-steps > button:hover { background: var(--chip); }
+body[data-page] #page .tipe-steps > button.is-active { background: var(--brand-tint); }
+body[data-page] #page .tipe-steps > button:focus-visible { outline: 2px solid var(--brand-solid); outline-offset: 1px; }
+body[data-page] #page .tipe-step-dot { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border: 1.5px solid var(--hairline); border-radius: 50%; background: var(--surface); color: var(--secondary); font-size: 13px; font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+body[data-page] #page .tipe-step-dot .icon-svg { width: 14px; height: 14px; }
+body[data-page] #page .tipe-steps > .is-done .tipe-step-dot { border-color: #16A34A; background: #16A34A; color: #fff; }
+body[data-page] #page .tipe-steps > .is-active .tipe-step-dot { border-color: var(--brand-solid); background: var(--brand-solid); color: #fff; }
+body[data-page] #page .tipe-step-text { display: grid; min-width: 0; }
+body[data-page] #page .tipe-step-text strong { color: var(--ink); font-size: 14px; line-height: 20px; font-weight: var(--font-semibold); }
+body[data-page] #page .tipe-step-text small { overflow: hidden; color: var(--secondary); font-size: 12px; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
+body[data-page] #page .tipe-steps > .is-done .tipe-step-text small { color: #15803D; }
+body[data-page] #page .tipe-steps > .is-active .tipe-step-text strong { color: var(--brand-hover); }
+
+body[data-page] #page .tipe-v2 .tipe-workspace-grid { grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+body[data-page] #page .tipe-v2 .tipe-section { margin-bottom: 16px; padding: 24px; border-radius: 16px; }
+body[data-page] #page .tipe-step-nav { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 24px; }
+body[data-page] #page .tipe-step-nav button { min-height: 40px; }
+body[data-page] #page .tipe-v2 .tipe-rail { display: grid; gap: 16px; }
+body[data-page] #page .tipe-v2 .tipe-rail-section { margin: 0; padding: 20px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); }
+body[data-page] #page .tipe-v2 .tipe-source-note { margin-top: 8px; }
+
+@media (max-width: 1100px) {
+  body[data-page] #page .tipe-overview, body[data-page] #page .tipe-v2 .tipe-workspace-grid, body[data-page] #page .tipe-v2 .tipe-rail { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  body[data-page] #page .tipe-v2 .tipe-header { flex-direction: column; align-items: stretch; gap: 12px; }
+  body[data-page] #page .tipe-v2 .tipe-header .tipe-inline-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  body[data-page] #page .tipe-question-card, body[data-page] #page .tipe-progress-card, body[data-page] #page .tipe-v2 .tipe-section { padding: 16px; }
+  body[data-page] #page .tipe-question-card > strong { font-size: 17px; line-height: 24px; }
+  body[data-page] #page .tipe-steps { padding: 4px; }
+  body[data-page] #page .tipe-steps > button { flex-direction: column; gap: 4px; padding: 8px 2px; text-align: center; }
+  body[data-page] #page .tipe-step-text small { display: none; }
+  body[data-page] #page .tipe-step-text strong { font-size: 12px; line-height: 16px; }
+}

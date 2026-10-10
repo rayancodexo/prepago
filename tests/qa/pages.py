@@ -112,7 +112,8 @@ with Site() as site:
       const first = [...document.querySelectorAll('.cal-time-axis > span')].map(s => s.getBoundingClientRect()).find(r => r.bottom > box.top + 1);
       return [Math.round(first.top - box.top), Math.round(box.bottom), innerHeight]; }''')
     check('week view: the first hour label is not cut off', hour[0] >= 0, hour)
-    check('week view: the grid ends on screen', hour[1] <= hour[2], hour)
+    first_label = page.evaluate("(() => { const box = document.querySelector('.cal-timeline-scroll').getBoundingClientRect(); return [...document.querySelectorAll('.cal-time-axis > span')].find(s => s.getBoundingClientRect().bottom > box.top + 1).innerText; })()")
+    check('week view: the agenda opens at 06:00 and scrolls with the page', first_label == '06:00', first_label)
     agenda = page.evaluate("(() => { const cs = getComputedStyle(document.querySelector('.cal-agenda')); return [cs.backgroundColor, cs.borderTopLeftRadius, document.querySelectorAll('.cal-agenda-item').length]; })()")
     check('day programme is a card listing the day', agenda[0] == 'rgb(255, 255, 255)' and agenda[1] == '16px' and agenda[2] >= 3, agenda)
     period = text(page, '.cal-range h2') or ''
@@ -139,14 +140,14 @@ with Site() as site:
       const banner = document.querySelector('.programme-banner').getBoundingClientRect(), stats = document.querySelector('.matieres-stats').getBoundingClientRect(), h1 = document.querySelector('#page h1').getBoundingClientRect();
       return { count: cards.length, perRow: cards.filter(r => Math.abs(r.top - cards[0].top) < 2).length, tallest: Math.round(Math.max(...cards.map(r => r.height))),
         sameLine: sym.right <= name.left && sym.top < name.bottom && name.top < sym.bottom, titleFirst: h1.bottom <= banner.top, sideBySide: Math.abs(banner.top - stats.top) < 2 && banner.right <= stats.left }; }''')
-    check('nine subjects, three per row, compact', grid['count'] == 9 and grid['perRow'] == 3 and grid['tallest'] <= 220, grid)
+    check('eight subjects (TIPE has its own page), three per row, compact', grid['count'] == 8 and grid['perRow'] == 3 and grid['tallest'] <= 220, grid)
     check('subject symbol and name share a line', grid['sameLine'], grid)
     check('title first, then programme and figures side by side', grid['titleFirst'] and grid['sideBySide'], grid)
     tint = page.evaluate("[...new Set([...document.querySelectorAll('.subject-hub-card')].map(c => getComputedStyle(c).borderLeftColor + ' ' + getComputedStyle(c).borderLeftWidth))]")
     check('no coloured side stripes on subject cards', tint == ['rgb(227, 233, 242) 1px'], tint)
     click(page, '.matieres-view button:nth-child(2)')
     rows = page.evaluate("[...document.querySelectorAll('.subject-hub-card')].map(c => c.getBoundingClientRect()).filter((r, i, all) => r.width > 900 && r.height <= 80 && (i === 0 || r.top > all[i - 1].top)).length")
-    check('list view: one subject per line', rows == 9, rows)
+    check('list view: one subject per line', rows == 8, rows)
     click(page, '.matieres-view button:nth-child(1)')
     click(page, '.subject-hub-card:nth-child(6) .subject-hub-open')
     check('opening a subject offers Sup and Spé', page.evaluate("document.querySelectorAll('.subject-level-card').length") == 2 and text(page, '#page h1') == 'Mathématiques', text(page, '#page h1'))
@@ -160,7 +161,7 @@ with Site() as site:
     shown = page.evaluate("[...document.querySelectorAll('.chapter-mastery-card')].filter(c => c.getClientRects().length).length")
     check('chapter search narrows the list', 1 <= shown < chapters[0], shown)
     click(page, '[data-back-to-subjects]')
-    check('breadcrumb goes back to the subjects', page.evaluate("document.querySelectorAll('.subject-hub-card').length") == 9)
+    check('breadcrumb goes back to the subjects', page.evaluate("document.querySelectorAll('.subject-hub-card').length") == 8)
     check('Matières flow: no errors', not problems, '; '.join(problems[:3]))
     page.context.close()
 
@@ -183,9 +184,32 @@ with Site() as site:
     click(page, '.paper-row')
     paper = page.evaluate("[!!document.querySelector('.paper-viewer'), document.querySelector('#cncClock')?.innerText, getComputedStyle(document.querySelector('#cncClock')).color]")
     check('a paper opens with its timer', paper[0] and paper[1] == '04:00:00' and paper[2] == 'rgb(20, 33, 58)', paper)
+    click(page, '[data-cnc-duration="10800"]')
+    t = page.evaluate("[document.querySelector('#cncClock').innerText, document.querySelector('#cncDurH').value, document.querySelector('[data-cnc-duration=\"10800\"]').getAttribute('aria-pressed')]")
+    check('the exam timer can be set to 3 h', t == ['03:00:00', '3', 'true'], t)
+    page.fill('#cncDurH', '1'); page.fill('#cncDurM', '30'); page.press('#cncDurM', 'Enter'); page.locator('#cncDurM').blur(); page.wait_for_timeout(300)
+    check('a custom duration is applied and remembered', page.evaluate("document.querySelector('#cncClock').innerText") == '01:30:00' and page.evaluate("Object.values(state.cnc.papers).some(p => p.timerDuration === 5400)"))
     click(page, '[data-cnc-home]')
+    accents = page.evaluate("[...document.querySelectorAll('.filiere-grid .choice-code')].map(n => getComputedStyle(n).color)")
+    check('each filière has its own colour', len(set(accents)) == len(accents) == 6, accents)
     check('breadcrumb goes back to the first screen', page.evaluate("document.querySelectorAll('.filiere-grid .choice-card').length") == 6 and page.is_visible('.cnc-library-note'))
     check('CNC flow: no errors', not problems, '; '.join(problems[:3]))
+    page.context.close()
+
+    # ---- Matières hides TIPE; calendar scrolls with the page; TIPE shows one step at a time ----
+    page, problems = site.workspace('wide')
+    goto_page(page, 'subjects')
+    names = page.evaluate("[...document.querySelectorAll('.subject-hub-card h2')].map(n => n.innerText)")
+    check('Matières does not list TIPE', names and not any(n.strip().upper().startswith('TIPE') for n in names), names)
+    goto_page(page, 'calendar')
+    cal = page.evaluate("(() => { const s = document.querySelector('.cal-timeline-scroll'); return {inner: s.scrollHeight - s.clientHeight, allDay: !!document.querySelector('.cal-unscheduled'), label: document.querySelector('.cal-gutter-head').innerText.trim(), first: document.querySelector('.cal-time-axis span:nth-child(7)').getBoundingClientRect().top >= document.querySelector('.cal-days').getBoundingClientRect().bottom - 12}; })()")
+    check('calendar: no inner scroll, no all-day row, no 24 h label', cal['inner'] <= 12 and not cal['allDay'] and cal['label'] == '' and cal['first'], cal)
+    goto_page(page, 'projects')
+    tipe = page.evaluate("[document.querySelectorAll('.tipe-steps > button').length, document.querySelectorAll('.tipe-main > .tipe-section').length, document.querySelector('.tipe-steps .is-active')?.dataset.tipeJump]")
+    check('TIPE: 5 steps, one section shown', tipe[0] == 5 and tipe[1] == 1, tipe)
+    click(page, '.tipe-steps [data-tipe-jump=mcot]')
+    check('TIPE: a step opens its section', page.is_visible('#tipeMCOTForm') and page.evaluate("document.querySelectorAll('.tipe-main > .tipe-section').length") == 1)
+    check('TIPE/calendar: no errors', not problems, '; '.join(problems[:3]))
     page.context.close()
 
     # ---- Other pages share the title size; phone and tablet do not scroll sideways --------

@@ -17,7 +17,7 @@
   function updateReadiness() {
     const values=core.readiness(core.primary(state)),list=document.querySelector('.tipe-readiness');
     if(list)list.innerHTML=values.map(c=>`<li class="${c.ok?'is-ready':''}"><span>${c.ok?'✓':'○'}</span>${c.label}</li>`).join('');
-    const count=document.querySelector('#tipeReadinessCount');if(count)count.textContent=`${values.filter(c=>c.ok).length}/${values.length}`;
+    const count=document.querySelector('#tipeReadinessCount');if(count)count.textContent=`${values.filter(c=>c.ok).length}/${values.length}`;const bar=document.querySelector('#tipeReadinessBar');if(bar)bar.style.width=Math.round(values.filter(c=>c.ok).length/values.length*100)+'%';
   }
   function ensure() {
     let p = core.primary(state), changed = false;
@@ -104,6 +104,17 @@
     const validate = () => url.setCustomValidity(safeURL(url.value) ? '' : 'Utilise un lien https:// ou http://.');
     url.addEventListener('input',validate); if (url.value) validate();
   }
+  let tipeStep = null;
+  function stepStatus(p,d,checks) {
+    const ok = (...i) => i.every(n => checks[n]?.ok);
+    return [
+      {key:'subject',label:'Sujet',ok:ok(0),hint:'Thème et question'},
+      {key:'journal',label:'Carnet',ok:d.journal.length > 0,hint:'Tes essais'},
+      {key:'mcot',label:'MCOT',ok:ok(1,2,3,4),hint:'Fiche à rédiger'},
+      {key:'dot',label:'DOT',ok:ok(5),hint:'Étapes clés'},
+      {key:'oral',label:'Oral',ok:ok(6,7,8),hint:'Plan et documents'}
+    ];
+  }
   function section(id,title,action,body) {return `<section class="tipe-section" id="tipe-${id}"><div class="tipe-section-head"><h2>${title}</h2>${action || ''}</div>${body}</section>`;}
   function entryActions(collection,id,attribute) {return `<div class="tipe-inline-actions"><button class="link-btn" ${attribute}="${esc(id)}">Modifier</button><button class="link-btn" data-tipe-remove="${collection}:${esc(id)}">Retirer</button></div>`;}
   function render() {
@@ -114,7 +125,7 @@
     const seconds = sessions.reduce((n,r) => n + r.duration_seconds,0), checks = core.readiness(p);
     const nextTask = tasks.find(t => !t.done);
     const legacy = (state.projects || []).filter(x => x.id !== p.id && (x.description || x.problematic));
-    const subject = section('subject','Sujet et direction','<button class="link-btn" data-tipe-subject>Modifier</button>',`<div class="tipe-subject-grid"><div><span class="tipe-caption">Thème</span><p>${esc(p.theme || 'À préciser avec ton encadrant')}</p><span class="tipe-caption">Encadrant</span><p>${esc(d.supervisor || 'À renseigner')}</p></div><div><span class="tipe-caption">Problématique</span><p class="tipe-question">${esc(p.problematic || 'Quelle question scientifique veux-tu résoudre ?')}</p>${d.team ? `<p class="tipe-caption">${esc(d.team)}</p>` : ''}</div></div>`);
+    const subject = section('subject','Sujet et direction','<button class="link-btn" data-tipe-subject>Modifier</button>',`<div class="tipe-subject-grid"><div><span class="tipe-caption">Thème</span><p>${esc(p.theme || 'À préciser avec ton encadrant')}</p><span class="tipe-caption">Encadrant</span><p>${esc(d.supervisor || 'À renseigner')}</p></div><div><span class="tipe-caption">Session</span><p>${esc(d.session || 'À préciser')}</p>${d.team ? `<span class="tipe-caption">Contribution</span><p>${esc(d.team)}</p>` : ''}</div></div>`);
     const mcot = section('mcot','MCOT','<span class="tipe-caption">Brouillon de préparation</span>',`<form id="tipeMCOTForm"><div class="tipe-form-grid">${textarea('Motivation du choix', 'motivation',d.motivation,50)}${textarea('Lien avec le thème','anchor',d.anchor,50)}</div>
       ${input('Positionnement thématique','positioning',d.positioning,'text','maxlength="500" placeholder="Ex. Physique · mécanique"')}
       <div class="tipe-form-grid">${input('5 mots-clés en français','keywordsFr',d.keywordsFr,'text','maxlength="400" placeholder="Séparés par des virgules" data-keywords="fr"')}${input('5 mots-clés en anglais','keywordsEn',d.keywordsEn,'text','maxlength="400" placeholder="Séparés par des virgules" data-keywords="en"')}</div>
@@ -130,18 +141,26 @@
       ${d.documents.map(r => `<article class="tipe-document"><span>${uiIcon('cnc')}</span><div><strong>${esc(r.title)}</strong>${safeURL(r.url) ? `<a href="${esc(safeURL(r.url))}" target="_blank" rel="noopener">Ouvrir le document</a>` : '<span>Lien à compléter</span>'}</div>${entryActions('documents',r.id,'data-tipe-doc')}</article>`).join('') || '<p class="tipe-empty">Rassemble la présentation, la fiche F2, les mesures et les simulations.</p>'}
       <div class="tipe-checklist">${[['presentation','Présentation PDF vérifiée'],['f2','Fiche F2 signée'],['submitted','Documents déposés sur le portail CNC'],['validated','Validation administrative confirmée']].map(([key,label]) => `<label><input type="checkbox" data-tipe-check="${key}" ${d.checks[key] ? 'checked' : ''}>${label}</label>`).join('')}</div>`);
     const milestones = `<section class="tipe-rail-section"><div class="tipe-section-head"><h2>Jalons</h2>${uiIcon('calendar')}</div><p class="tipe-caption">Tes dates ajoutent les échéances au calendrier.</p>${core.milestones.map(([key,label]) => `<label class="tipe-milestone"><span>${label}</span><input type="date" aria-label="Échéance TIPE — ${label}" data-tipe-deadline="${key}" value="${esc(d.deadlines[key] || '')}"></label>`).join('')}</section>`;
-    document.querySelector('#page').innerHTML = `<div class="tipe-workspace"><header class="tipe-header"><div><span class="tipe-caption">${esc(d.session || 'Mon TIPE')} · ${core.stages.find(([k]) => k === p.tipeStage)?.[1] || 'Sujet'}</span><h1>${esc(p.name)}</h1></div><div class="tipe-inline-actions"><button class="secondary-btn" data-tipe-export>Exporter le dossier</button><button class="primary-btn" data-project-focus="${esc(p.id)}">Travailler sur mon TIPE</button></div></header>
-      <nav class="tipe-outline" aria-label="Sections du TIPE">${[['subject','Sujet'],['mcot','MCOT'],['journal','Carnet'],['dot','DOT'],['oral','Oral et documents']].map(([k,l]) => `<button data-tipe-jump="${k}" aria-controls="tipe-${k}">${l}</button>`).join('')}</nav>
-      <div class="tipe-workspace-grid"><div class="tipe-main">${subject}${journal}${mcot}${dot}${oral}${d.removed.length ? `<details class="tipe-source-note"><summary>Éléments retirés (${d.removed.length})</summary>${d.removed.map(e => `<div class="tipe-removed-row"><span>${esc(e.record.title || e.record.text || 'Entrée retirée')}</span><button class="link-btn" data-tipe-restore="${esc(e.id)}">Restaurer</button></div>`).join('')}</details>` : ''}${legacy.length ? section('legacy','Notes reprises','',legacy.map(x => `<details class="tipe-log"><summary><strong>${esc(x.name)}</strong></summary><div><p>${esc(x.problematic || '')}</p><p>${esc(x.description || '')}</p></div></details>`).join('')) : ''}
-      <details class="tipe-source-note"><summary>Repères et sources officielles</summary><p>Les livrables et limites affichés viennent de la notice CNC 2026. Vérifie la notice de ta session et les consignes de ton encadrant ; aucune date officielle n’est préremplie.</p><a href="${notice}" target="_blank" rel="noopener">Notice CNC 2026 · TIPE</a><a href="${themeSource}" target="_blank" rel="noopener">Thème 2026–2027 · Bulletin officiel français</a><p>Le thème publié en France est « Sobriété, efficacité, optimisation ». Confirme son application au CNC de ta session avant de le renseigner.</p></details></div>
-      <aside class="tipe-rail"><section class="tipe-rail-section"><div class="tipe-stats"><div><strong>${done}/${tasks.length}</strong><span>Étapes terminées</span></div><div><strong>${FocusData.duration(seconds)}</strong><span>Temps de TIPE</span></div></div><div class="tipe-section-head"><h2>Prochaine action</h2><button class="link-btn" data-project-task="${esc(p.id)}">+ Étape</button></div>${nextTask ? `<p class="tipe-next-title">${esc(nextTask.title)}</p><button class="secondary-btn" data-task-focus="${esc(nextTask.id)}">Travailler cette étape</button>` : '<p class="tipe-empty">Choisis une petite action concrète pour avancer.</p>'}<div class="tipe-task-list">${tasks.map(taskWorkspaceRow).join('')}</div></section>
-      ${milestones}<section class="tipe-rail-section"><div class="tipe-section-head"><h2>Préparation du dossier</h2><span id="tipeReadinessCount">${checks.filter(c => c.ok).length}/${checks.length}</span></div><ul class="tipe-readiness">${checks.map(c => `<li class="${c.ok ? 'is-ready' : ''}"><span>${c.ok ? '✓' : '○'}</span>${c.label}</li>`).join('')}</ul></section>
+    const ready = checks.filter(c => c.ok).length, pct = Math.round(ready / checks.length * 100);
+    const steps = stepStatus(p,d,checks);
+    if (!steps.some(x => x.key === tipeStep)) tipeStep = (steps.find(x => !x.ok) || steps[0]).key;
+    const bodies = {subject,journal,mcot,dot,oral}, index = steps.findIndex(x => x.key === tipeStep), prev = steps[index-1], next = steps[index+1];
+    const extras = `${d.removed.length ? `<details class="tipe-source-note"><summary>Éléments retirés (${d.removed.length})</summary>${d.removed.map(e => `<div class="tipe-removed-row"><span>${esc(e.record.title || e.record.text || 'Entrée retirée')}</span><button class="link-btn" data-tipe-restore="${esc(e.id)}">Restaurer</button></div>`).join('')}</details>` : ''}${legacy.length ? section('legacy','Notes reprises','',legacy.map(x => `<details class="tipe-log"><summary><strong>${esc(x.name)}</strong></summary><div><p>${esc(x.problematic || '')}</p><p>${esc(x.description || '')}</p></div></details>`).join('')) : ''}
+      <details class="tipe-source-note"><summary>Repères et sources officielles</summary><p>Les livrables et limites affichés viennent de la notice CNC 2026. Vérifie la notice de ta session et les consignes de ton encadrant ; aucune date officielle n’est préremplie.</p><a href="${notice}" target="_blank" rel="noopener">Notice CNC 2026 · TIPE</a><a href="${themeSource}" target="_blank" rel="noopener">Thème 2026–2027 · Bulletin officiel français</a><p>Le thème publié en France est « Sobriété, efficacité, optimisation ». Confirme son application au CNC de ta session avant de le renseigner.</p></details>`;
+    document.querySelector('#page').innerHTML = `<div class="tipe-workspace tipe-v2"><header class="tipe-header"><div><h1>${esc(p.name)}</h1></div><div class="tipe-inline-actions"><button class="secondary-btn" data-tipe-export>Exporter le dossier</button><button class="primary-btn" data-project-focus="${esc(p.id)}">Travailler sur mon TIPE</button></div></header>
+      <section class="tipe-overview"><button class="tipe-question-card" data-tipe-subject><span class="tipe-caption">Ma problématique</span><strong class="${p.problematic ? '' : 'is-empty'}">${esc(p.problematic || 'Écris la question scientifique à laquelle ton TIPE répond.')}</strong><span class="tipe-question-meta">${esc(p.theme || 'Thème à préciser')} · ${esc(d.supervisor || 'Encadrant à renseigner')}</span></button>
+        <div class="tipe-progress-card"><div class="tipe-progress-top"><strong id="tipeReadinessCount">${ready}/${checks.length}</strong><span>éléments du dossier prêts</span></div><span class="tipe-progress-bar"><span id="tipeReadinessBar" style="width:${pct}%"></span></span><div class="tipe-progress-facts"><span><b>${done}/${tasks.length}</b> étapes faites</span><span><b>${FocusData.duration(seconds)}</b> de travail</span></div></div></section>
+      <nav class="tipe-steps" aria-label="Parcours du TIPE">${steps.map((x,i) => `<button type="button" class="${x.key === tipeStep ? 'is-active' : ''} ${x.ok ? 'is-done' : ''}" data-tipe-jump="${x.key}" aria-current="${x.key === tipeStep ? 'step' : 'false'}"><span class="tipe-step-dot" aria-hidden="true">${x.ok ? uiIcon('check') : i+1}</span><span class="tipe-step-text"><strong>${x.label}</strong><small>${x.ok ? 'Prêt' : x.hint}</small></span></button>`).join('')}</nav>
+      <div class="tipe-workspace-grid"><div class="tipe-main">${bodies[tipeStep]}<div class="tipe-step-nav">${prev ? `<button class="secondary-btn" data-tipe-jump="${prev.key}">‹ ${prev.label}</button>` : '<span></span>'}${next ? `<button class="primary-btn" data-tipe-jump="${next.key}">Suivant : ${next.label} ›</button>` : ''}</div>${extras}</div>
+      <aside class="tipe-rail"><section class="tipe-rail-section"><div class="tipe-section-head"><h2>Prochaine action</h2><button class="link-btn" data-project-task="${esc(p.id)}">+ Étape</button></div>${nextTask ? `<p class="tipe-next-title">${esc(nextTask.title)}</p><button class="secondary-btn" data-task-focus="${esc(nextTask.id)}">Travailler cette étape</button>` : '<p class="tipe-empty">Choisis une petite action concrète pour avancer.</p>'}<div class="tipe-task-list">${tasks.map(taskWorkspaceRow).join('')}</div></section>
+      ${milestones}
       <section class="tipe-rail-section"><div class="tipe-section-head"><h2>Travail enregistré</h2><button class="link-btn" data-tipe-calendar>Calendrier réel</button></div>${sessions.slice().sort((a,b) => String(b.started_at).localeCompare(String(a.started_at))).slice(0,5).map(r => `<div class="tipe-session"><span>${formatShort(r.legacy_date || FocusData.iso(new Date(r.started_at)))}</span><div><strong>${esc(r.session_goal || 'Travail TIPE')}</strong><span>${r.status === 'completed' ? 'Terminée' : 'Interrompue'}</span></div><strong>${FocusData.duration(r.duration_seconds)}</strong></div>`).join('') || `<p class="tipe-empty">${snap.ready ? 'Tes sessions apparaîtront ici après enregistrement.' : 'Chargement des sessions…'}</p>`}</section></aside></div></div>`;
     bindDraft('#tipeMCOTForm',['motivation','anchor','positioning','keywordsFr','keywordsEn','bibliography','objectives']);
     bindDraft('#tipeOralForm',['oralPlan','oralQuestions']);
   }
   function bindDraft(selector,fields) {
     const form = document.querySelector(selector);
+    if (!form) return;
     form.onsubmit = event => {
       event.preventDefault(); const values = Object.fromEntries(new FormData(form));
       persistData(Object.fromEntries(fields.map(k => [k,values[k] || ''])));clearTimeout(draftTimer);pendingDraft=null;save();updateReadiness();
@@ -172,7 +191,7 @@
   });
   document.addEventListener('click',e => {
     const b=e.target.closest('button');if(!b)return;const v=b.dataset;
-    if(v.tipeJump)document.getElementById('tipe-'+v.tipeJump)?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    if(v.tipeJump&&currentPage==='projects'){tipeStep=v.tipeJump;render();const nav=document.querySelector('.tipe-steps');if(nav&&nav.getBoundingClientRect().top<0)nav.scrollIntoView({block:'start'});}
     if(v.tipeRemove){const [collection,id]=v.tipeRemove.split(':');if(core.removeEntry(ensure(),collection,id)){save();render();showToast('Élément retiré. Il reste restaurable en bas du TIPE.');}}
     if(v.tipeRestore&&core.restoreEntry(ensure(),v.tipeRestore)){save();render();showToast('Élément restauré');}
     if ('tipeSubject' in v) editSubject();
@@ -187,5 +206,5 @@
   window.PrepagoTipe = {render,ensure,editSubject};
   document.addEventListener('click',e=>{if(e.target.closest('button,a'))flushDraft();},true);
   window.addEventListener('pagehide',flushDraft);
-  window.addEventListener('prepago:state-replaced',()=>{clearTimeout(draftTimer);pendingDraft=null;});
+  window.addEventListener('prepago:state-replaced',()=>{clearTimeout(draftTimer);pendingDraft=null;tipeStep=null;});
 })();

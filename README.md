@@ -33,7 +33,7 @@ Logging in from a local address talks to the real Supabase project.
 npm test
 ```
 
-This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) and `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
+This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) and `tests/qa/landing.py` (public home page: product tour video, XP section). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
 
 ## Publish
 

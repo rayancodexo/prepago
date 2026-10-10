@@ -7,3 +7,137 @@
 #prepagoLanding .lp-nav .lp-login{display:inline-flex;justify-content:center;align-items:center;gap:10px;min-height:44px;padding:10px 17px;border:1px solid #dce3ec;border-radius:8px;background:#fff;color:#17212d;font-size:var(--text-sm);font-weight:var(--font-semibold);line-height:1.4;white-space:nowrap;transition:background .18s,border-color .18s,color .18s}#prepagoLanding .lp-nav .lp-login svg{display:block;flex:none}#prepagoLanding .lp-nav .lp-login:hover{background:#edf3ff;border-color:#b8cdf8;color:#0750e8}#prepagoLanding .lp-nav .lp-login:focus-visible{outline:3px solid #0750e8;outline-offset:3px}@media(max-width:700px){#prepagoLanding .lp-nav .lp-login{padding:9px 13px;gap:8px}}
 
 }
+
+/* Public home page: hero with the product tour in a laptop (a phone on small screens),
+   the XP section and the ring in the focus tile. Loaded after the other public styles. */
+
+/* ---- Hero ------------------------------------------------------------------------- */
+.public-page .public-hero.hero-v2 { display: block; padding: 72px 0 24px; }
+.public-page .hero-v2-copy { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 24px 64px; align-items: end; }
+.public-page .public-hero.hero-v2 h1 { font-size: clamp(48px, 6vw, 84px); line-height: 1; letter-spacing: -.055em; font-weight: var(--font-bold); text-wrap: balance; }
+.public-page .hero-v2 .public-kicker { margin-bottom: 20px; }
+.public-page .hero-v2 .public-lead { max-width: 44ch; margin: 0; font-size: 18px; line-height: 1.6; }
+.public-page .hero-v2 .hero-highlights { margin-top: 18px; }
+.public-page .hero-v2 .public-hero-actions { margin-top: 24px; }
+.public-page .hero-v2 .public-button { min-height: 48px; padding: 0 22px; border-radius: 12px; font-size: 15px; }
+.public-page .hero-v2 .hero-reassurance { max-width: 46ch; }
+
+/* ---- Product tour ------------------------------------------------------------------ */
+.hero-tour { position: relative; max-width: 1120px; margin: 56px auto 0; isolation: isolate; }
+.hero-tour::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 8% -4% 4%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(10, 92, 255, .14), rgba(10, 92, 255, 0));
+  filter: blur(8px);
+}
+.tour-screen { position: relative; overflow: hidden; background: #F6F8FC; }
+.tour-screen .tour-poster, .tour-screen .tour-video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.tour-screen .tour-video { opacity: 0; transition: opacity .45s ease-out; }
+.hero-tour.is-playing .tour-video, .hero-tour.has-frame .tour-video { opacity: 1; }
+
+/* Laptop: lid with a thin dark bezel, then a wider base with the opening notch. */
+.laptop { position: relative; }
+.laptop-lid {
+  position: relative;
+  width: 86%;
+  margin: 0 auto;
+  padding: 1.5% 1.5% 1.7%;
+  border-radius: 22px 22px 8px 8px;
+  background: #0E1626;
+  box-shadow: inset 0 0 0 1px #2B3549, 0 50px 90px -40px rgba(20, 33, 58, .55), 0 18px 40px -24px rgba(20, 33, 58, .35);
+}
+.laptop-lid::before { content: ""; position: absolute; top: .55%; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: #2B3549; }
+.laptop-screen { aspect-ratio: 16 / 10; border-radius: 6px; }
+.laptop-base {
+  position: relative;
+  height: clamp(10px, 1.6vw, 18px);
+  border-radius: 2px 2px 18px 18px / 2px 2px 12px 12px;
+  background: linear-gradient(#E6EAF1, #C4CCD8 55%, #AEB7C4);
+  box-shadow: 0 22px 34px -22px rgba(20, 33, 58, .55);
+}
+.laptop-base i { position: absolute; top: 0; left: 50%; width: 15%; height: 42%; transform: translateX(-50%); border-radius: 0 0 10px 10px; background: linear-gradient(#B5BECB, #CDD4DE); }
+
+/* Phone: shown instead of the laptop on small screens. */
+.phone { display: none; width: min(300px, 76vw); margin: 0 auto; padding: 10px; border-radius: 46px; background: #0E1626; box-shadow: inset 0 0 0 1px #2B3549, 0 40px 70px -30px rgba(20, 33, 58, .55); }
+.phone-screen { aspect-ratio: 9 / 16; border-radius: 36px; }
+.phone-screen::after { content: ""; position: absolute; top: 10px; left: 50%; width: 84px; height: 24px; margin-left: -42px; border-radius: 12px; background: #0E1626; }
+
+.hero-tour figcaption { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 22px; color: var(--secondary); font-size: var(--text-xs); line-height: 1.5; text-align: center; }
+.tour-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: var(--font-medium) 13px/1 var(--font-sans);
+  cursor: pointer;
+}
+.tour-toggle:hover { background: var(--surface-hover); }
+.tour-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.tour-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+.tour-toggle .i-play, .tour-toggle[aria-pressed="true"] .i-pause { display: none; }
+.tour-toggle[aria-pressed="true"] .i-play { display: block; }
+
+/* ---- Focus tile: the timer sits in a ring, as in the app ---------------------------- */
+.bento-ring { position: relative; display: block; width: 156px; height: 156px; margin: 16px auto 20px; }
+.bento-ring svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+.bento-ring circle { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: 3; }
+.bento-ring circle.v { stroke: #5B95FF; stroke-linecap: round; stroke-dasharray: 351.86; stroke-dashoffset: 70; }
+.public-page .bento-focus .bento-timer-ui .bento-ring strong { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; font-size: 40px; line-height: 1; font-weight: var(--font-semibold); }
+
+/* ---- XP and levels ------------------------------------------------------------------ */
+.public-page .home-xp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; border-top: 1px solid var(--hairline); }
+.public-page .home-xp h2 { margin: 0; font-size: 40px; line-height: 1.1; letter-spacing: -.035em; font-weight: var(--font-semibold); }
+.public-page .home-xp h2 span { color: var(--brand); }
+.public-page .home-xp-copy > p { max-width: 46ch; margin: 20px 0 0; color: var(--secondary); line-height: 1.6; }
+.xp-table { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 28px 0 0; padding: 0; list-style: none; }
+.xp-table li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--hairline); font-size: 15px; }
+.xp-table b { color: var(--brand); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.home-xp-visual { display: flex; flex-direction: column; gap: 16px; }
+.xp-level, .xp-top { padding: 24px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); box-shadow: 0 30px 60px -40px rgba(20, 33, 58, .3); }
+.xp-level-head { display: flex; align-items: center; gap: 16px; }
+.public-page .xp-orb { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--brand); color: #fff; font-size: 24px; font-weight: var(--font-bold); }
+.xp-level-head strong { display: block; font-size: 20px; line-height: 1.25; letter-spacing: -.02em; }
+.xp-level-head span { color: var(--secondary); font-size: 14px; }
+.xp-level-bar { height: 8px; margin-top: 20px; border-radius: 4px; background: var(--hairline); overflow: hidden; }
+.xp-level-bar i { display: block; width: 3%; height: 100%; border-radius: 4px; background: var(--brand); }
+.xp-level-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; color: var(--secondary); font-size: 13px; font-variant-numeric: tabular-nums; }
+.xp-top-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; }
+.xp-top-head strong { font-size: 16px; }
+.xp-top-head span { color: var(--secondary); font-size: 13px; }
+.xp-top ol { margin: 14px 0 0; padding: 0; list-style: none; }
+.xp-top li { display: grid; grid-template-columns: 32px minmax(0, 1fr) 48px auto; align-items: center; gap: 12px; height: 48px; padding: 0 12px; border-radius: 10px; font-size: 15px; }
+.xp-top li b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--brand-tint); color: var(--brand); font-size: 13px; }
+.xp-top li small { color: var(--secondary); font-size: 13px; }
+.xp-top li em { font-style: normal; font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+.xp-top li.me { background: var(--brand-tint); }
+.xp-top li.me span { font-weight: var(--font-semibold); }
+.home-xp-visual .demo-caption { margin: 0; text-align: right; }
+
+/* ---- Small screens ------------------------------------------------------------------ */
+@media (max-width: 1023px) {
+  .public-page .hero-v2-copy { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .public-page .home-xp { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+}
+@media (max-width: 767px) {
+  .public-page .public-hero.hero-v2 { padding: 40px 0 8px; }
+  .public-page .public-hero.hero-v2 h1 { font-size: clamp(44px, 12vw, 60px); }
+  .public-page .hero-v2 .public-lead { font-size: 17px; }
+  .public-page .hero-v2 .public-hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-tour { margin-top: 40px; }
+  .hero-tour .laptop { display: none; }
+  .hero-tour .phone { display: block; }
+  .public-page .home-xp h2 { font-size: var(--text-title); line-height: 1.15; }
+  .xp-table { grid-template-columns: minmax(0, 1fr); }
+  .xp-top li { grid-template-columns: 28px minmax(0, 1fr) 40px auto; gap: 10px; padding: 0 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-screen .tour-video { transition: none; }
+}

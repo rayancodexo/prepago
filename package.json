@@ -4,7 +4,7 @@
   "description": "Prepago — static site (dist/) and Supabase backend (supabase/).",
   "scripts": {
     "dev": "vite dist --config vite.config.mjs",
-    "test": "python3 tests/qa/qa.py check && python3 tests/qa/flows.py && python3 tests/qa/home.py && python3 tests/qa/pages.py"
+    "test": "python3 tests/qa/qa.py check && python3 tests/qa/flows.py && python3 tests/qa/home.py && python3 tests/qa/pages.py && python3 tests/qa/landing.py"
   },
   "repository": {
     "type": "git",

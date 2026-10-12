@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Izem 2030 : le compagnon du supporter pour le Mondial 2030 au Maroc. Démo de hackathon, concept non officiel.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%81%3C/text%3E%3C/svg%3E">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Izem Morocco 2030</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Kufi+Arabic:wght@600;700&family=Noto+Sans+Arabic:wght@400;500;600&display=swap"><style>
+/* Layout: app shell. Brand, tabs and language switch on top; the guide scrolls on one side and
+   Izem's chat stays docked on the other. On phones the chat is its own tab in a bottom bar.
+   Identity: white first, then the flag's red and green, a saffron zellij-star mane and Fez cobalt.
+   One light look on purpose: the owner asked for white as the main colour on every device. */
+:root {
+  --bg: #FFFFFF; --surface: #FFFFFF; --surface-2: #F0F3F1; --tint: #F6F8F6; --ink: #101C16; --muted: #55635B; --line: #DDE4DF;
+  --pitch: #0A6A44; --pitch-ink: #FFFFFF; --pitch-soft: #DFF1E7;
+  --red: #C1272D; --red-ink: #FFFFFF; --red-soft: #FBE4E3;
+  --saffron: #8A5300; --saffron-soft: #FDEFCB;
+  --blue: #1F4E9C; --blue-soft: #E2EBF9;
+  --sea: #D3E3F3; --sea-ink: #3A5E90; --land: #F5EFDD; --land-2: #E3E8DC; --land-line: #CFC39E; --route: #101C16;
+  --mane: #E8A317; --mane-2: #C47A0A; --fur: #F7CB6B; --muzzle: #FFF3D6; --face-ink: #3A2410; --star: #0A6A44; --blush: #E2574C;
+  --kit: #C1272D; --kit-2: #0B5C3C; --ball: #FFFFFF;
+  --font-num: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+  --font-body: "Instrument Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --lh-d: .95;
+  --fs-xs: .75rem; --fs-sm: .875rem; --fs-md: 1rem; --fs-lg: 1.375rem; --fs-xl: 2rem;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 24px;
+  --zellij: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.3'%3E%3Crect x='8.2' y='8.2' width='39.6' height='39.6'/%3E%3Crect x='8.2' y='8.2' width='39.6' height='39.6' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E");
+  --khatam: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='4' width='16' height='16'/%3E%3Crect x='4' y='4' width='16' height='16' transform='rotate(45 12 12)'/%3E%3C/svg%3E");
+  --frieze: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22'%3E%3Cg fill='%23C1272D'%3E%3Crect x='5' y='5' width='12' height='12'/%3E%3Crect x='5' y='5' width='12' height='12' transform='rotate(45 11 11)'/%3E%3C/g%3E%3Cg fill='%230A6A44'%3E%3Crect x='27' y='5' width='12' height='12'/%3E%3Crect x='27' y='5' width='12' height='12' transform='rotate(45 33 11)'/%3E%3C/g%3E%3Cg fill='%23E8A317'%3E%3Crect x='20.5' y='9.5' width='3' height='3' transform='rotate(45 22 11)'/%3E%3Crect x='-1.5' y='9.5' width='3' height='3' transform='rotate(45 0 11)'/%3E%3Crect x='42.5' y='9.5' width='3' height='3' transform='rotate(45 44 11)'/%3E%3C/g%3E%3C/svg%3E");
+  color-scheme: light;
+}
+:root[lang="ar"] {
+  --font-display: "Noto Kufi Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif;
+  --font-body: "Noto Sans Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif;
+  --lh-d: 1.35;
+}
+:root[lang="ar"] * { letter-spacing: 0 !important; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 400 var(--fs-md)/1.5 var(--font-body); }
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--mane); outline-offset: 2px; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.d { font-family: var(--font-display); line-height: var(--lh-d); text-transform: uppercase; letter-spacing: .015em; }
+
+/* ---------- shell ---------- */
+.app { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "brand lang" "content content" "nav nav"; }
+.brand { grid-area: brand; display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--line); min-width: 0; }
+.brand .izem { width: 38px; height: 38px; flex: none; }
+.brand-name { font: 800 1.5rem/1 var(--font-num); letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; }
+.brand-name b { color: var(--red); font-weight: 800; }
+.lang { grid-area: lang; display: flex; align-items: center; gap: 2px; padding: 8px 16px 8px 0; padding-inline: 0 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.lang button { border: 0; background: none; min-width: 34px; height: 30px; padding: 0 6px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.lang button[aria-pressed="true"] { background: var(--pitch); color: var(--pitch-ink); }
+
+.nav { grid-area: nav; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px); }
+.nav button { background: none; border: 0; padding: 8px 2px 9px; display: grid; justify-items: center; gap: 2px;
+  font-size: .6875rem; font-weight: 600; color: var(--muted); min-width: 0; }
+.nav button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav button.on { color: var(--pitch); box-shadow: inset 0 3px 0 var(--red); }
+
+.views { grid-area: content; overflow-y: auto; min-width: 0; }
+.view { display: none; flex-direction: column; gap: 32px; padding-inline: 16px; padding-block: 16px 44px; max-width: 1060px; margin-inline: auto; }
+.view.on { display: flex; }
+.chat { grid-area: content; min-width: 0; min-height: 0; display: none; flex-direction: column; background: var(--surface); }
+.app[data-chat="1"] .views { display: none; }
+.app[data-chat="1"] .chat { display: flex; }
+
+@media (min-width: 980px) {
+  .app { grid-template-columns: auto minmax(0, 1fr) auto 400px; grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "brand nav lang chat" "content content content chat"; }
+  .brand { padding-inline: 24px 8px; }
+  .nav { display: flex; align-items: stretch; gap: 2px; border-top: 0; border-bottom: 1px solid var(--line); padding: 0 8px; }
+  .nav button { grid-auto-flow: column; align-items: center; gap: 8px; padding: 0 12px; font-size: var(--fs-sm); border-bottom: 3px solid transparent; }
+  .nav svg { width: 20px; height: 20px; }
+  .nav button[data-view="chat"] { display: none; }
+  .nav button.on { border-bottom-color: var(--red); box-shadow: none; }
+  .app[data-chat="1"] .views { display: block; }
+  .chat { grid-area: chat; display: flex; border-inline-start: 1px solid var(--line); }
+  .view { padding-inline: 28px; padding-block: 24px 60px; gap: 40px; }
+}
+
+/* ---------- mascot ---------- */
+.izem, .izem-full { display: block; overflow: visible; }
+.izem-mane { transform-origin: 60px 60px; }
+.izem-eye { transform-box: fill-box; transform-origin: center; animation: blink 5.2s infinite; }
+.izem-arm { transform-origin: 124px 118px; animation: wave 2.4s ease-in-out infinite; }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+@keyframes spin { to { transform: rotate(90deg); } }
+@keyframes wave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-16deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.thinking .izem-mane { animation: spin 1.1s cubic-bezier(.6, 0, .3, 1) infinite; }
+
+/* ---------- buttons ---------- */
+.btn { border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 600; font-size: var(--fs-sm); background: var(--pitch); color: var(--pitch-ink); }
+.btn:hover { filter: brightness(1.08); }
+.btn-hero { background: var(--red); color: var(--red-ink); }
+.btn-ghost-hero { background: transparent; color: var(--pitch); box-shadow: inset 0 0 0 1.5px var(--pitch); }
+.btn-quiet { background: var(--surface-2); color: var(--ink); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; border-radius: var(--r-lg); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+  padding: 16px 20px 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.hero::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 22px; background: var(--frieze) center / 44px 22px repeat-x; }
+.hero-copy { position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0; padding-bottom: 42px; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--pitch); }
+.hero h1 { font: 800 clamp(2.75rem, 8vw, 4.5rem)/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .005em; text-wrap: balance; }
+.hero h1 span { color: var(--red); display: block; }
+:root[lang="ar"] .hero h1 { font-size: clamp(2rem, 6.4vw, 3.4rem); font-weight: 700; }
+.hero p { color: var(--muted); max-width: 48ch; }
+.countdown { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 6px; direction: ltr; }
+:root[lang="ar"] .countdown { justify-content: end; }
+.cd { border-radius: var(--r-sm); padding: 8px 8px 6px; min-width: 56px; text-align: center; background: var(--red); color: #FFFFFF; }
+.cd:nth-child(2) { background: var(--pitch); }
+.cd:nth-child(3) { background: var(--mane); color: var(--face-ink); }
+.cd:nth-child(4) { background: var(--blue); }
+.cd .num { display: block; font-weight: 700; font-size: clamp(1.75rem, 7vw, 2.25rem); line-height: 1; }
+.cd small { font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; }
+.cd-note { font-size: var(--fs-sm); color: var(--muted); }
+.hero-mascot { position: relative; order: -1; justify-self: center; display: grid; justify-items: center; align-content: end; }
+.hero-mascot::before, .hero-mascot::after { content: ""; position: absolute; left: 50%; top: 56%; width: 108%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; }
+.hero-mascot::before { background: var(--pitch); }
+.hero-mascot::after { background: rgba(255, 255, 255, .2); -webkit-mask: var(--zellij) center / 44px 44px; mask: var(--zellij) center / 44px 44px; }
+.hero-mascot .izem-full { position: relative; z-index: 1; width: 150px; height: 180px; }
+.hero-mascot .izem-body { animation: bob 4.5s ease-in-out infinite; }
+.bubble { position: relative; z-index: 2; background: var(--ink); color: #FFFFFF; font-weight: 600; font-size: var(--fs-sm); padding: 6px 12px; border-radius: 14px; border-end-start-radius: 4px; margin-bottom: -4px; }
+@media (min-width: 680px) {
+  .hero { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 32px 40px 0 36px; gap: 32px; }
+  .hero-copy { padding-bottom: 54px; }
+  .hero-mascot { order: 0; margin-bottom: 34px; }
+  .hero-mascot .izem-full { width: 230px; height: 276px; }
+}
+
+/* ---------- sections ---------- */
+.sec { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sec-h { display: flex; align-items: center; gap: 10px; font: 700 var(--fs-xl)/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .02em; text-wrap: balance; }
+.sec-h::before { content: ""; flex: none; width: 18px; height: 18px; background: var(--red); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+:root[lang="ar"] .sec-h { font-size: 1.5rem; }
+.lede { color: var(--muted); max-width: 65ch; }
+
+.acts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.act { text-align: start; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r-md); padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: start; }
+.act:hover { border-color: var(--ink); }
+.act:nth-child(2) svg { background: var(--blue-soft); color: var(--blue); }
+.act:nth-child(3) svg { background: var(--red-soft); color: var(--red); }
+.act svg { grid-row: span 2; width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: var(--pitch-soft); color: var(--pitch); fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.act b { font: 700 1.375rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .02em; }
+:root[lang="ar"] .act b { font-size: 1.0625rem; line-height: 1.5; }
+.act span { font-size: var(--fs-sm); color: var(--muted); }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); overflow: hidden; }
+.facts div { padding: 14px 16px; border-inline-end: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0 -1px -1px 0; }
+.facts dt { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.facts dd { font: 700 2.5rem/1.05 var(--font-num); font-variant-numeric: tabular-nums; color: var(--red); }
+.facts div:nth-child(2) dd { color: var(--pitch); }
+.facts div:nth-child(3) dd { color: var(--blue); }
+.facts div:nth-child(4) dd { color: var(--saffron); }
+.facts div:nth-child(5) dd { color: var(--pitch); }
+
+.dates { display: grid; border-inline-start: 2px solid var(--line); margin-inline-start: 6px; }
+.dates li { position: relative; padding-block: 0 18px; padding-inline: 22px 0; display: grid; gap: 2px; }
+.dates li:last-child { padding-bottom: 0; }
+.dates li:nth-child(2)::before { background: var(--pitch); }
+.dates li:nth-child(3)::before { background: var(--mane-2); }
+.dates li::before { content: ""; position: absolute; inset-inline-start: -8px; top: 4px; width: 14px; height: 14px; background: var(--red); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+.dates .when { font: 700 1.375rem/1.15 var(--font-display); text-transform: uppercase; letter-spacing: .02em; }
+:root[lang="ar"] .dates .when { font-size: 1.125rem; line-height: 1.5; }
+.dates .what { color: var(--muted); max-width: 60ch; }
+
+.hosts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.host-group { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.host-group h3 { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.host-group ul { display: flex; flex-wrap: wrap; gap: 8px; }
+.host-group li { font: 700 1.375rem/1 var(--font-display); text-transform: uppercase; letter-spacing: .02em; padding: 7px 12px; border-radius: var(--r-sm); background: var(--surface-2); }
+:root[lang="ar"] .host-group li { font-size: 1.0625rem; line-height: 1.4; }
+.host-group li.home { background: var(--kit); color: #FFFFFF; }
+.host-group p { font-size: var(--fs-sm); color: var(--muted); }
+
+.history li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.history li:last-child { border-bottom: 1px solid var(--line); }
+.history .yr { font: 700 1.75rem/1 var(--font-num); font-variant-numeric: tabular-nums; color: var(--red); }
+.history strong { font-weight: 600; }
+.history span { color: var(--muted); }
+
+.open-q { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 24px; }
+.open-q li { padding-inline-start: 20px; position: relative; font-size: var(--fs-sm); color: var(--muted); }
+.open-q li::before { content: ""; position: absolute; inset-inline-start: 0; top: .35em; width: 12px; height: 12px; background: var(--saffron); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+.open-q strong { color: var(--ink); font-weight: 600; }
+.foot { font-size: var(--fs-xs); color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; max-width: 80ch; }
+
+/* ---------- map ---------- */
+.map-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (min-width: 720px) { .map-wrap { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
+.map { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); background: var(--sea); }
+.map svg { display: block; width: 100%; height: auto; direction: ltr; }
+.map .land { fill: var(--land); stroke: var(--land-line); stroke-width: 1.2; }
+.map .land2 { fill: var(--land-2); stroke: var(--land-line); stroke-width: 1; }
+.map .sea-l { fill: var(--sea-ink); font: 600 11px var(--font-body); letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.map .rt { fill: none; stroke: var(--route); stroke-linecap: round; }
+.map .rt.boraq { stroke-width: 3.2; }
+.map .rt.rail { stroke-width: 1.6; }
+.map .rt.road { stroke-width: 1.6; stroke-dasharray: 2 5; }
+.map .city { cursor: pointer; }
+.map .city .mk { fill: var(--kit); stroke: var(--surface); stroke-width: 1.5; transition: transform .2s; transform-box: fill-box; transform-origin: center; }
+.map .city.on .mk { fill: var(--mane); stroke: var(--face-ink); transform: scale(1.25); }
+.map .city text { fill: var(--ink); font: 700 15px var(--font-display); paint-order: stroke; stroke: var(--land); stroke-width: 3px; stroke-linejoin: round; }
+.map .city.sea text { stroke: var(--sea); }
+.map .city:focus, .map .city:focus-visible { outline: none; }
+.map .city:focus-visible .mk { stroke: var(--mane); stroke-width: 3; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: var(--fs-xs); color: var(--muted); padding: 10px 12px; background: var(--surface); border-top: 1px solid var(--line); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 22px; border-top: 3px solid var(--route); }
+.legend i.rail { border-top-width: 1.5px; }
+.legend i.road { border-top: 2px dotted var(--route); }
+.mpanel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.mpanel h3 { font: 700 1.625rem/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .015em; }
+:root[lang="ar"] .mpanel h3, :root[lang="ar"] .stad h3 { font-size: 1.25rem; }
+.mpanel .sub { font-size: var(--fs-sm); color: var(--muted); }
+.legs { display: grid; }
+.legs li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: var(--fs-sm); }
+.legs b { font-weight: 600; }
+.legs .t { font: 700 1.25rem/1 var(--font-num); font-variant-numeric: tabular-nums; grid-row: span 2; align-self: center; }
+.legs small { color: var(--muted); font-size: var(--fs-xs); }
+
+/* ---------- stadium cards ---------- */
+.stad-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface-2); border-radius: 999px; padding: 3px; }
+.seg button { border: 0; background: none; border-radius: 999px; padding: 6px 14px; font-size: var(--fs-sm); font-weight: 600; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .14); }
+.stad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+.stad { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; scroll-margin: 16px; }
+.stad-top { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.stad h3 { font: 700 1.625rem/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .015em; text-wrap: balance; }
+.stad-city { font-size: var(--fs-sm); color: var(--muted); }
+.pill { font-size: .6875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; }
+.pill.new { background: var(--red-soft); color: var(--red); }
+.pill.done { background: var(--pitch-soft); color: var(--pitch); }
+.pill.plan { background: var(--saffron-soft); color: var(--saffron); }
+.cap { display: grid; gap: 6px; }
+.cap-row { display: flex; align-items: baseline; gap: 8px; }
+.cap-row .num { font-weight: 700; font-size: 2.5rem; line-height: 1; }
+.cap-row small { font-size: var(--fs-xs); color: var(--muted); }
+.cap-bar { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.cap-bar i { display: block; height: 100%; background: var(--pitch); border-radius: 4px; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; font-size: var(--fs-sm); }
+.kv dt { color: var(--muted); }
+.stad p { font-size: var(--fs-sm); color: var(--muted); }
+.stad .btn-row { margin-top: auto; }
+.note { font-size: var(--fs-xs); color: var(--muted); }
+
+/* ---------- planner ---------- */
+.pl { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (min-width: 760px) { .pl { grid-template-columns: 290px minmax(0, 1fr); } }
+.pl-form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px; display: grid; gap: 14px; }
+.fld { display: grid; gap: 6px; }
+.fld > label, .fld > .lbl { font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.fld select { width: 100%; background: var(--tint); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 9px 10px; }
+.togs { display: flex; flex-wrap: wrap; gap: 6px; }
+.togs button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: var(--fs-sm); font-weight: 500; }
+.togs button[aria-pressed="true"] { background: var(--pitch); border-color: var(--pitch); color: var(--pitch-ink); }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; min-width: 0; }
+.plan-top { position: relative; background: var(--kit); color: #FFFFFF; padding: 18px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; align-items: center; }
+.plan-top::before { content: ""; position: absolute; inset: 0; background: rgba(255, 255, 255, .13); -webkit-mask: var(--zellij) 0 0 / 56px 56px; mask: var(--zellij) 0 0 / 56px 56px; pointer-events: none; }
+.plan-top > * { position: relative; }
+.plan-top .izem { width: 64px; height: 64px; grid-row: span 3; }
+.plan-tag { justify-self: start; font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; background: rgba(255, 255, 255, .2); padding: 3px 9px; border-radius: 999px; }
+.plan-top h3 { font: 800 1.875rem/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .015em; }
+:root[lang="ar"] .plan-top h3 { font-size: 1.375rem; }
+.plan-top p { font-size: var(--fs-sm); color: #FFFFFF; }
+.steps { padding: 18px; display: grid; }
+.steps li { display: grid; grid-template-columns: 58px 18px minmax(0, 1fr); gap: 0 10px; }
+.steps .tm { font: 700 1.25rem/1.2 var(--font-num); font-variant-numeric: tabular-nums; text-align: end; }
+.steps .tm.txt { font: 600 var(--fs-xs)/1.3 var(--font-body); color: var(--muted); padding-top: 4px; }
+.steps .rail { position: relative; }
+.steps .rail::before { content: ""; position: absolute; top: 4px; inset-inline-start: 2px; width: 14px; height: 14px; background: var(--pitch); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+.steps .rail::after { content: ""; position: absolute; top: 22px; bottom: 0; inset-inline-start: 8px; border-inline-start: 2px solid var(--line); }
+.steps li:last-child .rail::after { display: none; }
+.steps li.ko .rail::before { background: var(--red); }
+.steps .bd { padding-bottom: 18px; display: grid; gap: 2px; }
+.steps li:last-child .bd { padding-bottom: 0; }
+.steps .bd b { font-weight: 600; }
+.steps .bd span { font-size: var(--fs-sm); color: var(--muted); }
+.budget { border-top: 1px solid var(--line); padding: 18px; display: grid; gap: 10px; }
+.budget h4 { margin: 0; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.budget dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; font-size: var(--fs-sm); }
+.budget dd { font-variant-numeric: tabular-nums; text-align: end; }
+.budget .tot { font-weight: 600; font-size: var(--fs-md); border-top: 1px solid var(--line); padding-top: 8px; }
+.budget dd.tot { font: 700 1.5rem/1 var(--font-num); }
+.plan-foot { border-top: 1px solid var(--line); padding: 14px 18px; }
+
+/* ---------- local ---------- */
+.picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.pick { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; display: grid; gap: 6px; align-content: start; }
+.pick .cat { justify-self: start; font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--pitch-soft); color: var(--pitch); }
+.pick .cat.craft { background: var(--saffron-soft); color: var(--saffron); }
+.pick .cat.see { background: var(--red-soft); color: var(--red); }
+.pick .cat.stay { background: var(--surface-2); color: var(--ink); }
+.pick b { font: 700 1.375rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .015em; }
+:root[lang="ar"] .pick b { font-size: 1.0625rem; line-height: 1.5; }
+.pick p { font-size: var(--fs-sm); color: var(--muted); }
+.biz { border-radius: var(--r-md); background: var(--surface-2); padding: 20px; display: grid; gap: 12px; }
+.biz-h { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.biz h3 { font: 700 1.5rem/var(--lh-d) var(--font-display); text-transform: uppercase; letter-spacing: .02em; }
+:root[lang="ar"] .biz h3 { font-size: 1.1875rem; }
+.biz ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 20px; }
+.biz li { position: relative; padding-inline-start: 20px; font-size: var(--fs-sm); }
+.biz li::before { content: ""; position: absolute; inset-inline-start: 0; top: .35em; width: 12px; height: 12px; background: var(--pitch); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+
+/* ---------- chat ---------- */
+.chat-head { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 16px 18px; border-bottom: 1px solid var(--line); }
+.chat-head::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 8px; background: var(--frieze) center / 16px 8px repeat-x; }
+.chat-head .izem { width: 52px; height: 52px; flex: none; }
+.chat-head h2 { font: 800 1.5rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .02em; }
+.chat-head p { font-size: var(--fs-xs); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.chat-head p::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--pitch); }
+.chat-head .btn-quiet { margin-inline-start: auto; padding: 7px 12px; font-size: var(--fs-xs); flex: none; }
+.thread { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: var(--tint); }
+.msg { display: flex; gap: 8px; align-items: flex-end; max-width: 100%; }
+.msg .izem { width: 30px; height: 30px; flex: none; }
+.msg-body { min-width: 0; max-width: min(88%, 34rem); padding: 10px 14px; border-radius: 16px; border-end-start-radius: 4px; background: var(--surface); border: 1px solid var(--line);
+  font-size: .9375rem; display: flex; flex-direction: column; gap: 8px; overflow-wrap: anywhere; }
+.msg.user { justify-content: flex-end; }
+.msg.user .msg-body { background: var(--pitch); color: var(--pitch-ink); border-color: transparent; border-end-start-radius: 16px; border-end-end-radius: 4px; }
+.msg-body ul { display: grid; gap: 4px; }
+.msg-body li { padding-inline-start: 16px; position: relative; }
+.msg-body li::before { content: ""; position: absolute; inset-inline-start: 0; top: .45em; width: 9px; height: 9px; background: var(--mane-2); -webkit-mask: var(--khatam) center / contain no-repeat; mask: var(--khatam) center / contain no-repeat; }
+.msg-body strong { font-weight: 600; }
+.msg-body .ai-text { white-space: pre-wrap; }
+.tag { align-self: flex-start; font-size: .625rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: var(--pitch-soft); color: var(--pitch); }
+.tip { font-size: var(--fs-sm); color: var(--muted); border-top: 1px dashed var(--line); padding-top: 8px; }
+.tip b { color: var(--saffron); font-weight: 600; }
+.mini { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 10px 12px; display: grid; gap: 4px; background: var(--tint); }
+.mini b { font: 700 1.25rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .02em; }
+:root[lang="ar"] .mini b { font-size: 1rem; line-height: 1.5; }
+.mini span { font-size: var(--fs-sm); color: var(--muted); }
+.mini button { justify-self: start; margin-top: 4px; background: none; border: 0; padding: 0; color: var(--pitch); font-weight: 600; font-size: var(--fs-sm); text-decoration: underline; text-underline-offset: 3px; }
+.dots { display: inline-flex; gap: 4px; padding: 4px 0; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: dot 1s infinite; }
+.dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 60%, 100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 0; background: var(--surface); border-top: 1px solid var(--line); }
+.chips button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: var(--fs-sm); color: var(--ink); }
+.chips button:hover { border-color: var(--pitch); color: var(--pitch); }
+.composer { display: flex; gap: 8px; padding: 10px 16px 14px; background: var(--surface); }
+.composer input { flex: 1; min-width: 0; background: var(--tint); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; }
+.composer input::placeholder { color: var(--muted); }
+.composer .btn { flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .izem-eye, .izem-arm, .hero-mascot .izem-body, .thinking .izem-mane, .dots i { animation: none; }
+  .map .city .mk { transition: none; }
+}
+
+.facts.why dt { text-transform: none; letter-spacing: 0; font-size: var(--fs-sm, .9rem); font-weight: 500; line-height: 1.35; }
+.facts.why dd { font-size: 2rem; margin-top: 4px; }
+.facts.why div { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+.why-note { margin-top: 10px; font-size: var(--fs-sm, .9rem); color: var(--muted); max-width: 62ch; }
+</style>
+</head>
+<body>
+
+
+<div class="app" data-chat="0">
+  <header class="brand">
+    <span data-izem></span>
+    <span class="brand-name">Izem <b>2030</b></span>
+  </header>
+
+  <div class="lang" role="group" aria-label="Language" id="lang">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+    <button type="button" data-lang="es" aria-pressed="false">ES</button>
+    <button type="button" data-lang="ar" aria-pressed="false" lang="ar">ع</button>
+  </div>
+
+  <nav class="nav" aria-label="Sections">
+    <button type="button" data-view="home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8l3.8 2.8-1.4 4.4H9.6l-1.4-4.4z"/><path d="M12 3v5M20.6 9.3l-4.8 1.5M17.3 19.3l-2.9-4.1M6.7 19.3l2.9-4.1M3.4 9.3l4.8 1.5"/></svg>
+      <span data-t="navHome"></span>
+    </button>
+    <button type="button" data-view="stadiums">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="9" rx="9" ry="4"/><path d="M3 9v6c0 2.2 4 4 9 4s9-1.800 9-4V9"/><path d="M8 12.600v5.900M16 12.600v5.900"/></svg>
+      <span data-t="navStadiums"></span>
+    </button>
+    <button type="button" data-view="planner">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.500"/><circle cx="18" cy="6" r="2.500"/><path d="M8.500 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.500"/></svg>
+      <span data-t="navPlanner"></span>
+    </button>
+    <button type="button" data-view="local">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.500 10h-13z"/><path d="M8 9l4-5 4 5"/><path d="M9.500 13v3M14.500 13v3"/></svg>
+      <span data-t="navLocal"></span>
+    </button>
+    <button type="button" data-view="chat">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="M8 9.500h8M8 12.500h5"/></svg>
+      <span data-t="navChat"></span>
+    </button>
+  </nav>
+
+  <main class="views" id="views">
+    <!-- ================= HOME ================= -->
+    <section class="view" id="view-home">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow" data-t="eyebrow"></span>
+          <h1><i style="font-style:normal" data-t="h1a"></i> <span data-t="h1b"></span></h1>
+          <p data-t="heroP"></p>
+          <div class="countdown" id="countdown">
+            <div class="cd"><span class="num" id="cd-d">0</span><small data-t="cdDays"></small></div>
+            <div class="cd"><span class="num" id="cd-h">00</span><small data-t="cdHours"></small></div>
+            <div class="cd"><span class="num" id="cd-m">00</span><small data-t="cdMin"></small></div>
+            <div class="cd"><span class="num" id="cd-s">00</span><small data-t="cdSec"></small></div>
+          </div>
+          <span class="cd-note" data-t="cdNote"></span>
+          <div class="btn-row">
+            <button type="button" class="btn btn-hero" data-view="planner" data-t="btnPlan"></button>
+            <button type="button" class="btn btn-ghost-hero" data-view="chat" data-t="btnAsk"></button>
+          </div>
+        </div>
+        <div class="hero-mascot">
+          <span class="bubble" dir="ltr">Salam! Dima Maghrib.</span>
+          <span data-izem-full></span>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="actTitle"></h2>
+        <div class="acts">
+          <button type="button" class="act" data-view="planner">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.500"/><circle cx="18" cy="6" r="2.500"/><path d="M8.500 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.500"/></svg>
+            <b data-t="act1T"></b><span data-t="act1P"></span>
+          </button>
+          <button type="button" class="act" data-view="stadiums">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.600 6-10.500A6 6 0 0 0 6 10.500C6 15.400 12 21 12 21z"/><circle cx="12" cy="10.500" r="2.200"/></svg>
+            <b data-t="act2T"></b><span data-t="act2P"></span>
+          </button>
+          <button type="button" class="act" data-view="local">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.500 10h-13z"/><path d="M8 9l4-5 4 5"/><path d="M9.500 13v3M14.500 13v3"/></svg>
+            <b data-t="act3T"></b><span data-t="act3P"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="whyTitle"></h2>
+        <dl class="facts why">
+          <div><dt data-t="w1"></dt><dd data-t="w1n"></dd></div>
+          <div><dt data-t="w2"></dt><dd data-t="w2n"></dd></div>
+          <div><dt data-t="w3"></dt><dd data-t="w3n"></dd></div>
+        </dl>
+        <p class="why-note" data-t="whyNote"></p>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="numTitle"></h2>
+        <dl class="facts">
+          <div><dt data-t="nTeams"></dt><dd>48</dd></div>
+          <div><dt data-t="nMatches"></dt><dd>104</dd></div>
+          <div><dt data-t="nCountries"></dt><dd>6</dd></div>
+          <div><dt data-t="nContinents"></dt><dd>3</dd></div>
+          <div><dt data-t="nStadiums"></dt><dd>6</dd></div>
+        </dl>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="datesTitle"></h2>
+        <ol class="dates">
+          <li><span class="when" data-t="d1w"></span><span class="what" data-t="d1t"></span></li>
+          <li><span class="when" data-t="d2w"></span><span class="what" data-t="d2t"></span></li>
+          <li><span class="when" data-t="d3w"></span><span class="what" data-t="d3t"></span></li>
+        </ol>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="hostsTitle"></h2>
+        <div class="hosts">
+          <div class="host-group">
+            <h3 data-t="hostMain"></h3>
+            <ul><li class="home" data-t="cMorocco"></li><li data-t="cSpain"></li><li data-t="cPortugal"></li></ul>
+            <p data-t="hostMainP"></p>
+          </div>
+          <div class="host-group">
+            <h3 data-t="hostCent"></h3>
+            <ul><li data-t="cUruguay"></li><li data-t="cArgentina"></li><li data-t="cParaguay"></li></ul>
+            <p data-t="hostCentP"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="histTitle"></h2>
+        <ol class="history">
+          <li><span class="yr">1970</span><div><strong data-t="h70t"></strong> <span data-t="h70p"></span></div></li>
+          <li><span class="yr">1986</span><div><strong data-t="h86t"></strong> <span data-t="h86p"></span></div></li>
+          <li><span class="yr">2022</span><div><strong data-t="h22t"></strong> <span data-t="h22p"></span></div></li>
+          <li><span class="yr">2026</span><div><strong data-t="h26t"></strong> <span data-t="h26p"></span></div></li>
+          <li><span class="yr">2030</span><div><strong data-t="h30t"></strong> <span data-t="h30p"></span></div></li>
+        </ol>
+      </div>
+
+      <div class="sec">
+        <h2 class="sec-h" data-t="openTitle"></h2>
+        <ul class="open-q">
+          <li><strong data-t="o1t"></strong> <span data-t="o1p"></span></li>
+          <li><strong data-t="o2t"></strong> <span data-t="o2p"></span></li>
+          <li><strong data-t="o3t"></strong> <span data-t="o3p"></span></li>
+          <li><strong data-t="o4t"></strong> <span data-t="o4p"></span></li>
+        </ul>
+      </div>
+
+      <p class="foot" data-t="foot"></p>
+    </section>
+
+    <!-- ================= STADIUMS + MAP ================= -->
+    <section class="view" id="view-stadiums">
+      <div class="sec">
+        <h2 class="sec-h" data-t="mapTitle"></h2>
+        <p class="lede" data-t="mapLede"></p>
+        <div class="map-wrap">
+          <div class="map">
+            <svg id="map" viewBox="0 0 500 456" role="group" aria-label="Map"></svg>
+            <div class="legend">
+              <span><i></i><span data-t="legBoraq"></span></span>
+              <span><i class="rail"></i><span data-t="legRail"></span></span>
+              <span><i class="road"></i><span data-t="legRoad"></span></span>
+            </div>
+          </div>
+          <div class="mpanel" id="mpanel" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="stad-head">
+          <h2 class="sec-h" data-t="stTitle"></h2>
+          <div class="seg" role="group" id="sort">
+            <button type="button" id="sort-cap" data-sort="cap" aria-pressed="true" data-t="sortCap"></button>
+            <button type="button" id="sort-geo" data-sort="geo" aria-pressed="false" data-t="sortGeo"></button>
+          </div>
+        </div>
+        <div class="stad-grid" id="stad-grid"></div>
+        <p class="note" data-t="scaleNote"></p>
+      </div>
+    </section>
+
+    <!-- ================= PLANNER ================= -->
+    <section class="view" id="view-planner">
+      <div class="sec">
+        <h2 class="sec-h" data-t="plTitle"></h2>
+        <p class="lede" data-t="plLede"></p>
+        <div class="pl">
+          <form class="pl-form" id="pl-form">
+            <div class="fld"><label for="pl-from" data-t="fFrom"></label><select id="pl-from"></select></div>
+            <div class="fld"><label for="pl-to" data-t="fTo"></label><select id="pl-to"></select></div>
+            <div class="fld"><label for="pl-ko" data-t="fKo"></label>
+              <select id="pl-ko"><option value="840">14:00</option><option value="1020">17:00</option><option value="1200" selected>20:00</option></select></div>
+            <div class="fld"><span class="lbl" data-t="fStyle"></span>
+              <div class="togs" id="pl-style" role="group">
+                <button type="button" id="pl-style-saver" data-style="saver" aria-pressed="false" data-t="sSaver"></button>
+                <button type="button" id="pl-style-comfort" data-style="comfort" aria-pressed="true" data-t="sComfort"></button>
+                <button type="button" id="pl-style-premium" data-style="premium" aria-pressed="false" data-t="sPremium"></button>
+              </div></div>
+            <div class="fld"><span class="lbl" data-t="fInt"></span>
+              <div class="togs" id="pl-int" role="group">
+                <button type="button" id="pl-int-eat" data-int="eat" aria-pressed="true" data-t="iEat"></button>
+                <button type="button" id="pl-int-see" data-int="see" aria-pressed="true" data-t="iSee"></button>
+                <button type="button" id="pl-int-craft" data-int="craft" aria-pressed="false" data-t="iCraft"></button>
+              </div></div>
+            <p class="note" data-t="plNote"></p>
+          </form>
+          <div class="plan" id="plan" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LOCAL ================= -->
+    <section class="view" id="view-local">
+      <div class="sec">
+        <h2 class="sec-h" data-t="loTitle"></h2>
+        <p class="lede" data-t="loLede"></p>
+        <div class="seg" role="group" id="lo-city"></div>
+        <div class="picks" id="picks"></div>
+        <div class="btn-row"><button type="button" class="btn" id="lo-plan"></button></div>
+      </div>
+      <div class="biz">
+        <div class="biz-h"><h3 data-t="bizTitle"></h3><span class="pill plan" data-t="conceptTag"></span></div>
+        <ul><li data-t="biz1"></li><li data-t="biz2"></li><li data-t="biz3"></li></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= CHAT ================= -->
+  <aside class="chat" id="chat">
+    <div class="chat-head">
+      <span data-izem id="chat-avatar"></span>
+      <div>
+        <h2>Izem</h2>
+        <p id="chat-status"></p>
+      </div>
+      <button type="button" class="btn btn-quiet" id="chat-reset" data-t="chReset"></button>
+    </div>
+    <div class="thread" id="thread" role="log" aria-live="polite"></div>
+    <div class="chips" id="chips"></div>
+    <form class="composer" id="composer" autocomplete="off">
+      <input id="chat-input" type="text" maxlength="240">
+      <button type="submit" class="btn" id="chat-send" data-t="chSend"></button>
+    </form>
+  </aside>
+</div>
+<script>
+(function () {
+'use strict';
+var L = {};
+var D = {
+  maxCap: 115000,
+  ids: ['casa', 'tangier', 'rabat', 'fez', 'agadir', 'marrakech'],
+  city: {
+    casa: { cap: 115000, lat: 33.66, lon: -7.20, status: 'new', anchor: 'end', transfer: 75 },
+    tangier: { cap: 75600, lat: 35.77, lon: -5.80, status: 'done', anchor: 'end', transfer: 35 },
+    rabat: { cap: 68700, lat: 34.02, lon: -6.84, status: 'done', anchor: 'end', transfer: 35 },
+    fez: { cap: 55800, lat: 34.03, lon: -5.00, status: 'plan', anchor: 'start', transfer: 35 },
+    agadir: { cap: 46000, lat: 30.42, lon: -9.60, status: 'plan', anchor: 'start', transfer: 35 },
+    marrakech: { cap: 45860, lat: 31.63, lon: -7.99, status: 'plan', anchor: 'start', transfer: 35 }
+  },
+  /* typical 2026 journeys: minutes, road km, one-way fare in MAD (2nd class or standard bus); alt = direct flight minutes */
+  travel: {
+    'casa-rabat': { mode: 'boraq', min: 60, km: 90, fare: 60 },
+    'casa-tangier': { mode: 'boraq', min: 130, km: 340, fare: 200 },
+    'casa-marrakech': { mode: 'train', min: 160, km: 240, fare: 130 },
+    'casa-fez': { mode: 'train', min: 225, km: 295, fare: 140 },
+    'casa-agadir': { mode: 'bus', min: 390, km: 460, fare: 250, alt: 65 },
+    'rabat-tangier': { mode: 'boraq', min: 80, km: 250, fare: 150 },
+    'rabat-fez': { mode: 'train', min: 165, km: 205, fare: 100 },
+    'rabat-marrakech': { mode: 'train', min: 225, km: 325, fare: 170 },
+    'rabat-agadir': { mode: 'mix', min: 450, km: 545, fare: 320 },
+    'tangier-fez': { mode: 'train', min: 240, km: 300, fare: 160 },
+    'tangier-marrakech': { mode: 'train', min: 300, km: 570, fare: 330 },
+    'tangier-agadir': { mode: 'flight', min: 90, km: 800, fare: 600 },
+    'fez-marrakech': { mode: 'train', min: 390, km: 530, fare: 230, alt: 60 },
+    'fez-agadir': { mode: 'flight', min: 75, km: 750, fare: 600 },
+    'marrakech-agadir': { mode: 'bus', min: 210, km: 250, fare: 130 }
+  },
+  tips: {
+    bshhal: ['Bshhal?', 'بشحال؟'], skhoun: ['Skhoun', 'سخون'], lagar: ['Fin kayna la gare?', 'فين كاينة لاگار؟'], bnin: ['Bnin', 'بنين'],
+    tiran: ['Tiran', 'تيران'], fuqash: ['Fuqash?', 'فوقاش؟'], koura: ['Koura', 'الكورة'], mrehba: ['Mrehba', 'مرحبا'], sbe3: ['Sbe3', 'سبع'],
+    blajmil: ['Bla jmil', 'بلا جميل'], labas: ['Labas?', 'لاباس؟'], yallah: ['Yallah', 'يالله'], zwin: ['Zwin', 'زوين'], mya: ['Mya', 'مية'], dima: ['Dima Maghrib', 'ديما مغرب']
+  },
+  coast: [[-1.5,35.1],[-2.2,35.1],[-2.93,35.27],[-2.96,35.44],[-3.3,35.2],[-3.93,35.25],[-4.4,35.15],[-4.68,35.21],[-5.08,35.45],[-5.27,35.62],[-5.32,35.9],[-5.56,35.85],[-5.78,35.8],[-5.93,35.79],[-6.04,35.46],[-6.16,35.2],[-6.3,34.88],[-6.68,34.26],[-6.86,34.03],[-7.4,33.72],[-7.66,33.6],[-8.35,33.3],[-8.52,33.25],[-9.03,32.73],[-9.28,32.55],[-9.25,32.3],[-9.5,31.9],[-9.78,31.51],[-9.85,30.9],[-9.89,30.63],[-9.62,30.42],[-9.68,30.05],[-9.84,29.8],[-10.18,29.38],[-10.5,29.0]],
+  spain: [[-6.3,36.6],[-6.1,36.28],[-5.92,36.18],[-5.6,36.01],[-5.45,36.13],[-5.34,36.12],[-5.15,36.42],[-4.88,36.5],[-4.5,36.6]],
+  routes: [
+    { cls: 'boraq', pts: [[-5.80,35.77],[-6.0,35.15],[-6.55,34.27],[-6.84,34.02],[-7.20,33.66]] },
+    { cls: 'rail', pts: [[-7.20,33.66],[-7.58,33.45],[-7.62,33.0],[-7.9,32.25],[-7.99,31.63]] },
+    { cls: 'rail', pts: [[-6.55,34.27],[-5.7,34.22],[-5.55,33.9],[-5.00,34.03]] },
+    { cls: 'road', pts: [[-7.99,31.63],[-8.8,31.15],[-9.2,30.65],[-9.60,30.42]] }
+  ]
+};
+L.en = {
+  locale: 'en-US', dir: 'ltr', langName: 'English',
+  ui: {
+    navHome: 'Home', navStadiums: 'Stadiums', navPlanner: 'Planner', navLocal: 'Local', navChat: 'Izem',
+    eyebrow: 'World Cup 2030 · Morocco, Spain, Portugal',
+    h1a: 'The Atlas Lions', h1b: 'host the world',
+    heroP: 'Six Moroccan stadiums, 48 teams and the tournament’s 100th birthday. Izem, your Atlas lion guide, plans your match day and answers in four languages.',
+    cdDays: 'days', cdHours: 'hours', cdMin: 'min', cdSec: 'sec', cdNote: 'until the first match on 8 June 2030',
+    btnPlan: 'Plan my match day', btnAsk: 'Ask Izem',
+    actTitle: 'What Izem does',
+    act1T: 'Plans your match day', act1P: 'How to get there, when to leave, what to eat and a budget in dirhams.',
+    act2T: 'Shows you the map', act2P: 'Six host cities, their stadiums and how long it takes to travel between them.',
+    act3T: 'Sends you to local places', act3P: 'Markets, craft streets and food that keep World Cup spending in Moroccan hands.',
+    whyTitle: 'Why Izem', w1n: '≈ 600,000', w1: 'Foreign visitors expected in Morocco (our estimate)', w2n: '2 million', w2: 'Target users, visitors and residents', w3n: '0.22 MAD', w3: 'Cost per user for the whole tournament', whyNote: 'Our estimates, not official figures. Izem answers from facts written in advance first; AI only steps in as a fallback.',
+    numTitle: 'The tournament in numbers', nTeams: 'Teams', nMatches: 'Matches', nCountries: 'Host countries', nContinents: 'Continents', nStadiums: 'Stadiums in Morocco',
+    datesTitle: 'Key dates',
+    d1w: '8 to 9 June 2030', d1t: 'Centenary matches in Montevideo, Buenos Aires and Asunción. The first is at Estadio Centenario, where the 1930 final was played.',
+    d2w: '13 to 14 June 2030', d2t: 'Opening matches in Morocco, Spain and Portugal. The tournament then stays in the three main host countries.',
+    d3w: '21 July 2030', d3t: 'The final. FIFA has not chosen the venue yet. Morocco is putting forward the Grand Stade Hassan II.',
+    hostsTitle: 'Who hosts what', hostMain: 'Main hosts', hostCent: 'Centenary matches',
+    hostMainP: '101 of the 104 matches. It is the first World Cup played in North Africa and the first shared between two confederations.',
+    hostCentP: 'One match each, to mark 100 years since Uruguay hosted and won the first World Cup in 1930.',
+    cMorocco: 'Morocco', cSpain: 'Spain', cPortugal: 'Portugal', cUruguay: 'Uruguay', cArgentina: 'Argentina', cParaguay: 'Paraguay',
+    histTitle: 'Morocco at the World Cup',
+    h70t: 'First appearance.', h70p: 'Morocco qualifies for Mexico 1970.',
+    h86t: 'Group winners.', h86p: 'The first African team to reach the round of 16.',
+    h22t: 'Fourth place in Qatar.', h22p: 'The first African and first Arab team in a World Cup semi-final.',
+    h26t: 'Quarter-finalists.', h26p: 'The run ends against France.',
+    h30t: 'Hosts.', h30p: 'After five unsuccessful bids, the World Cup comes to Morocco.',
+    openTitle: 'Still to be decided',
+    o1t: 'The final venue.', o1p: 'Madrid, Barcelona and the Grand Stade Hassan II are the names in play.',
+    o2t: 'The final stadium list.', o2p: 'FIFA has yet to confirm every host stadium.',
+    o3t: 'The number of teams.', o3p: '48 is the plan. A 64-team edition has been proposed.',
+    o4t: 'Tickets.', o4p: 'Nothing is on sale yet.',
+    foot: 'Izem is an unofficial fan concept and a hackathon demo. It is not affiliated with FIFA or any football federation. Facts come from the 2030 bid documents and press reports, checked in October 2026. Travel times and prices are estimates and may change before the tournament.',
+
+    mapTitle: 'The host cities', mapLede: 'Tap a city to see its stadium and the journey to the other five.',
+    legBoraq: 'Al Boraq high-speed line', legRail: 'Conventional rail', legRoad: 'Road, no rail yet',
+    seaAtl: 'Atlantic Ocean', seaMed: 'Mediterranean', spain: 'Spain',
+    mapFrom: 'From {city}', openCard: 'Stadium details', planHere: 'Plan a match day here', seats: '{n} seats',
+    stTitle: 'Morocco’s six stadiums', sortCap: 'Largest first', sortGeo: 'North to south',
+    seatsPlanned: 'seats planned', lblOpened: 'Opened', lblAirport: 'Airport', lblRail: 'Rail', askAbout: 'Ask Izem',
+    scaleNote: 'Bars share one scale: a full bar is 115,000 seats. Capacities are the planned 2030 figures from the bid and can still change.',
+
+    plTitle: 'Plan your match day',
+    plLede: 'Tell Izem where you are staying and where the match is. Izem works out the journey, the timing and a budget.',
+    fFrom: 'I’m staying in', fTo: 'The match is in', fKo: 'Kick-off', fStyle: 'Budget', sSaver: 'Saver', sComfort: 'Comfort', sPremium: 'Premium',
+    fInt: 'I also want to', iEat: 'Eat local', iSee: 'See the sights', iCraft: 'Shop crafts',
+    plNote: 'The match schedule is not out yet, so the kick-off time is an example.',
+    tagExample: 'Example plan', tagYours: 'Your plan',
+    planHead: '{from} to {to}', planSame: 'Match day in {to}',
+    sayTravel: '{mode}, about {dur}. Leave {from} by {time} and you will have time to look around before the match.',
+    saySame: 'You are already in {to}. Here is how to make a full day of it.',
+    sayDayBefore: 'That is too long for one day. Travel the day before and wake up in {to}.',
+    stDepart: 'Leave {from}', stDepartD: '{mode}, about {dur}. Roughly {km} km.',
+    stDayBefore: 'Travel to {to}', stDayBeforeD: '{mode}, about {dur}. Sleep in {to}: {stay}.', dayBefore: 'Day before',
+    stArrive: 'Arrive in {to}', stMorning: 'Start your day in {to}', stFree: 'Drop your bag and get your bearings.',
+    stGo: 'Head to the stadium',
+    goHassan: 'The stadium is in Benslimane, about 40 km from Casablanca. Allow well over an hour and aim to be at the gates two hours early.',
+    goOther: 'Allow 30 to 40 minutes by taxi or shuttle and aim to be at the gates two hours early.',
+    stKick: 'Kick-off at {stadium}', stKickD: '{n} seats. Find your gate early.',
+    stAfter: 'After the match',
+    afterStay: 'Trains and buses will be packed and it is late. Stay the night: {stay}.',
+    afterReturn: 'You can head back to {from} tonight, but book your seat ahead. Or stay: {stay}.',
+    afterSame: 'No travel tonight. Dinner idea: {eat}.',
+    altFlight: 'Short on time? A direct flight takes about {dur}.',
+    budTitle: 'Rough budget per person', bTravel: 'Travel there and back', bLocal: 'Taxis and shuttles', bFood: 'Food and drink', bCraft: 'Crafts and souvenirs', bSee: 'Visits', bTotal: 'Total',
+    bNote: 'Estimates in 2026 prices. Match ticket and hotel are not included.',
+    durH: '{h} h {m}', durHonly: '{h} h', durM: '{m} min', approxEur: 'about {n} €',
+
+    loTitle: 'Eat, shop and stay local',
+    loLede: 'Real places in each host city, chosen so World Cup spending reaches Moroccan cooks, artisans and hosts.',
+    loPlan: 'Plan a match day in {city}',
+    bizTitle: 'How Izem helps local businesses', conceptTag: 'Concept',
+    biz1: 'Free listing for riads, restaurants, artisans and guides near each stadium.',
+    biz2: 'Izem recommends them in four languages, at the moment a fan asks.',
+    biz3: 'Fans spend in the medina and the souk, and not only at the stadium.',
+
+    chScript: 'Demo · scripted answers', chLive: 'Scripted answers + live AI', chReset: 'Restart', chSend: 'Send',
+    chPlaceholder: 'Ask about stadiums, travel, food…', liveTag: 'Live AI', thinking: 'Thinking…',
+    openPlanner: 'Open the planner', openGuide: 'Open the map and stadiums', openLocal: 'See local picks',
+    chipStadium: 'The stadium in {city}', darija: 'Darija',
+    aiOff: 'Live AI is not available in this view, so I am back to my script. Try one of these:',
+    aiBusy: 'Too many questions at once. Give me a moment and ask again.',
+    aiFail: 'I could not reach the live AI. Ask again in a moment.'
+  },
+  cities: { casa: 'Casablanca', rabat: 'Rabat', tangier: 'Tangier', fez: 'Fez', marrakech: 'Marrakech', agadir: 'Agadir' },
+  modes: { boraq: 'Al Boraq high-speed train', train: 'Train', bus: 'Bus', flight: 'Flight', mix: 'Train then bus' },
+  cats: { eat: 'Eat', craft: 'Craft', see: 'See', stay: 'Stay' },
+  stad: {
+    casa: { name: 'Grand Stade Hassan II', where: 'Benslimane, near Casablanca', status: 'Under construction', opened: 'Target 2028', airport: 'Casablanca Mohammed V (CMN)', rail: 'Rail link planned for 2030',
+      blurb: 'Built from scratch for 2030, about 40 km from Casablanca on the road to Rabat. At 115,000 seats it is planned as the largest football stadium in the world, under a roof shaped like a traditional moussem tent. Morocco is putting it forward for the final.' },
+    tangier: { name: 'Grand Stade de Tanger', where: 'Tangier', status: 'Expanded 2025', opened: '2011', airport: 'Tangier Ibn Battouta (TNG)', rail: 'Al Boraq high-speed line',
+      blurb: 'Also known as Ibn Batouta Stadium. It sits minutes from the Strait of Gibraltar, the closest Moroccan ground to Spain. The running track was removed and a new roof added before the 2025 Africa Cup of Nations.' },
+    rabat: { name: 'Stade Prince Moulay Abdellah', where: 'Rabat', status: 'Rebuilt 2025', opened: '2025 (original 1983)', airport: 'Rabat-Salé (RBA)', rail: 'Al Boraq high-speed line',
+      blurb: 'The national stadium in the capital. The old ground was demolished and rebuilt as a football-only arena, reopening in 2025. It hosted the opening match and the final of the 2025 Africa Cup of Nations.' },
+    fez: { name: 'Grand Stade de Fès', where: 'Fez', status: 'Expansion planned', opened: '2007', airport: 'Fès-Saïs (FEZ)', rail: 'Conventional rail from Rabat and Casablanca',
+      blurb: 'Opened in 2007 and refreshed for the 2025 Africa Cup of Nations, with a larger bowl planned for 2030. The medieval medina of Fez, a UNESCO World Heritage site, is a short ride away.' },
+    agadir: { name: 'Grand Stade d’Agadir', where: 'Agadir', status: 'Upgrade planned', opened: '2013', airport: 'Agadir Al Massira (AGA)', rail: 'No rail yet. Bus, car or flight',
+      blurb: 'Also called Adrar Stadium. First designed for Morocco’s 2010 bid, it opened in 2013 between the Atlantic beaches and the Atlas foothills, and hosted FIFA Club World Cup matches that year.' },
+    marrakech: { name: 'Grand Stade de Marrakech', where: 'Marrakech', status: 'Upgrade planned', opened: '2011', airport: 'Marrakech Menara (RAK)', rail: 'Conventional rail. High-speed extension under construction',
+      blurb: 'Opened in 2011 just north of the Red City. It hosted the FIFA Club World Cup finals of 2013 and 2014 and is being remodelled for 2030.' }
+  },
+  local: {
+    casa: { eat: ['Marché Central', 'Pick your fish at the stalls and have it grilled at the tables next door.'],
+      craft: ['Quartier des Habous', 'An arcaded 1930s medina: babouches, brassware, olives and almond pastries.'],
+      see: ['Hassan II Mosque', 'One of the largest mosques in the world, built out over the Atlantic. Guided visits are open to non-Muslims.'],
+      stay: ['Near Casa-Port or Casa-Voyageurs', 'Stay by a station for trains to Rabat, and plan your transfer to the stadium early.'] },
+    rabat: { eat: ['Medina street food', 'Grilled sardines, bissara soup and msemen hot off the griddle along Rue Souika.'],
+      craft: ['Rue des Consuls', 'The street of Rabat’s carpet weavers, with leather and silver alongside.'],
+      see: ['Kasbah of the Udayas', 'Blue and white lanes above the river mouth, with the Hassan Tower nearby.'],
+      stay: ['Medina riads or Agdal', 'Riads inside the walls, or Agdal for the high-speed rail station.'] },
+    tangier: { eat: ['Fish grills by the port', 'Fried and grilled fish straight off the boats, near the fishing port.'],
+      craft: ['Fondouk Chejra', 'The weavers’ caravanserai by the Grand Socco, with looms still at work upstairs.'],
+      see: ['Café Hafa and the Kasbah', 'Mint tea on cliffside terraces since 1921, facing Spain across the strait.'],
+      stay: ['Kasbah guesthouses', 'Small guesthouses in the old town, a short walk from the port.'] },
+    fez: { eat: ['Pastilla in the medina', 'The city’s signature pie: flaky pastry, chicken or pigeon, almonds and cinnamon.'],
+      craft: ['Place Seffarine', 'Coppersmiths hammer pots in the open air, as they have for centuries.'],
+      see: ['Chouara Tannery', 'Leather dyed in stone vats, seen from the terraces above.'],
+      stay: ['Riads in Fes el-Bali', 'Courtyard houses inside one of the world’s largest car-free medinas.'] },
+    marrakech: { eat: ['Tanjia near Jemaa el-Fna', 'The city’s slow-cooked specialty, served around the square. After dark the square itself becomes an open-air kitchen.'],
+      craft: ['The souks', 'Leather, lanterns and carpets, sold street by street by trade. Bargain with a smile.'],
+      see: ['Jardin Majorelle', 'The cobalt-blue garden once owned by Yves Saint Laurent. Book ahead.'],
+      stay: ['Medina riads', 'Hundreds of restored courtyard houses within walking distance of the square.'] },
+    agadir: { eat: ['Fish stalls at the port', 'Choose from the day’s catch and have it grilled at shared tables.'],
+      craft: ['Souk El Had', 'One of Morocco’s largest markets. Look for argan oil and amlou from women’s cooperatives.'],
+      see: ['Agadir Oufella', 'The hilltop kasbah above the bay, reached by cable car.'],
+      stay: ['Beachfront or Taghazout', 'Hotels along the promenade, or the surf village of Taghazout about 20 km north.'] }
+  },
+  tips: { bshhal: 'how much?', skhoun: 'hot', lagar: 'where is the station?', bnin: 'delicious', tiran: 'the pitch, the stadium', fuqash: 'when?', koura: 'football', mrehba: 'welcome', sbe3: 'lion', blajmil: 'you’re welcome', labas: 'how are you?', yallah: 'let’s go', zwin: 'beautiful', mya: 'one hundred', dima: 'always Morocco' },
+  chips: { stadiums: 'Which stadiums are in Morocco?', dates: 'When does it start?', final: 'Where is the final?', travel: 'How do I get around?', tickets: 'Can I buy tickets?', weather: 'What is the weather like?', food: 'What should I eat?', darija: 'Teach me some Darija', format: 'How many teams play?', centenary: 'Why are there matches in South America?', hosts: 'Which countries are hosting?', team: 'Who are the Atlas Lions?', mascot: 'Who are you?', plan: 'Plan my match day', local: 'Where can I shop local?' },
+  chat: {
+    greet: '<p>Salam! I’m <strong>Izem</strong>, your Atlas lion guide to World Cup 2030 in Morocco.</p><p>Ask me about the six stadiums, the dates or how to get around, or let me plan your match day.</p>',
+    ai: '<p>Most of my answers are written in advance and matched to keywords. When live AI is switched on for this page, I use it for questions outside my script.</p>',
+    final: '<p>The final is on <strong>21 July 2030</strong>. FIFA has not chosen the stadium yet.</p><p>Three names are in play: the Santiago Bernabéu in Madrid, Camp Nou in Barcelona and Morocco’s new Grand Stade Hassan II.</p>',
+    tickets: '<p>No tickets are on sale yet and no prices have been announced.</p><p>When sales open, FIFA’s own website is the only official seller. Be careful with anyone offering 2030 tickets before then.</p>',
+    weather: '<p>June and July are dry across Morocco.</p><ul><li><strong>Atlantic and north coast</strong> (Casablanca, Rabat, Tangier, Agadir): mild, usually in the mid 20s °C with a sea breeze.</li><li><strong>Inland</strong> (Marrakech, Fez): hot, often 35 °C or more in the afternoon.</li></ul><p>Pack sun protection for Marrakech and Fez.</p>',
+    travel: '<p>The north is the easy part: the <strong>Al Boraq</strong> high-speed train links Tangier, Rabat and Casablanca, and Tangier to Casablanca takes a little over two hours.</p><ul><li><strong>Marrakech</strong>: regular trains from Casablanca. A high-speed extension is under construction.</li><li><strong>Fez</strong>: regular trains from Rabat and Casablanca.</li><li><strong>Agadir</strong>: no railway yet, so bus, car or a short flight.</li></ul><p>Name two cities and I will give you the journey.</p>',
+    darija: '<p>A few words of Darija, Moroccan Arabic, go a long way:</p><ul><li><strong>Salam</strong>: hello</li><li><strong>Shukran</strong>: thank you</li><li><strong>Afak</strong>: please</li><li><strong>Bslama</strong>: goodbye</li><li><strong>Dima Maghrib</strong>: always Morocco, the fans’ chant</li></ul><p>I add a new word under most of my answers.</p>',
+    money: '<p>Morocco uses the <strong>dirham (MAD)</strong>. Cards work in hotels, malls and most restaurants. Keep cash for taxis, souks and small cafés.</p>',
+    food: '<p>Start here:</p><ul><li><strong>Tagine</strong>: slow-cooked stew named after its clay pot.</li><li><strong>Couscous</strong>: the Friday family lunch.</li><li><strong>Harira</strong>: tomato, lentil and chickpea soup.</li><li><strong>Mint tea</strong>: poured from a height, offered everywhere.</li></ul><p>Name a city and I will tell you where to eat there.</p>',
+    stadiumsIntro: '<p>Morocco is putting forward six stadiums. Planned 2030 capacities:</p>',
+    stadiumsOutro: '<p>The Grand Stade Hassan II is the only new build. The other five already exist.</p>',
+    dates: '<p>The tournament runs from <strong>8 June to 21 July 2030</strong>.</p><ul><li><strong>8 to 9 June</strong>: centenary matches in Uruguay, Argentina and Paraguay.</li><li><strong>13 to 14 June</strong>: opening matches in Morocco, Spain and Portugal.</li><li><strong>21 July</strong>: the final.</li></ul><p>The match-by-match schedule comes later, after the draw.</p>',
+    format: '<p>The plan is <strong>48 teams and 104 matches</strong>, the same format as 2026: twelve groups of four, then a round of 32.</p><p>A 64-team edition has been proposed for the centenary. FIFA has not adopted it.</p><p>All six host countries qualify automatically, Morocco included.</p>',
+    centenary: '<p>2030 marks <strong>100 years</strong> since the first World Cup, which Uruguay hosted and won in 1930.</p><p>To celebrate, Uruguay, Argentina and Paraguay each host one match on 8 and 9 June. The first is at Estadio Centenario in Montevideo. Every other match is in Morocco, Spain and Portugal.</p>',
+    hosts: '<p>Three main hosts: <strong>Morocco, Spain and Portugal</strong>. Three centenary hosts with one match each: Uruguay, Argentina and Paraguay.</p><p>That makes six countries on three continents. Morocco has six stadiums in its plan.</p>',
+    team: '<p>The Atlas Lions have a habit of making history:</p><ul><li><strong>1986</strong>: first African team to reach the round of 16.</li><li><strong>2022</strong>: fourth place, the first African and first Arab semi-finalists.</li><li><strong>2026</strong>: quarter-finalists, beaten by France.</li></ul><p>In 2030 they play at home and qualify automatically as hosts.</p>',
+    mascot: '<p>I’m <strong>Izem</strong>. The name is Amazigh for lion, after the Atlas lions that once roamed these mountains and gave the national team its nickname.</p><p>My mane is an eight-pointed zellij star and the green star on my forehead comes from the Moroccan flag. I’m a fan-made concept, not an official mascot.</p>',
+    thanks: '<p>Bla jmil. Anything else before kick-off?</p>',
+    hello: '<p>Salam! Good to see you. What would you like to know about Morocco 2030?</p>',
+    help: '<p>I can cover:</p><ul><li>The six stadiums and the map</li><li>Dates, format, hosts and the final</li><li>Journeys between host cities</li><li>Local food, crafts and places to stay</li><li>A full match-day plan with a budget</li></ul>',
+    fallback: '<p>That one is not in my script yet. I work best with questions like these:</p>',
+    route: '<p><strong>{from} to {to}</strong>: {mode}, about {dur}. It is roughly {km} km by road.</p>',
+    plan: '<p>Yallah, let’s plan it. Pick where you are staying and where the match is, and I will work out the journey, the timing and a budget.</p>',
+    planTo: '<p>Yallah. I have set the planner to a match in <strong>{city}</strong>. Choose where you are staying and I will do the rest.</p>',
+    localIntro: '<p>In <strong>{city}</strong>, start with these:</p>',
+    localGeneric: '<p>Every host city has places where your money goes straight to local cooks and artisans. Name a city, or open the full list.</p>'
+  }
+};
+L.fr = {
+  locale: 'fr-FR', dir: 'ltr', langName: 'French',
+  ui: {
+    navHome: 'Accueil', navStadiums: 'Stades', navPlanner: 'Trajet', navLocal: 'Local', navChat: 'Izem',
+    eyebrow: 'Coupe du monde 2030 · Maroc, Espagne, Portugal',
+    h1a: 'Les Lions de l’Atlas', h1b: 'reçoivent le monde',
+    heroP: 'Six stades marocains, 48 équipes et les 100 ans du tournoi. Izem, votre guide lion de l’Atlas, organise votre jour de match et répond en quatre langues.',
+    cdDays: 'jours', cdHours: 'heures', cdMin: 'min', cdSec: 's', cdNote: 'avant le premier match, le 8 juin 2030',
+    btnPlan: 'Organiser mon jour de match', btnAsk: 'Demander à Izem',
+    actTitle: 'Ce que fait Izem',
+    act1T: 'Il organise votre jour de match', act1P: 'Comment y aller, quand partir, quoi manger et un budget en dirhams.',
+    act2T: 'Il vous montre la carte', act2P: 'Six villes hôtes, leurs stades et les temps de trajet entre elles.',
+    act3T: 'Il vous envoie chez les locaux', act3P: 'Marchés, rues d’artisans et bonnes tables : l’argent du Mondial reste entre des mains marocaines.',
+    whyTitle: 'Pourquoi Izem', w1n: '≈ 600 000', w1: 'Visiteurs étrangers attendus au Maroc (notre estimation)', w2n: '2 millions', w2: 'Utilisateurs visés, visiteurs et résidents', w3n: '0,22 MAD', w3: 'Coût par utilisateur pour tout le tournoi', whyNote: 'Ce sont nos estimations, pas des chiffres officiels. Izem répond d’abord avec des faits écrits à l’avance ; l’IA n’intervient qu’en repli.',
+    numTitle: 'Le tournoi en chiffres', nTeams: 'Équipes', nMatches: 'Matchs', nCountries: 'Pays hôtes', nContinents: 'Continents', nStadiums: 'Stades au Maroc',
+    datesTitle: 'Dates clés',
+    d1w: '8 et 9 juin 2030', d1t: 'Matchs du centenaire à Montevideo, Buenos Aires et Asunción. Le premier se joue à l’Estadio Centenario, théâtre de la finale de 1930.',
+    d2w: '13 et 14 juin 2030', d2t: 'Matchs d’ouverture au Maroc, en Espagne et au Portugal. Le tournoi reste ensuite dans les trois pays hôtes principaux.',
+    d3w: '21 juillet 2030', d3t: 'La finale. La FIFA n’a pas encore choisi le stade. Le Maroc propose le Grand Stade Hassan II.',
+    hostsTitle: 'Qui accueille quoi', hostMain: 'Pays hôtes principaux', hostCent: 'Matchs du centenaire',
+    hostMainP: '101 des 104 matchs. C’est la première Coupe du monde jouée en Afrique du Nord et la première partagée entre deux confédérations.',
+    hostCentP: 'Un match chacun, pour les 100 ans de la première Coupe du monde, organisée et gagnée par l’Uruguay en 1930.',
+    cMorocco: 'Maroc', cSpain: 'Espagne', cPortugal: 'Portugal', cUruguay: 'Uruguay', cArgentina: 'Argentine', cParaguay: 'Paraguay',
+    histTitle: 'Le Maroc en Coupe du monde',
+    h70t: 'Première participation.', h70p: 'Le Maroc se qualifie pour Mexico 1970.',
+    h86t: 'Premier de son groupe.', h86p: 'Première équipe africaine en huitièmes de finale.',
+    h22t: 'Quatrième au Qatar.', h22p: 'Première équipe africaine et première équipe arabe en demi-finale.',
+    h26t: 'Quart de finaliste.', h26p: 'Le parcours s’arrête face à la France.',
+    h30t: 'Pays hôte.', h30p: 'Après cinq candidatures sans succès, la Coupe du monde arrive au Maroc.',
+    openTitle: 'Ce qui reste à décider',
+    o1t: 'Le stade de la finale.', o1p: 'Madrid, Barcelone et le Grand Stade Hassan II sont en lice.',
+    o2t: 'La liste définitive des stades.', o2p: 'La FIFA doit encore confirmer chaque stade.',
+    o3t: 'Le nombre d’équipes.', o3p: '48 sont prévues. Une édition à 64 a été proposée.',
+    o4t: 'Les billets.', o4p: 'Rien n’est encore en vente.',
+    foot: 'Izem est un concept de supporter non officiel et une démo de hackathon. Il n’est affilié ni à la FIFA ni à une fédération. Les informations viennent du dossier de candidature 2030 et de la presse, vérifiées en octobre 2026. Les temps de trajet et les prix sont des estimations et peuvent changer d’ici le tournoi.',
+
+    mapTitle: 'Les villes hôtes', mapLede: 'Touchez une ville pour voir son stade et les trajets vers les cinq autres.',
+    legBoraq: 'Ligne à grande vitesse Al Boraq', legRail: 'Train classique', legRoad: 'Route, pas encore de train',
+    seaAtl: 'Océan Atlantique', seaMed: 'Méditerranée', spain: 'Espagne',
+    mapFrom: 'Depuis {city}', openCard: 'Fiche du stade', planHere: 'Organiser un jour de match ici', seats: '{n} places',
+    stTitle: 'Les six stades du Maroc', sortCap: 'Du plus grand', sortGeo: 'Du nord au sud',
+    seatsPlanned: 'places prévues', lblOpened: 'Ouverture', lblAirport: 'Aéroport', lblRail: 'Train', askAbout: 'Demander à Izem',
+    scaleNote: 'Les barres partagent la même échelle : une barre pleine vaut 115 000 places. Les capacités sont celles prévues pour 2030 dans le dossier et peuvent encore changer.',
+
+    plTitle: 'Organisez votre jour de match',
+    plLede: 'Dites à Izem où vous logez et où se joue le match. Il calcule le trajet, les horaires et un budget.',
+    fFrom: 'Je loge à', fTo: 'Le match est à', fKo: 'Coup d’envoi', fStyle: 'Budget', sSaver: 'Éco', sComfort: 'Confort', sPremium: 'Premium',
+    fInt: 'Je veux aussi', iEat: 'Manger local', iSee: 'Visiter', iCraft: 'Acheter de l’artisanat',
+    plNote: 'Le calendrier des matchs n’est pas encore publié : l’heure du coup d’envoi est un exemple.',
+    tagExample: 'Exemple', tagYours: 'Votre plan',
+    planHead: '{from} → {to}', planSame: 'Jour de match à {to}',
+    sayTravel: '{mode}, environ {dur}. Quittez {from} avant {time} et vous aurez le temps de vous promener avant le match.',
+    saySame: 'Vous êtes déjà à {to}. Voici de quoi remplir la journée.',
+    sayDayBefore: 'C’est trop long pour une seule journée. Voyagez la veille et réveillez-vous à {to}.',
+    stDepart: 'Départ de {from}', stDepartD: '{mode}, environ {dur}. Près de {km} km.',
+    stDayBefore: 'Trajet vers {to}', stDayBeforeD: '{mode}, environ {dur}. Dormez à {to} : {stay}.', dayBefore: 'La veille',
+    stArrive: 'Arrivée à {to}', stMorning: 'Commencez la journée à {to}', stFree: 'Posez votre sac et repérez les lieux.',
+    stGo: 'Direction le stade',
+    goHassan: 'Le stade est à Benslimane, à environ 40 km de Casablanca. Comptez largement plus d’une heure et visez les portes deux heures avant.',
+    goOther: 'Comptez 30 à 40 minutes en taxi ou en navette et visez les portes deux heures avant.',
+    stKick: 'Coup d’envoi au {stadium}', stKickD: '{n} places. Repérez votre porte tôt.',
+    stAfter: 'Après le match',
+    afterStay: 'Trains et bus seront pleins et il sera tard. Restez dormir : {stay}.',
+    afterReturn: 'Vous pouvez rentrer à {from} le soir même, mais réservez votre place. Ou restez : {stay}.',
+    afterSame: 'Pas de trajet ce soir. Idée pour dîner : {eat}.',
+    altFlight: 'Pressé ? Un vol direct dure environ {dur}.',
+    budTitle: 'Budget indicatif par personne', bTravel: 'Trajet aller-retour', bLocal: 'Taxis et navettes', bFood: 'Repas et boissons', bCraft: 'Artisanat et souvenirs', bSee: 'Visites', bTotal: 'Total',
+    bNote: 'Estimations aux prix de 2026. Billet de match et hôtel non compris.',
+    durH: '{h} h {m}', durHonly: '{h} h', durM: '{m} min', approxEur: 'environ {n} €',
+
+    loTitle: 'Manger, acheter et dormir local',
+    loLede: 'De vrais lieux dans chaque ville hôte, choisis pour que l’argent du Mondial arrive aux cuisiniers, artisans et hôtes marocains.',
+    loPlan: 'Organiser un jour de match à {city}',
+    bizTitle: 'Comment Izem aide les commerces locaux', conceptTag: 'Concept',
+    biz1: 'Référencement gratuit pour les riads, restaurants, artisans et guides près de chaque stade.',
+    biz2: 'Izem les recommande en quatre langues, au moment où le supporter pose la question.',
+    biz3: 'Les supporters dépensent dans la médina et au souk, et pas seulement au stade.',
+
+    chScript: 'Démo · réponses préécrites', chLive: 'Réponses préécrites + IA en direct', chReset: 'Recommencer', chSend: 'Envoyer',
+    chPlaceholder: 'Stades, trajets, cuisine…', liveTag: 'IA en direct', thinking: 'Je réfléchis…',
+    openPlanner: 'Ouvrir le planificateur', openGuide: 'Ouvrir la carte et les stades', openLocal: 'Voir les adresses locales',
+    chipStadium: 'Le stade de {city}', darija: 'Darija',
+    aiOff: 'L’IA en direct n’est pas disponible ici, je reviens donc à mon script. Essayez l’une de ces questions :',
+    aiBusy: 'Trop de questions à la fois. Laissez-moi un instant et reposez la question.',
+    aiFail: 'Je n’ai pas pu joindre l’IA en direct. Réessayez dans un instant.'
+  },
+  cities: { casa: 'Casablanca', rabat: 'Rabat', tangier: 'Tanger', fez: 'Fès', marrakech: 'Marrakech', agadir: 'Agadir' },
+  modes: { boraq: 'Train à grande vitesse Al Boraq', train: 'Train', bus: 'Bus', flight: 'Avion', mix: 'Train puis bus' },
+  cats: { eat: 'Manger', craft: 'Artisanat', see: 'À voir', stay: 'Dormir' },
+  stad: {
+    casa: { name: 'Grand Stade Hassan II', where: 'Benslimane, près de Casablanca', status: 'En construction', opened: 'Prévu pour 2028', airport: 'Casablanca Mohammed V (CMN)', rail: 'Desserte ferroviaire prévue pour 2030',
+      blurb: 'Construit pour 2030, à environ 40 km de Casablanca sur la route de Rabat. Avec 115 000 places, il doit devenir le plus grand stade de football du monde, sous un toit inspiré de la tente traditionnelle des moussems. Le Maroc le propose pour la finale.' },
+    tangier: { name: 'Grand Stade de Tanger', where: 'Tanger', status: 'Agrandi en 2025', opened: '2011', airport: 'Tanger Ibn Battouta (TNG)', rail: 'Ligne à grande vitesse Al Boraq',
+      blurb: 'Aussi appelé stade Ibn Batouta. À quelques minutes du détroit de Gibraltar, c’est le stade marocain le plus proche de l’Espagne. La piste d’athlétisme a été supprimée et un nouveau toit ajouté avant la CAN 2025.' },
+    rabat: { name: 'Stade Prince Moulay Abdellah', where: 'Rabat', status: 'Reconstruit en 2025', opened: '2025 (premier stade : 1983)', airport: 'Rabat-Salé (RBA)', rail: 'Ligne à grande vitesse Al Boraq',
+      blurb: 'Le stade national, dans la capitale. L’ancienne enceinte a été démolie et reconstruite pour le football seul, puis rouverte en 2025. Il a accueilli le match d’ouverture et la finale de la CAN 2025.' },
+    fez: { name: 'Grand Stade de Fès', where: 'Fès', status: 'Agrandissement prévu', opened: '2007', airport: 'Fès-Saïs (FEZ)', rail: 'Train classique depuis Rabat et Casablanca',
+      blurb: 'Ouvert en 2007 et rénové pour la CAN 2025, avec un agrandissement prévu pour 2030. La médina médiévale de Fès, classée au patrimoine mondial de l’UNESCO, est toute proche.' },
+    agadir: { name: 'Grand Stade d’Agadir', where: 'Agadir', status: 'Rénovation prévue', opened: '2013', airport: 'Agadir Al Massira (AGA)', rail: 'Pas encore de train. Bus, voiture ou avion',
+      blurb: 'Aussi appelé stade Adrar. Conçu à l’origine pour la candidature marocaine de 2010, il a ouvert en 2013 entre les plages de l’Atlantique et les contreforts de l’Atlas, et a accueilli des matchs de la Coupe du monde des clubs cette année-là.' },
+    marrakech: { name: 'Grand Stade de Marrakech', where: 'Marrakech', status: 'Rénovation prévue', opened: '2011', airport: 'Marrakech Ménara (RAK)', rail: 'Train classique. Prolongement à grande vitesse en construction',
+      blurb: 'Ouvert en 2011 au nord de la ville ocre. Il a accueilli les finales de la Coupe du monde des clubs 2013 et 2014 et il est en cours de réaménagement pour 2030.' }
+  },
+  local: {
+    casa: { eat: ['Marché Central', 'Choisissez votre poisson sur les étals et faites-le griller aux tables voisines.'],
+      craft: ['Quartier des Habous', 'Une médina à arcades des années 1930 : babouches, cuivres, olives et pâtisseries aux amandes.'],
+      see: ['Mosquée Hassan II', 'L’une des plus grandes mosquées du monde, bâtie sur l’Atlantique. Visites guidées ouvertes aux non-musulmans.'],
+      stay: ['Près de Casa-Port ou Casa-Voyageurs', 'Logez près d’une gare pour les trains vers Rabat, et prévoyez tôt votre transfert vers le stade.'] },
+    rabat: { eat: ['Cuisine de rue de la médina', 'Sardines grillées, bissara et msemen tout chauds le long de la rue Souika.'],
+      craft: ['Rue des Consuls', 'La rue des tisserands de tapis de Rabat, avec aussi le cuir et l’argent.'],
+      see: ['Kasbah des Oudayas', 'Des ruelles bleues et blanches au-dessus de l’embouchure du fleuve, près de la tour Hassan.'],
+      stay: ['Riads de la médina ou Agdal', 'Des riads à l’intérieur des remparts, ou Agdal pour la gare à grande vitesse.'] },
+    tangier: { eat: ['Grillades de poisson du port', 'Poisson frit ou grillé à la descente des bateaux, près du port de pêche.'],
+      craft: ['Fondouk Chejra', 'Le caravansérail des tisserands près du Grand Socco, où les métiers tournent encore à l’étage.'],
+      see: ['Café Hafa et la Kasbah', 'Thé à la menthe en terrasses à flanc de falaise depuis 1921, face à l’Espagne.'],
+      stay: ['Maisons d’hôtes de la Kasbah', 'De petites maisons d’hôtes dans la vieille ville, à quelques pas du port.'] },
+    fez: { eat: ['Pastilla dans la médina', 'La spécialité de la ville : pâte feuilletée, poulet ou pigeon, amandes et cannelle.'],
+      craft: ['Place Seffarine', 'Les dinandiers martèlent le cuivre en plein air, comme depuis des siècles.'],
+      see: ['Tannerie Chouara', 'Le cuir teint dans des cuves de pierre, à voir depuis les terrasses.'],
+      stay: ['Riads de Fès el-Bali', 'Des maisons à patio dans l’une des plus grandes médinas piétonnes du monde.'] },
+    marrakech: { eat: ['Tanjia près de Jemaa el-Fna', 'La spécialité mijotée de la ville, servie autour de la place. À la nuit tombée, la place devient elle-même une cuisine à ciel ouvert.'],
+      craft: ['Les souks', 'Cuir, lanternes et tapis, vendus rue par rue, métier par métier. Marchandez avec le sourire.'],
+      see: ['Jardin Majorelle', 'Le jardin bleu cobalt qui appartenait à Yves Saint Laurent. Réservez à l’avance.'],
+      stay: ['Riads de la médina', 'Des centaines de maisons à patio restaurées, à quelques minutes à pied de la place.'] },
+    agadir: { eat: ['Grillades du port', 'Choisissez dans la pêche du jour et faites griller, à de grandes tables partagées.'],
+      craft: ['Souk El Had', 'L’un des plus grands marchés du Maroc. Cherchez l’huile d’argan et l’amlou des coopératives de femmes.'],
+      see: ['Agadir Oufella', 'La kasbah sur la colline au-dessus de la baie, accessible en téléphérique.'],
+      stay: ['Front de mer ou Taghazout', 'Des hôtels le long de la promenade, ou le village de surf de Taghazout à environ 20 km au nord.'] }
+  },
+  tips: { bshhal: 'combien ?', skhoun: 'chaud', lagar: 'où est la gare ?', bnin: 'délicieux', tiran: 'le terrain, le stade', fuqash: 'quand ?', koura: 'le football', mrehba: 'bienvenue', sbe3: 'lion', blajmil: 'de rien', labas: 'ça va ?', yallah: 'on y va', zwin: 'beau', mya: 'cent', dima: 'toujours le Maroc' },
+  chips: { stadiums: 'Quels stades au Maroc ?', dates: 'Ça commence quand ?', final: 'Où se joue la finale ?', travel: 'Comment se déplacer ?', tickets: 'Peut-on acheter des billets ?', weather: 'Quel temps fera-t-il ?', food: 'Que manger ?', darija: 'Apprends-moi la darija', format: 'Combien d’équipes ?', centenary: 'Pourquoi des matchs en Amérique du Sud ?', hosts: 'Quels pays accueillent ?', team: 'Qui sont les Lions de l’Atlas ?', mascot: 'Qui es-tu ?', plan: 'Organiser mon jour de match', local: 'Où acheter local ?' },
+  chat: {
+    greet: '<p>Salam ! Je suis <strong>Izem</strong>, votre guide lion de l’Atlas pour la Coupe du monde 2030 au Maroc.</p><p>Posez-moi vos questions sur les six stades, les dates ou les trajets, ou laissez-moi organiser votre jour de match.</p>',
+    ai: '<p>La plupart de mes réponses sont écrites à l’avance et déclenchées par des mots-clés. Quand l’IA en direct est activée sur cette page, je m’en sers pour les questions hors script.</p>',
+    final: '<p>La finale se joue le <strong>21 juillet 2030</strong>. La FIFA n’a pas encore choisi le stade.</p><p>Trois noms circulent : le Santiago Bernabéu à Madrid, le Camp Nou à Barcelone et le nouveau Grand Stade Hassan II au Maroc.</p>',
+    tickets: '<p>Aucun billet n’est en vente et aucun prix n’a été annoncé.</p><p>À l’ouverture des ventes, le site de la FIFA sera le seul vendeur officiel. Méfiez-vous de toute offre de billets 2030 avant cela.</p>',
+    weather: '<p>Juin et juillet sont secs partout au Maroc.</p><ul><li><strong>Côtes atlantique et nord</strong> (Casablanca, Rabat, Tanger, Agadir) : doux, autour de 25 °C avec la brise marine.</li><li><strong>Intérieur</strong> (Marrakech, Fès) : chaud, souvent 35 °C ou plus l’après-midi.</li></ul><p>Prévoyez de quoi vous protéger du soleil à Marrakech et à Fès.</p>',
+    travel: '<p>Le nord est le plus simple : le train à grande vitesse <strong>Al Boraq</strong> relie Tanger, Rabat et Casablanca, et Tanger–Casablanca prend un peu plus de deux heures.</p><ul><li><strong>Marrakech</strong> : trains classiques depuis Casablanca. Un prolongement à grande vitesse est en construction.</li><li><strong>Fès</strong> : trains classiques depuis Rabat et Casablanca.</li><li><strong>Agadir</strong> : pas encore de train, donc bus, voiture ou court vol.</li></ul><p>Donnez-moi deux villes et je vous indique le trajet.</p>',
+    darija: '<p>Quelques mots de darija, l’arabe marocain, ouvrent bien des portes :</p><ul><li><strong>Salam</strong> : bonjour</li><li><strong>Choukran</strong> : merci</li><li><strong>Afak</strong> : s’il vous plaît</li><li><strong>Bslama</strong> : au revoir</li><li><strong>Dima Maghrib</strong> : toujours le Maroc, le chant des supporters</li></ul><p>J’ajoute un nouveau mot sous la plupart de mes réponses.</p>',
+    money: '<p>La monnaie est le <strong>dirham (MAD)</strong>. La carte passe dans les hôtels, les centres commerciaux et la plupart des restaurants. Gardez des espèces pour les taxis, les souks et les petits cafés.</p>',
+    food: '<p>Commencez par :</p><ul><li><strong>Tajine</strong> : ragoût mijoté qui porte le nom de son plat en terre.</li><li><strong>Couscous</strong> : le déjeuner familial du vendredi.</li><li><strong>Harira</strong> : soupe de tomates, lentilles et pois chiches.</li><li><strong>Thé à la menthe</strong> : versé de haut, offert partout.</li></ul><p>Citez une ville et je vous dis où manger.</p>',
+    stadiumsIntro: '<p>Le Maroc propose six stades. Capacités prévues pour 2030 :</p>',
+    stadiumsOutro: '<p>Le Grand Stade Hassan II est le seul stade neuf. Les cinq autres existent déjà.</p>',
+    dates: '<p>Le tournoi se joue du <strong>8 juin au 21 juillet 2030</strong>.</p><ul><li><strong>8 et 9 juin</strong> : matchs du centenaire en Uruguay, en Argentine et au Paraguay.</li><li><strong>13 et 14 juin</strong> : matchs d’ouverture au Maroc, en Espagne et au Portugal.</li><li><strong>21 juillet</strong> : la finale.</li></ul><p>Le calendrier match par match viendra plus tard, après le tirage au sort.</p>',
+    format: '<p>Le format prévu : <strong>48 équipes et 104 matchs</strong>, comme en 2026, avec douze groupes de quatre puis des seizièmes de finale.</p><p>Une édition à 64 équipes a été proposée pour le centenaire. La FIFA ne l’a pas adoptée.</p><p>Les six pays hôtes sont qualifiés d’office, Maroc compris.</p>',
+    centenary: '<p>2030 marque les <strong>100 ans</strong> de la première Coupe du monde, organisée et gagnée par l’Uruguay en 1930.</p><p>Pour fêter cela, l’Uruguay, l’Argentine et le Paraguay accueillent un match chacun les 8 et 9 juin. Le premier se joue à l’Estadio Centenario de Montevideo. Tous les autres matchs ont lieu au Maroc, en Espagne et au Portugal.</p>',
+    hosts: '<p>Trois pays hôtes principaux : <strong>le Maroc, l’Espagne et le Portugal</strong>. Trois hôtes du centenaire, avec un match chacun : l’Uruguay, l’Argentine et le Paraguay.</p><p>Soit six pays sur trois continents. Le Maroc présente six stades.</p>',
+    team: '<p>Les Lions de l’Atlas ont l’habitude d’écrire l’histoire :</p><ul><li><strong>1986</strong> : première équipe africaine en huitièmes de finale.</li><li><strong>2022</strong> : quatrième place, premiers demi-finalistes africains et arabes.</li><li><strong>2026</strong> : quart de finale, perdu face à la France.</li></ul><p>En 2030, ils jouent à domicile et sont qualifiés d’office.</p>',
+    mascot: '<p>Je suis <strong>Izem</strong>. Mon nom veut dire lion en amazigh, en souvenir des lions de l’Atlas qui vivaient dans ces montagnes et ont donné son surnom à l’équipe nationale.</p><p>Ma crinière est une étoile de zellige à huit branches et l’étoile verte sur mon front vient du drapeau marocain. Je suis un concept de supporter, pas une mascotte officielle.</p>',
+    thanks: '<p>Bla jmil. Autre chose avant le coup d’envoi ?</p>',
+    hello: '<p>Salam ! Content de vous voir. Que voulez-vous savoir sur Maroc 2030 ?</p>',
+    help: '<p>Je peux vous parler de :</p><ul><li>Les six stades et la carte</li><li>Les dates, le format, les pays hôtes et la finale</li><li>Les trajets entre villes hôtes</li><li>La cuisine, l’artisanat et les hébergements locaux</li><li>Un jour de match complet avec son budget</li></ul>',
+    fallback: '<p>Cette question n’est pas encore dans mon script. Je suis plus à l’aise avec celles-ci :</p>',
+    route: '<p><strong>{from} → {to}</strong> : {mode}, environ {dur}. Près de {km} km par la route.</p>',
+    plan: '<p>Yallah, on s’organise. Choisissez où vous logez et où se joue le match : je calcule le trajet, les horaires et un budget.</p>',
+    planTo: '<p>Yallah. J’ai réglé le planificateur sur un match à <strong>{city}</strong>. Indiquez où vous logez et je m’occupe du reste.</p>',
+    localIntro: '<p>À <strong>{city}</strong>, commencez par ici :</p>',
+    localGeneric: '<p>Chaque ville hôte a des adresses où votre argent va directement aux cuisiniers et aux artisans du coin. Citez une ville, ou ouvrez la liste complète.</p>'
+  }
+};
+L.es = {
+  locale: 'es-ES', dir: 'ltr', langName: 'Spanish',
+  ui: {
+    navHome: 'Inicio', navStadiums: 'Estadios', navPlanner: 'Plan', navLocal: 'Local', navChat: 'Izem',
+    eyebrow: 'Mundial 2030 · Marruecos, España, Portugal',
+    h1a: 'Los Leones del Atlas', h1b: 'reciben al mundo',
+    heroP: 'Seis estadios marroquíes, 48 selecciones y el centenario del torneo. Izem, tu guía león del Atlas, organiza tu día de partido y responde en cuatro idiomas.',
+    cdDays: 'días', cdHours: 'horas', cdMin: 'min', cdSec: 's', cdNote: 'para el primer partido, el 8 de junio de 2030',
+    btnPlan: 'Organizar mi día de partido', btnAsk: 'Preguntar a Izem',
+    actTitle: 'Qué hace Izem',
+    act1T: 'Organiza tu día de partido', act1P: 'Cómo llegar, cuándo salir, qué comer y un presupuesto en dírhams.',
+    act2T: 'Te enseña el mapa', act2P: 'Seis ciudades sede, sus estadios y cuánto se tarda entre ellas.',
+    act3T: 'Te lleva a lo local', act3P: 'Mercados, calles de artesanos y buena comida: el gasto del Mundial se queda en manos marroquíes.',
+    whyTitle: 'Por qué Izem', w1n: '≈ 600.000', w1: 'Visitantes extranjeros esperados en Marruecos (nuestra estimación)', w2n: '2 millones', w2: 'Usuarios previstos, visitantes y residentes', w3n: '0,22 MAD', w3: 'Coste por usuario durante todo el torneo', whyNote: 'Son nuestras estimaciones, no cifras oficiales. Izem responde primero con datos escritos de antemano; la IA solo interviene como respaldo.',
+    numTitle: 'El torneo en cifras', nTeams: 'Selecciones', nMatches: 'Partidos', nCountries: 'Países sede', nContinents: 'Continentes', nStadiums: 'Estadios en Marruecos',
+    datesTitle: 'Fechas clave',
+    d1w: '8 y 9 de junio de 2030', d1t: 'Partidos del centenario en Montevideo, Buenos Aires y Asunción. El primero se juega en el Estadio Centenario, sede de la final de 1930.',
+    d2w: '13 y 14 de junio de 2030', d2t: 'Partidos inaugurales en Marruecos, España y Portugal. Después el torneo se queda en los tres países anfitriones principales.',
+    d3w: '21 de julio de 2030', d3t: 'La final. La FIFA aún no ha elegido el estadio. Marruecos propone el Gran Estadio Hassan II.',
+    hostsTitle: 'Quién organiza qué', hostMain: 'Anfitriones principales', hostCent: 'Partidos del centenario',
+    hostMainP: '101 de los 104 partidos. Es el primer Mundial que se juega en el norte de África y el primero compartido entre dos confederaciones.',
+    hostCentP: 'Un partido cada uno, por los 100 años del primer Mundial, que Uruguay organizó y ganó en 1930.',
+    cMorocco: 'Marruecos', cSpain: 'España', cPortugal: 'Portugal', cUruguay: 'Uruguay', cArgentina: 'Argentina', cParaguay: 'Paraguay',
+    histTitle: 'Marruecos en los Mundiales',
+    h70t: 'Primera participación.', h70p: 'Marruecos se clasifica para México 1970.',
+    h86t: 'Primero de grupo.', h86p: 'La primera selección africana en llegar a octavos de final.',
+    h22t: 'Cuarto puesto en Catar.', h22p: 'La primera selección africana y la primera árabe en unas semifinales.',
+    h26t: 'Cuartos de final.', h26p: 'El camino termina ante Francia.',
+    h30t: 'Anfitrión.', h30p: 'Tras cinco candidaturas sin éxito, el Mundial llega a Marruecos.',
+    openTitle: 'Lo que falta por decidir',
+    o1t: 'La sede de la final.', o1p: 'Madrid, Barcelona y el Gran Estadio Hassan II son las opciones.',
+    o2t: 'La lista definitiva de estadios.', o2p: 'La FIFA aún tiene que confirmar cada estadio.',
+    o3t: 'El número de selecciones.', o3p: 'El plan es 48. Se ha propuesto una edición de 64.',
+    o4t: 'Las entradas.', o4p: 'Todavía no hay nada a la venta.',
+    foot: 'Izem es un concepto no oficial hecho por aficionados y una demo de hackathon. No está afiliado a la FIFA ni a ninguna federación. Los datos proceden del expediente de candidatura 2030 y de la prensa, comprobados en octubre de 2026. Los tiempos de viaje y los precios son estimaciones y pueden cambiar antes del torneo.',
+
+    mapTitle: 'Las ciudades sede', mapLede: 'Toca una ciudad para ver su estadio y el viaje a las otras cinco.',
+    legBoraq: 'Línea de alta velocidad Al Boraq', legRail: 'Tren convencional', legRoad: 'Carretera, aún sin tren',
+    seaAtl: 'Océano Atlántico', seaMed: 'Mediterráneo', spain: 'España',
+    mapFrom: 'Desde {city}', openCard: 'Ficha del estadio', planHere: 'Organizar un día de partido aquí', seats: '{n} asientos',
+    stTitle: 'Los seis estadios de Marruecos', sortCap: 'De mayor a menor', sortGeo: 'De norte a sur',
+    seatsPlanned: 'asientos previstos', lblOpened: 'Apertura', lblAirport: 'Aeropuerto', lblRail: 'Tren', askAbout: 'Preguntar a Izem',
+    scaleNote: 'Las barras comparten la misma escala: una barra completa son 115.000 asientos. Los aforos son los previstos para 2030 en la candidatura y aún pueden cambiar.',
+
+    plTitle: 'Organiza tu día de partido',
+    plLede: 'Dile a Izem dónde te alojas y dónde se juega el partido. Él calcula el viaje, los horarios y un presupuesto.',
+    fFrom: 'Me alojo en', fTo: 'El partido es en', fKo: 'Inicio del partido', fStyle: 'Presupuesto', sSaver: 'Económico', sComfort: 'Cómodo', sPremium: 'Premium',
+    fInt: 'También quiero', iEat: 'Comer local', iSee: 'Hacer turismo', iCraft: 'Comprar artesanía',
+    plNote: 'El calendario de partidos aún no se ha publicado: la hora de inicio es un ejemplo.',
+    tagExample: 'Ejemplo', tagYours: 'Tu plan',
+    planHead: 'De {from} a {to}', planSame: 'Día de partido en {to}',
+    sayTravel: '{mode}, aprox. {dur}. Sal de {from} antes de las {time} y tendrás tiempo de pasear antes del partido.',
+    saySame: 'Ya estás en {to}. Así puedes aprovechar todo el día.',
+    sayDayBefore: 'Es demasiado para un solo día. Viaja la víspera y despierta en {to}.',
+    stDepart: 'Salida de {from}', stDepartD: '{mode}, aprox. {dur}. Unos {km} km.',
+    stDayBefore: 'Viaje a {to}', stDayBeforeD: '{mode}, aprox. {dur}. Duerme en {to}: {stay}.', dayBefore: 'La víspera',
+    stArrive: 'Llegada a {to}', stMorning: 'Empieza el día en {to}', stFree: 'Deja la mochila y oriéntate.',
+    stGo: 'Camino del estadio',
+    goHassan: 'El estadio está en Benslimane, a unos 40 km de Casablanca. Calcula bastante más de una hora e intenta estar en las puertas dos horas antes.',
+    goOther: 'Calcula de 30 a 40 minutos en taxi o lanzadera e intenta estar en las puertas dos horas antes.',
+    stKick: 'Empieza el partido en el {stadium}', stKickD: '{n} asientos. Localiza tu puerta pronto.',
+    stAfter: 'Después del partido',
+    afterStay: 'Trenes y autobuses irán llenos y será tarde. Quédate a dormir: {stay}.',
+    afterReturn: 'Puedes volver a {from} esa misma noche, pero reserva tu plaza. O quédate: {stay}.',
+    afterSame: 'Esta noche no hay viaje. Idea para cenar: {eat}.',
+    altFlight: '¿Poco tiempo? Un vuelo directo dura aprox. {dur}.',
+    budTitle: 'Presupuesto orientativo por persona', bTravel: 'Viaje de ida y vuelta', bLocal: 'Taxis y lanzaderas', bFood: 'Comida y bebida', bCraft: 'Artesanía y recuerdos', bSee: 'Visitas', bTotal: 'Total',
+    bNote: 'Estimaciones a precios de 2026. No incluye la entrada ni el hotel.',
+    durH: '{h} h {m}', durHonly: '{h} h', durM: '{m} min', approxEur: 'unos {n} €',
+
+    loTitle: 'Comer, comprar y dormir local',
+    loLede: 'Lugares reales en cada ciudad sede, elegidos para que el gasto del Mundial llegue a cocineros, artesanos y anfitriones marroquíes.',
+    loPlan: 'Organizar un día de partido en {city}',
+    bizTitle: 'Cómo ayuda Izem al comercio local', conceptTag: 'Concepto',
+    biz1: 'Alta gratuita para riads, restaurantes, artesanos y guías cerca de cada estadio.',
+    biz2: 'Izem los recomienda en cuatro idiomas, justo cuando el aficionado pregunta.',
+    biz3: 'Los aficionados gastan en la medina y en el zoco, y no solo en el estadio.',
+
+    chScript: 'Demo · respuestas preparadas', chLive: 'Respuestas preparadas + IA en vivo', chReset: 'Reiniciar', chSend: 'Enviar',
+    chPlaceholder: 'Estadios, viajes, comida…', liveTag: 'IA en vivo', thinking: 'Pensando…',
+    openPlanner: 'Abrir el planificador', openGuide: 'Abrir el mapa y los estadios', openLocal: 'Ver sitios locales',
+    chipStadium: 'El estadio de {city}', darija: 'Dariya',
+    aiOff: 'La IA en vivo no está disponible aquí, así que vuelvo a mi guion. Prueba con una de estas:',
+    aiBusy: 'Demasiadas preguntas a la vez. Dame un momento y vuelve a preguntar.',
+    aiFail: 'No he podido conectar con la IA en vivo. Inténtalo de nuevo en un momento.'
+  },
+  cities: { casa: 'Casablanca', rabat: 'Rabat', tangier: 'Tánger', fez: 'Fez', marrakech: 'Marrakech', agadir: 'Agadir' },
+  modes: { boraq: 'Tren de alta velocidad Al Boraq', train: 'Tren', bus: 'Autobús', flight: 'Avión', mix: 'Tren y luego autobús' },
+  cats: { eat: 'Comer', craft: 'Artesanía', see: 'Ver', stay: 'Dormir' },
+  stad: {
+    casa: { name: 'Gran Estadio Hassan II', where: 'Benslimane, cerca de Casablanca', status: 'En construcción', opened: 'Previsto para 2028', airport: 'Casablanca Mohammed V (CMN)', rail: 'Conexión ferroviaria prevista para 2030',
+      blurb: 'Construido desde cero para 2030, a unos 40 km de Casablanca en la carretera a Rabat. Con 115.000 asientos, está pensado como el mayor estadio de fútbol del mundo, bajo una cubierta inspirada en la tienda tradicional de los moussems. Marruecos lo propone para la final.' },
+    tangier: { name: 'Gran Estadio de Tánger', where: 'Tánger', status: 'Ampliado en 2025', opened: '2011', airport: 'Tánger Ibn Battouta (TNG)', rail: 'Línea de alta velocidad Al Boraq',
+      blurb: 'También conocido como estadio Ibn Batouta. Está a minutos del estrecho de Gibraltar y es el estadio marroquí más cercano a España. Se eliminó la pista de atletismo y se añadió una cubierta nueva antes de la Copa África 2025.' },
+    rabat: { name: 'Estadio Príncipe Moulay Abdellah', where: 'Rabat', status: 'Reconstruido en 2025', opened: '2025 (el original, 1983)', airport: 'Rabat-Salé (RBA)', rail: 'Línea de alta velocidad Al Boraq',
+      blurb: 'El estadio nacional, en la capital. El antiguo recinto se demolió y se reconstruyó solo para fútbol, y reabrió en 2025. Acogió el partido inaugural y la final de la Copa África 2025.' },
+    fez: { name: 'Gran Estadio de Fez', where: 'Fez', status: 'Ampliación prevista', opened: '2007', airport: 'Fez-Saïs (FEZ)', rail: 'Tren convencional desde Rabat y Casablanca',
+      blurb: 'Abierto en 2007 y renovado para la Copa África 2025, con una ampliación prevista para 2030. La medina medieval de Fez, Patrimonio Mundial de la UNESCO, queda muy cerca.' },
+    agadir: { name: 'Gran Estadio de Agadir', where: 'Agadir', status: 'Reforma prevista', opened: '2013', airport: 'Agadir Al Massira (AGA)', rail: 'Aún sin tren. Autobús, coche o avión',
+      blurb: 'También llamado estadio Adrar. Diseñado en origen para la candidatura marroquí de 2010, abrió en 2013 entre las playas del Atlántico y las estribaciones del Atlas, y ese año acogió partidos del Mundial de Clubes.' },
+    marrakech: { name: 'Gran Estadio de Marrakech', where: 'Marrakech', status: 'Reforma prevista', opened: '2011', airport: 'Marrakech Menara (RAK)', rail: 'Tren convencional. Prolongación de alta velocidad en obras',
+      blurb: 'Abierto en 2011 al norte de la Ciudad Roja. Acogió las finales del Mundial de Clubes de 2013 y 2014 y se está remodelando para 2030.' }
+  },
+  local: {
+    casa: { eat: ['Marché Central', 'Elige el pescado en los puestos y pide que te lo hagan a la brasa en las mesas de al lado.'],
+      craft: ['Barrio de los Habous', 'Una medina con soportales de los años treinta: babuchas, latón, aceitunas y dulces de almendra.'],
+      see: ['Mezquita Hassan II', 'Una de las mayores mezquitas del mundo, levantada sobre el Atlántico. Hay visitas guiadas para no musulmanes.'],
+      stay: ['Cerca de Casa-Port o Casa-Voyageurs', 'Alójate junto a una estación para los trenes a Rabat y organiza pronto el traslado al estadio.'] },
+    rabat: { eat: ['Comida callejera de la medina', 'Sardinas a la brasa, sopa bissara y msemen recién hecho en la calle Souika.'],
+      craft: ['Rue des Consuls', 'La calle de los tejedores de alfombras de Rabat, con cuero y plata.'],
+      see: ['Kasbah de los Udayas', 'Callejuelas azules y blancas sobre la desembocadura del río, con la Torre Hassan cerca.'],
+      stay: ['Riads de la medina o Agdal', 'Riads dentro de las murallas, o Agdal por la estación de alta velocidad.'] },
+    tangier: { eat: ['Pescado a la brasa en el puerto', 'Pescado frito o a la brasa recién llegado en barca, junto al puerto pesquero.'],
+      craft: ['Fondouk Chejra', 'El caravasar de los tejedores junto al Gran Zoco, con telares que siguen funcionando.'],
+      see: ['Café Hafa y la Kasbah', 'Té con menta en terrazas sobre el acantilado desde 1921, frente a España.'],
+      stay: ['Casas de huéspedes de la Kasbah', 'Pequeñas casas de huéspedes en la ciudad vieja, a un paseo del puerto.'] },
+    fez: { eat: ['Pastela en la medina', 'El plato estrella de la ciudad: hojaldre fino, pollo o pichón, almendras y canela.'],
+      craft: ['Plaza Seffarine', 'Los caldereros martillean el cobre al aire libre, como desde hace siglos.'],
+      see: ['Curtiduría Chouara', 'Cuero teñido en cubas de piedra, visto desde las terrazas.'],
+      stay: ['Riads de Fez el-Bali', 'Casas con patio dentro de una de las mayores medinas peatonales del mundo.'] },
+    marrakech: { eat: ['Tanjia junto a Jemaa el-Fna', 'El guiso lento de la ciudad, servido alrededor de la plaza. Al anochecer, la propia plaza se convierte en una cocina al aire libre.'],
+      craft: ['Los zocos', 'Cuero, faroles y alfombras, vendidos calle a calle según el oficio. Regatea con una sonrisa.'],
+      see: ['Jardín Majorelle', 'El jardín azul cobalto que fue de Yves Saint Laurent. Reserva con antelación.'],
+      stay: ['Riads de la medina', 'Cientos de casas con patio restauradas, a pocos minutos a pie de la plaza.'] },
+    agadir: { eat: ['Puestos de pescado del puerto', 'Elige entre la pesca del día y cómela a la brasa en mesas compartidas.'],
+      craft: ['Souk El Had', 'Uno de los mayores mercados de Marruecos. Busca aceite de argán y amlou de cooperativas de mujeres.'],
+      see: ['Agadir Oufella', 'La kasbah en lo alto de la bahía, a la que se sube en teleférico.'],
+      stay: ['Primera línea de playa o Taghazout', 'Hoteles a lo largo del paseo, o el pueblo surfero de Taghazout unos 20 km al norte.'] }
+  },
+  tips: { bshhal: '¿cuánto cuesta?', skhoun: 'caliente', lagar: '¿dónde está la estación?', bnin: 'delicioso', tiran: 'el campo, el estadio', fuqash: '¿cuándo?', koura: 'el fútbol', mrehba: 'bienvenido', sbe3: 'león', blajmil: 'de nada', labas: '¿qué tal?', yallah: 'vamos', zwin: 'bonito', mya: 'cien', dima: 'siempre Marruecos' },
+  chips: { stadiums: '¿Qué estadios hay en Marruecos?', dates: '¿Cuándo empieza?', final: '¿Dónde es la final?', travel: '¿Cómo me muevo?', tickets: '¿Puedo comprar entradas?', weather: '¿Qué tiempo hará?', food: '¿Qué debo comer?', darija: 'Enséñame dariya', format: '¿Cuántas selecciones juegan?', centenary: '¿Por qué hay partidos en Sudamérica?', hosts: '¿Qué países son sede?', team: '¿Quiénes son los Leones del Atlas?', mascot: '¿Quién eres?', plan: 'Organizar mi día de partido', local: '¿Dónde compro local?' },
+  chat: {
+    greet: '<p>¡Salam! Soy <strong>Izem</strong>, tu guía león del Atlas para el Mundial 2030 en Marruecos.</p><p>Pregúntame por los seis estadios, las fechas o cómo moverte, o deja que organice tu día de partido.</p>',
+    ai: '<p>La mayoría de mis respuestas están escritas de antemano y se activan con palabras clave. Cuando la IA en vivo está activada en esta página, la uso para lo que queda fuera de mi guion.</p>',
+    final: '<p>La final es el <strong>21 de julio de 2030</strong>. La FIFA aún no ha elegido el estadio.</p><p>Suenan tres nombres: el Santiago Bernabéu en Madrid, el Camp Nou en Barcelona y el nuevo Gran Estadio Hassan II de Marruecos.</p>',
+    tickets: '<p>Todavía no hay entradas a la venta ni precios anunciados.</p><p>Cuando se abra la venta, la web de la FIFA será el único vendedor oficial. Desconfía de quien ofrezca entradas de 2030 antes.</p>',
+    weather: '<p>Junio y julio son secos en todo Marruecos.</p><ul><li><strong>Costa atlántica y norte</strong> (Casablanca, Rabat, Tánger, Agadir): suave, en torno a 25 °C con brisa del mar.</li><li><strong>Interior</strong> (Marrakech, Fez): calor, a menudo 35 °C o más por la tarde.</li></ul><p>Lleva protección solar para Marrakech y Fez.</p>',
+    travel: '<p>El norte es lo más fácil: el tren de alta velocidad <strong>Al Boraq</strong> une Tánger, Rabat y Casablanca, y de Tánger a Casablanca se tarda algo más de dos horas.</p><ul><li><strong>Marrakech</strong>: trenes convencionales desde Casablanca. La prolongación de alta velocidad está en obras.</li><li><strong>Fez</strong>: trenes convencionales desde Rabat y Casablanca.</li><li><strong>Agadir</strong>: aún sin tren, así que autobús, coche o un vuelo corto.</li></ul><p>Dime dos ciudades y te doy el trayecto.</p>',
+    darija: '<p>Unas pocas palabras de dariya, el árabe marroquí, ayudan mucho:</p><ul><li><strong>Salam</strong>: hola</li><li><strong>Shukran</strong>: gracias</li><li><strong>Afak</strong>: por favor</li><li><strong>Bslama</strong>: adiós</li><li><strong>Dima Maghrib</strong>: siempre Marruecos, el cántico de la afición</li></ul><p>Añado una palabra nueva debajo de casi todas mis respuestas.</p>',
+    money: '<p>La moneda es el <strong>dírham (MAD)</strong>. Se puede pagar con tarjeta en hoteles, centros comerciales y la mayoría de restaurantes. Lleva efectivo para taxis, zocos y cafés pequeños.</p>',
+    food: '<p>Empieza por aquí:</p><ul><li><strong>Tajín</strong>: guiso a fuego lento que toma el nombre de su cazuela de barro.</li><li><strong>Cuscús</strong>: la comida familiar de los viernes.</li><li><strong>Harira</strong>: sopa de tomate, lentejas y garbanzos.</li><li><strong>Té con menta</strong>: servido desde lo alto, te lo ofrecen en todas partes.</li></ul><p>Dime una ciudad y te digo dónde comer.</p>',
+    stadiumsIntro: '<p>Marruecos propone seis estadios. Aforos previstos para 2030:</p>',
+    stadiumsOutro: '<p>El Gran Estadio Hassan II es el único de nueva construcción. Los otros cinco ya existen.</p>',
+    dates: '<p>El torneo se juega del <strong>8 de junio al 21 de julio de 2030</strong>.</p><ul><li><strong>8 y 9 de junio</strong>: partidos del centenario en Uruguay, Argentina y Paraguay.</li><li><strong>13 y 14 de junio</strong>: partidos inaugurales en Marruecos, España y Portugal.</li><li><strong>21 de julio</strong>: la final.</li></ul><p>El calendario partido a partido llegará más adelante, después del sorteo.</p>',
+    format: '<p>El plan es de <strong>48 selecciones y 104 partidos</strong>, el mismo formato que en 2026: doce grupos de cuatro y luego dieciseisavos de final.</p><p>Se ha propuesto una edición de 64 selecciones por el centenario. La FIFA no la ha aprobado.</p><p>Los seis países sede se clasifican automáticamente, Marruecos incluido.</p>',
+    centenary: '<p>En 2030 se cumplen <strong>100 años</strong> del primer Mundial, que Uruguay organizó y ganó en 1930.</p><p>Para celebrarlo, Uruguay, Argentina y Paraguay acogen un partido cada uno el 8 y el 9 de junio. El primero se juega en el Estadio Centenario de Montevideo. Todos los demás partidos son en Marruecos, España y Portugal.</p>',
+    hosts: '<p>Tres anfitriones principales: <strong>Marruecos, España y Portugal</strong>. Tres sedes del centenario con un partido cada una: Uruguay, Argentina y Paraguay.</p><p>En total, seis países en tres continentes. Marruecos presenta seis estadios.</p>',
+    team: '<p>Los Leones del Atlas acostumbran a hacer historia:</p><ul><li><strong>1986</strong>: primera selección africana en octavos de final.</li><li><strong>2022</strong>: cuarto puesto, primeros semifinalistas africanos y árabes.</li><li><strong>2026</strong>: cuartos de final, eliminados por Francia.</li></ul><p>En 2030 juegan en casa y se clasifican automáticamente como anfitriones.</p>',
+    mascot: '<p>Soy <strong>Izem</strong>. Mi nombre significa león en amazig, por los leones del Atlas que vivían en estas montañas y dieron su apodo a la selección.</p><p>Mi melena es una estrella de zellige de ocho puntas y la estrella verde de mi frente viene de la bandera marroquí. Soy un concepto hecho por aficionados, no una mascota oficial.</p>',
+    thanks: '<p>Bla jmil. ¿Algo más antes del pitido inicial?</p>',
+    hello: '<p>¡Salam! Me alegro de verte. ¿Qué quieres saber sobre Marruecos 2030?</p>',
+    help: '<p>Puedo hablarte de:</p><ul><li>Los seis estadios y el mapa</li><li>Fechas, formato, sedes y la final</li><li>Trayectos entre ciudades sede</li><li>Comida, artesanía y alojamiento local</li><li>Un día de partido completo con presupuesto</li></ul>',
+    fallback: '<p>Eso todavía no está en mi guion. Se me dan mejor preguntas como estas:</p>',
+    route: '<p><strong>De {from} a {to}</strong>: {mode}, aprox. {dur}. Son unos {km} km por carretera.</p>',
+    plan: '<p>Yallah, vamos a organizarlo. Elige dónde te alojas y dónde es el partido, y yo calculo el viaje, los horarios y un presupuesto.</p>',
+    planTo: '<p>Yallah. He puesto el planificador en un partido en <strong>{city}</strong>. Elige dónde te alojas y yo hago el resto.</p>',
+    localIntro: '<p>En <strong>{city}</strong>, empieza por aquí:</p>',
+    localGeneric: '<p>Cada ciudad sede tiene sitios donde tu dinero va directo a cocineros y artesanos locales. Dime una ciudad o abre la lista completa.</p>'
+  }
+};
+L.ar = {
+  locale: 'en-US', dir: 'rtl', langName: 'Modern Standard Arabic',
+  ui: {
+    navHome: 'الرئيسية', navStadiums: 'الملاعب', navPlanner: 'الخطة', navLocal: 'محلي', navChat: 'إيزم',
+    eyebrow: 'كأس العالم 2030 · المغرب، إسبانيا، البرتغال',
+    h1a: 'أسود الأطلس', h1b: 'يستقبلون العالم',
+    heroP: 'ستة ملاعب مغربية، 48 منتخبًا ومئوية البطولة. إيزم، مرشدك أسد الأطلس، ينظّم يوم مباراتك ويجيب بأربع لغات.',
+    cdDays: 'يوم', cdHours: 'ساعة', cdMin: 'دقيقة', cdSec: 'ثانية', cdNote: 'على أول مباراة يوم 8 يونيو 2030',
+    btnPlan: 'نظّم يوم مباراتي', btnAsk: 'اسأل إيزم',
+    actTitle: 'ماذا يفعل إيزم',
+    act1T: 'ينظّم يوم مباراتك', act1P: 'كيف تصل، متى تنطلق، ماذا تأكل، مع ميزانية بالدرهم.',
+    act2T: 'يريك الخريطة', act2P: 'ست مدن مستضيفة وملاعبها ومدة التنقل بينها.',
+    act3T: 'يدلّك على المحلي', act3P: 'أسواق وأزقة الحرفيين ومأكولات تُبقي إنفاق المونديال في أيدٍ مغربية.',
+    whyTitle: 'لماذا إيزم', w1n: '600 ألف', w1: 'زائر أجنبي متوقع في المغرب (تقديرنا)', w2n: '2 مليون', w2: 'مستخدم مستهدف، من الزوار والمقيمين', w3n: '0.22 درهم', w3: 'تكلفة المستخدم الواحد طوال البطولة', whyNote: 'هذه تقديراتنا وليست أرقامًا رسمية. يجيب إيزم أولًا بمعلومات مكتوبة مسبقًا، ولا يتدخل الذكاء الاصطناعي إلا كحل احتياطي.',
+    numTitle: 'البطولة بالأرقام', nTeams: 'منتخبًا', nMatches: 'مباريات', nCountries: 'دول مستضيفة', nContinents: 'قارات', nStadiums: 'ملاعب في المغرب',
+    datesTitle: 'تواريخ مهمة',
+    d1w: '8 و9 يونيو 2030', d1t: 'مباريات المئوية في مونتيفيديو وبوينس آيرس وأسونسيون. الأولى في ملعب سنتيناريو الذي احتضن نهائي 1930.',
+    d2w: '13 و14 يونيو 2030', d2t: 'المباريات الافتتاحية في المغرب وإسبانيا والبرتغال. بعدها تبقى البطولة في الدول الثلاث المستضيفة الرئيسية.',
+    d3w: '21 يوليو 2030', d3t: 'النهائي. لم تختر الفيفا الملعب بعد. المغرب يقترح ملعب الحسن الثاني الكبير.',
+    hostsTitle: 'من يستضيف ماذا', hostMain: 'الدول المستضيفة الرئيسية', hostCent: 'مباريات المئوية',
+    hostMainP: '101 مباراة من أصل 104. إنها أول كأس عالم تُلعب في شمال أفريقيا وأول نسخة مشتركة بين اتحادين قاريين.',
+    hostCentP: 'مباراة واحدة لكل بلد، احتفالًا بمرور 100 عام على أول كأس عالم نظّمتها الأوروغواي وفازت بها سنة 1930.',
+    cMorocco: 'المغرب', cSpain: 'إسبانيا', cPortugal: 'البرتغال', cUruguay: 'الأوروغواي', cArgentina: 'الأرجنتين', cParaguay: 'باراغواي',
+    histTitle: 'المغرب في كأس العالم',
+    h70t: 'أول مشاركة.', h70p: 'المغرب يتأهل إلى مونديال المكسيك 1970.',
+    h86t: 'متصدر المجموعة.', h86p: 'أول منتخب أفريقي يبلغ دور الستة عشر.',
+    h22t: 'المركز الرابع في قطر.', h22p: 'أول منتخب أفريقي وأول منتخب عربي يبلغ نصف النهائي.',
+    h26t: 'ربع النهائي.', h26p: 'انتهى المشوار أمام فرنسا.',
+    h30t: 'البلد المستضيف.', h30p: 'بعد خمسة ترشيحات لم تنجح، كأس العالم تصل إلى المغرب.',
+    openTitle: 'ما لم يُحسم بعد',
+    o1t: 'ملعب النهائي.', o1p: 'مدريد وبرشلونة وملعب الحسن الثاني الكبير هي الأسماء المطروحة.',
+    o2t: 'القائمة النهائية للملاعب.', o2p: 'لم تؤكد الفيفا بعد كل الملاعب المستضيفة.',
+    o3t: 'عدد المنتخبات.', o3p: 'المقرر 48 منتخبًا. وقد اقتُرحت نسخة من 64.',
+    o4t: 'التذاكر.', o4p: 'لا شيء معروض للبيع حتى الآن.',
+    foot: 'إيزم فكرة غير رسمية من صنع المشجعين وعرض تجريبي لهاكاثون. لا تربطه أي علاقة بالفيفا أو بأي اتحاد كروي. المعلومات مأخوذة من ملف الترشح لمونديال 2030 ومن الصحافة، وتم التحقق منها في أكتوبر 2026. مدد التنقل والأسعار تقديرية وقد تتغير قبل البطولة.',
+
+    mapTitle: 'المدن المستضيفة', mapLede: 'اضغط على مدينة لترى ملعبها والرحلة إلى المدن الخمس الأخرى.',
+    legBoraq: 'خط البراق فائق السرعة', legRail: 'قطار عادي', legRoad: 'طريق، لا قطار بعد',
+    seaAtl: 'المحيط الأطلسي', seaMed: 'البحر المتوسط', spain: 'إسبانيا',
+    mapFrom: 'انطلاقًا من {city}', openCard: 'بطاقة الملعب', planHere: 'نظّم يوم مباراة هنا', seats: '{n} مقعد',
+    stTitle: 'ملاعب المغرب الستة', sortCap: 'الأكبر أولًا', sortGeo: 'من الشمال إلى الجنوب',
+    seatsPlanned: 'مقعد مقرر', lblOpened: 'الافتتاح', lblAirport: 'المطار', lblRail: 'القطار', askAbout: 'اسأل إيزم',
+    scaleNote: 'الأشرطة بمقياس واحد: الشريط الكامل يساوي 115,000 مقعد. السعات هي المقررة لسنة 2030 في ملف الترشح وقد تتغير.',
+
+    plTitle: 'نظّم يوم مباراتك',
+    plLede: 'أخبر إيزم أين تقيم وأين تُلعب المباراة، وهو يحسب الرحلة والتوقيت والميزانية.',
+    fFrom: 'أقيم في', fTo: 'المباراة في', fKo: 'انطلاق المباراة', fStyle: 'الميزانية', sSaver: 'اقتصادي', sComfort: 'مريح', sPremium: 'فاخر',
+    fInt: 'أريد أيضًا', iEat: 'أكل محلي', iSee: 'زيارة المعالم', iCraft: 'شراء منتجات حرفية',
+    plNote: 'لم يصدر جدول المباريات بعد، لذلك توقيت الانطلاق مجرد مثال.',
+    tagExample: 'خطة نموذجية', tagYours: 'خطتك',
+    planHead: 'من {from} إلى {to}', planSame: 'يوم المباراة في {to}',
+    sayTravel: '{mode}، حوالي {dur}. غادر {from} قبل {time} وسيبقى لك وقت للتجول قبل المباراة.',
+    saySame: 'أنت أصلًا في {to}. إليك كيف تملأ يومك.',
+    sayDayBefore: 'الرحلة طويلة على يوم واحد. سافر في اليوم السابق واستيقظ في {to}.',
+    stDepart: 'المغادرة من {from}', stDepartD: '{mode}، حوالي {dur}. نحو {km} كلم.',
+    stDayBefore: 'السفر إلى {to}', stDayBeforeD: '{mode}، حوالي {dur}. المبيت في {to}: {stay}.', dayBefore: 'اليوم السابق',
+    stArrive: 'الوصول إلى {to}', stMorning: 'ابدأ يومك في {to}', stFree: 'ضع حقيبتك وتعرّف على المكان.',
+    stGo: 'التوجه إلى الملعب',
+    goHassan: 'الملعب في بنسليمان، على بعد نحو 40 كلم من الدار البيضاء. احسب أكثر من ساعة وحاول أن تكون عند الأبواب قبل ساعتين.',
+    goOther: 'احسب من 30 إلى 40 دقيقة بسيارة الأجرة أو الحافلة المكوكية وحاول أن تكون عند الأبواب قبل ساعتين.',
+    stKick: 'صافرة البداية في {stadium}', stKickD: '{n} مقعد. ابحث عن بابك مبكرًا.',
+    stAfter: 'بعد المباراة',
+    afterStay: 'القطارات والحافلات ستكون ممتلئة والوقت متأخر. اقضِ الليلة هناك: {stay}.',
+    afterReturn: 'يمكنك العودة إلى {from} في الليلة نفسها، لكن احجز مقعدك مسبقًا. أو ابقَ: {stay}.',
+    afterSame: 'لا سفر هذه الليلة. اقتراح للعشاء: {eat}.',
+    altFlight: 'وقتك ضيق؟ الرحلة الجوية المباشرة تستغرق حوالي {dur}.',
+    budTitle: 'ميزانية تقريبية للشخص', bTravel: 'السفر ذهابًا وإيابًا', bLocal: 'سيارات الأجرة والحافلات', bFood: 'الأكل والشرب', bCraft: 'منتجات حرفية وتذكارات', bSee: 'الزيارات', bTotal: 'المجموع',
+    bNote: 'تقديرات بأسعار 2026. لا تشمل تذكرة المباراة ولا الفندق.',
+    durH: '{h} س {m} د', durHonly: '{h} س', durM: '{m} د', approxEur: 'حوالي {n} €',
+
+    loTitle: 'كُل واشترِ وأقم عند أهل البلد',
+    loLede: 'أماكن حقيقية في كل مدينة مستضيفة، اخترناها ليصل إنفاق المونديال إلى الطباخين والحرفيين والمضيفين المغاربة.',
+    loPlan: 'نظّم يوم مباراة في {city}',
+    bizTitle: 'كيف يساعد إيزم التجارة المحلية', conceptTag: 'تصوّر',
+    biz1: 'تسجيل مجاني للرياضات والمطاعم والحرفيين والمرشدين قرب كل ملعب.',
+    biz2: 'إيزم يوصي بهم بأربع لغات لحظة يسأل المشجع.',
+    biz3: 'المشجعون ينفقون في المدينة العتيقة والسوق، وليس في الملعب فقط.',
+
+    chScript: 'عرض تجريبي · إجابات جاهزة', chLive: 'إجابات جاهزة + ذكاء اصطناعي مباشر', chReset: 'من جديد', chSend: 'إرسال',
+    chPlaceholder: 'اسأل عن الملاعب، التنقل، الأكل…', liveTag: 'ذكاء اصطناعي مباشر', thinking: 'أفكّر…',
+    openPlanner: 'افتح المخطِّط', openGuide: 'افتح الخريطة والملاعب', openLocal: 'شاهد الأماكن المحلية',
+    chipStadium: 'ملعب {city}', darija: 'بالدارجة',
+    aiOff: 'الذكاء الاصطناعي المباشر غير متاح هنا، لذلك أعود إلى إجاباتي الجاهزة. جرّب أحد هذه الأسئلة:',
+    aiBusy: 'أسئلة كثيرة في وقت واحد. أمهلني لحظة ثم اسأل من جديد.',
+    aiFail: 'لم أتمكن من الوصول إلى الذكاء الاصطناعي المباشر. حاول بعد لحظة.'
+  },
+  cities: { casa: 'الدار البيضاء', rabat: 'الرباط', tangier: 'طنجة', fez: 'فاس', marrakech: 'مراكش', agadir: 'أكادير' },
+  modes: { boraq: 'قطار البراق فائق السرعة', train: 'القطار', bus: 'الحافلة', flight: 'الطائرة', mix: 'القطار ثم الحافلة' },
+  cats: { eat: 'أكل', craft: 'حِرَف', see: 'معالم', stay: 'إقامة' },
+  stad: {
+    casa: { name: 'ملعب الحسن الثاني الكبير', where: 'بنسليمان، قرب الدار البيضاء', status: 'قيد البناء', opened: 'مرتقب في 2028', airport: 'مطار محمد الخامس، الدار البيضاء (CMN)', rail: 'ربط سككي مقرر لسنة 2030',
+      blurb: 'يُبنى من الصفر لمونديال 2030، على بعد نحو 40 كلم من الدار البيضاء في اتجاه الرباط. بسعة 115,000 مقعد، يُرتقب أن يكون أكبر ملعب كرة قدم في العالم، تحت سقف مستوحى من خيمة المواسم التقليدية. المغرب يقترحه لاحتضان النهائي.' },
+    tangier: { name: 'ملعب طنجة الكبير', where: 'طنجة', status: 'تم توسيعه في 2025', opened: '2011', airport: 'مطار طنجة ابن بطوطة (TNG)', rail: 'خط البراق فائق السرعة',
+      blurb: 'يُعرف أيضًا بملعب ابن بطوطة. يقع على بعد دقائق من مضيق جبل طارق، وهو أقرب ملعب مغربي إلى إسبانيا. أزيل مضمار ألعاب القوى وأضيف سقف جديد قبل كأس أمم أفريقيا 2025.' },
+    rabat: { name: 'ملعب الأمير مولاي عبد الله', where: 'الرباط', status: 'أعيد بناؤه في 2025', opened: '2025 (الملعب الأصلي: 1983)', airport: 'مطار الرباط سلا (RBA)', rail: 'خط البراق فائق السرعة',
+      blurb: 'الملعب الوطني في العاصمة. هُدم الملعب القديم وأعيد بناؤه لكرة القدم فقط، وافتُتح من جديد في 2025. احتضن المباراة الافتتاحية ونهائي كأس أمم أفريقيا 2025.' },
+    fez: { name: 'ملعب فاس الكبير', where: 'فاس', status: 'توسعة مقررة', opened: '2007', airport: 'مطار فاس سايس (FEZ)', rail: 'قطار عادي من الرباط والدار البيضاء',
+      blurb: 'افتُتح سنة 2007 وجُدّد لكأس أمم أفريقيا 2025، مع توسعة مقررة لسنة 2030. المدينة العتيقة لفاس، المصنفة تراثًا عالميًا لدى اليونسكو، على مسافة قصيرة.' },
+    agadir: { name: 'ملعب أكادير الكبير', where: 'أكادير', status: 'تجديد مقرر', opened: '2013', airport: 'مطار أكادير المسيرة (AGA)', rail: 'لا قطار بعد. حافلة أو سيارة أو طائرة',
+      blurb: 'يُعرف أيضًا بملعب أدرار. صُمم في الأصل لملف ترشح المغرب لمونديال 2010، وافتُتح سنة 2013 بين شواطئ الأطلسي وسفوح الأطلس، واحتضن مباريات من كأس العالم للأندية في السنة نفسها.' },
+    marrakech: { name: 'ملعب مراكش الكبير', where: 'مراكش', status: 'تجديد مقرر', opened: '2011', airport: 'مطار مراكش المنارة (RAK)', rail: 'قطار عادي. تمديد الخط فائق السرعة قيد الإنجاز',
+      blurb: 'افتُتح سنة 2011 شمال المدينة الحمراء. احتضن نهائيَي كأس العالم للأندية 2013 و2014، ويخضع لإعادة تهيئة استعدادًا لسنة 2030.' }
+  },
+  local: {
+    casa: { eat: ['السوق المركزي', 'اختر سمكك من الباعة واطلب شيّه على الطاولات المجاورة.'],
+      craft: ['حي الأحباس', 'مدينة عتيقة بأقواس من ثلاثينيات القرن الماضي: بلاغي، نحاسيات، زيتون وحلويات باللوز.'],
+      see: ['مسجد الحسن الثاني', 'من أكبر مساجد العالم، مشيّد فوق مياه الأطلسي. توجد زيارات مع مرشد لغير المسلمين.'],
+      stay: ['قرب محطة الدار البيضاء الميناء أو المسافرين', 'أقم قرب محطة قطار للوصول إلى الرباط، ورتّب تنقلك إلى الملعب مبكرًا.'] },
+    rabat: { eat: ['أكل الشارع في المدينة العتيقة', 'سردين مشوي، بيصارة ومسمن ساخن على طول زنقة السويقة.'],
+      craft: ['زنقة القناصل', 'زنقة نسّاجي الزربية الرباطية، ومعها الجلد والفضة.'],
+      see: ['قصبة الأوداية', 'أزقة زرقاء وبيضاء فوق مصب النهر، وصومعة حسان قريبة منها.'],
+      stay: ['رياضات المدينة العتيقة أو أكدال', 'رياضات داخل الأسوار، أو حي أكدال قرب محطة القطار فائق السرعة.'] },
+    tangier: { eat: ['مشاوي السمك قرب الميناء', 'سمك مقلي ومشوي طازج من القوارب، قرب ميناء الصيد.'],
+      craft: ['فندق الشجرة', 'خان النسّاجين قرب السوق الكبير، والأنوال ما زالت تعمل فيه.'],
+      see: ['مقهى الحافة والقصبة', 'شاي بالنعناع على شرفات فوق الجرف منذ 1921، قبالة إسبانيا.'],
+      stay: ['دور الضيافة في القصبة', 'دور ضيافة صغيرة في المدينة القديمة، على مسافة قصيرة من الميناء.'] },
+    fez: { eat: ['البسطيلة في المدينة العتيقة', 'طبق المدينة الشهير: عجين رقيق، دجاج أو حمام، لوز وقرفة.'],
+      craft: ['ساحة الصفارين', 'النحّاسون يطرقون الأواني في الهواء الطلق كما يفعلون منذ قرون.'],
+      see: ['دار الدبغ شوارة', 'جلود تُصبغ في أحواض حجرية، تُشاهد من الشرفات المحيطة.'],
+      stay: ['رياضات فاس البالي', 'بيوت بأفنية داخلية في واحدة من أكبر المدن العتيقة الخالية من السيارات في العالم.'] },
+    marrakech: { eat: ['الطنجية قرب جامع الفنا', 'أكلة المدينة المطهوة على مهل، تُقدَّم حول الساحة. وبعد الغروب تتحول الساحة نفسها إلى مطبخ مفتوح.'],
+      craft: ['الأسواق', 'جلد وفوانيس وزرابي، تُباع زنقة بزنقة حسب الحرفة. ساوم بابتسامة.'],
+      see: ['حديقة ماجوريل', 'الحديقة الزرقاء التي كانت ملكًا لإيف سان لوران. احجز مسبقًا.'],
+      stay: ['رياضات المدينة العتيقة', 'مئات البيوت المرمَّمة ذات الأفنية، على بعد دقائق مشيًا من الساحة.'] },
+    agadir: { eat: ['مشاوي السمك في الميناء', 'اختر من صيد اليوم وتناوله مشويًا على طاولات مشتركة.'],
+      craft: ['سوق الأحد', 'من أكبر أسواق المغرب. ابحث عن زيت الأركان وأملو من التعاونيات النسائية.'],
+      see: ['أكادير أوفلا', 'القصبة على التل المطل على الخليج، ويُصعد إليها بالتلفريك.'],
+      stay: ['الواجهة البحرية أو تغازوت', 'فنادق على طول الكورنيش، أو قرية ركوب الأمواج تغازوت على بعد نحو 20 كلم شمالًا.'] }
+  },
+  tips: { bshhal: 'بكم؟', skhoun: 'ساخن', lagar: 'أين محطة القطار؟', bnin: 'لذيذ', tiran: 'الملعب', fuqash: 'متى؟', koura: 'كرة القدم', mrehba: 'أهلًا وسهلًا', sbe3: 'أسد', blajmil: 'عفوًا', labas: 'كيف الحال؟', yallah: 'هيا بنا', zwin: 'جميل', mya: 'مئة', dima: 'المغرب دائمًا' },
+  chips: { stadiums: 'ما هي ملاعب المغرب؟', dates: 'متى تبدأ البطولة؟', final: 'أين يُلعب النهائي؟', travel: 'كيف أتنقل؟', tickets: 'هل أستطيع شراء التذاكر؟', weather: 'كيف سيكون الطقس؟', food: 'ماذا آكل؟', darija: 'علّمني الدارجة', format: 'كم منتخبًا يشارك؟', centenary: 'لماذا تُلعب مباريات في أمريكا الجنوبية؟', hosts: 'ما هي الدول المستضيفة؟', team: 'من هم أسود الأطلس؟', mascot: 'من أنت؟', plan: 'نظّم يوم مباراتي', local: 'أين أشتري من المحلي؟' },
+  chat: {
+    greet: '<p>سلام! أنا <strong>إيزم</strong>، مرشدك أسد الأطلس إلى كأس العالم 2030 في المغرب.</p><p>اسألني عن الملاعب الستة أو التواريخ أو التنقل، أو دعني أنظّم يوم مباراتك.</p>',
+    ai: '<p>معظم إجاباتي مكتوبة مسبقًا وتُختار حسب الكلمات المفتاحية. وعندما يكون الذكاء الاصطناعي المباشر مفعّلًا في هذه الصفحة، أستعمله للأسئلة التي لا أجدها في إجاباتي الجاهزة.</p>',
+    final: '<p>النهائي يوم <strong>21 يوليو 2030</strong>. لم تختر الفيفا الملعب بعد.</p><p>ثلاثة أسماء مطروحة: سانتياغو برنابيو في مدريد، كامب نو في برشلونة، وملعب الحسن الثاني الكبير الجديد في المغرب.</p>',
+    tickets: '<p>لا توجد تذاكر للبيع حتى الآن ولم تُعلن أي أسعار.</p><p>عند فتح البيع، سيكون موقع الفيفا هو البائع الرسمي الوحيد. احذر ممن يعرض تذاكر 2030 قبل ذلك.</p>',
+    weather: '<p>يونيو ويوليو جافّان في كل أنحاء المغرب.</p><ul><li><strong>الساحل الأطلسي والشمال</strong> (الدار البيضاء، الرباط، طنجة، أكادير): طقس معتدل، حوالي 25 درجة مع نسيم البحر.</li><li><strong>الداخل</strong> (مراكش، فاس): حرارة مرتفعة، كثيرًا ما تبلغ 35 درجة أو أكثر بعد الظهر.</li></ul><p>خذ معك ما يحميك من الشمس في مراكش وفاس.</p>',
+    travel: '<p>الشمال هو الأسهل: قطار <strong>البراق</strong> فائق السرعة يربط طنجة بالرباط والدار البيضاء، والرحلة من طنجة إلى الدار البيضاء تستغرق أكثر من ساعتين بقليل.</p><ul><li><strong>مراكش</strong>: قطارات عادية من الدار البيضاء. تمديد الخط فائق السرعة قيد الإنجاز.</li><li><strong>فاس</strong>: قطارات عادية من الرباط والدار البيضاء.</li><li><strong>أكادير</strong>: لا قطار بعد، فالخيار حافلة أو سيارة أو رحلة جوية قصيرة.</li></ul><p>اذكر لي مدينتين وأعطيك تفاصيل الرحلة.</p>',
+    darija: '<p>بضع كلمات بالدارجة المغربية تفتح لك الأبواب:</p><ul><li><strong>لاباس؟</strong>: كيف الحال؟</li><li><strong>واخا</strong>: موافق</li><li><strong>عفاك</strong>: من فضلك</li><li><strong>بسلامة</strong>: مع السلامة</li><li><strong>ديما مغرب</strong>: المغرب دائمًا، هتاف الجماهير</li></ul><p>أضيف كلمة جديدة تحت معظم إجاباتي.</p>',
+    money: '<p>العملة هي <strong>الدرهم المغربي (MAD)</strong>. البطاقات مقبولة في الفنادق والمراكز التجارية ومعظم المطاعم. احتفظ بالنقود لسيارات الأجرة والأسواق والمقاهي الصغيرة.</p>',
+    food: '<p>ابدأ بهذه:</p><ul><li><strong>الطاجين</strong>: طبخ على مهل في إناء فخاري يحمل الاسم نفسه.</li><li><strong>الكسكس</strong>: غداء العائلة يوم الجمعة.</li><li><strong>الحريرة</strong>: حساء الطماطم والعدس والحمص.</li><li><strong>الشاي بالنعناع</strong>: يُصب من الأعلى ويُقدَّم في كل مكان.</li></ul><p>اذكر مدينة وأدلّك على مكان للأكل فيها.</p>',
+    stadiumsIntro: '<p>المغرب يقترح ستة ملاعب. السعات المقررة لسنة 2030:</p>',
+    stadiumsOutro: '<p>ملعب الحسن الثاني الكبير هو الملعب الجديد الوحيد. الخمسة الأخرى موجودة أصلًا.</p>',
+    dates: '<p>تُلعب البطولة من <strong>8 يونيو إلى 21 يوليو 2030</strong>.</p><ul><li><strong>8 و9 يونيو</strong>: مباريات المئوية في الأوروغواي والأرجنتين وباراغواي.</li><li><strong>13 و14 يونيو</strong>: المباريات الافتتاحية في المغرب وإسبانيا والبرتغال.</li><li><strong>21 يوليو</strong>: النهائي.</li></ul><p>جدول المباريات التفصيلي يصدر لاحقًا، بعد القرعة.</p>',
+    format: '<p>المقرر <strong>48 منتخبًا و104 مباريات</strong>، بنظام 2026 نفسه: اثنتا عشرة مجموعة من أربعة منتخبات، ثم دور الـ32.</p><p>اقتُرحت نسخة من 64 منتخبًا بمناسبة المئوية. الفيفا لم تعتمدها.</p><p>الدول الست المستضيفة تتأهل تلقائيًا، ومنها المغرب.</p>',
+    centenary: '<p>سنة 2030 تصادف مرور <strong>100 عام</strong> على أول كأس عالم، نظّمتها الأوروغواي وفازت بها سنة 1930.</p><p>احتفالًا بذلك، تستضيف الأوروغواي والأرجنتين وباراغواي مباراة واحدة لكل منها يومَي 8 و9 يونيو. الأولى في ملعب سنتيناريو بمونتيفيديو. كل المباريات الأخرى في المغرب وإسبانيا والبرتغال.</p>',
+    hosts: '<p>ثلاث دول مستضيفة رئيسية: <strong>المغرب وإسبانيا والبرتغال</strong>. وثلاث دول تحتضن مباريات المئوية بمباراة لكل منها: الأوروغواي والأرجنتين وباراغواي.</p><p>المجموع ست دول في ثلاث قارات. المغرب يقترح ستة ملاعب.</p>',
+    team: '<p>أسود الأطلس اعتادوا صنع التاريخ:</p><ul><li><strong>1986</strong>: أول منتخب أفريقي يبلغ دور الستة عشر.</li><li><strong>2022</strong>: المركز الرابع، أول منتخب أفريقي وعربي في نصف النهائي.</li><li><strong>2026</strong>: ربع النهائي، والخروج أمام فرنسا.</li></ul><p>في 2030 يلعبون على أرضهم ويتأهلون تلقائيًا بصفتهم البلد المستضيف.</p>',
+    mascot: '<p>أنا <strong>إيزم</strong>. اسمي يعني الأسد بالأمازيغية، نسبةً إلى أسود الأطلس التي عاشت في هذه الجبال ومنحت المنتخب الوطني لقبه.</p><p>لبدتي نجمة زليج ثمانية، والنجمة الخضراء على جبيني من العلم المغربي. أنا فكرة من صنع المشجعين ولست تميمة رسمية.</p>',
+    thanks: '<p>بلا جميل. هل من سؤال آخر قبل صافرة البداية؟</p>',
+    hello: '<p>سلام! سعيد برؤيتك. ماذا تريد أن تعرف عن مونديال المغرب 2030؟</p>',
+    help: '<p>أستطيع أن أحدثك عن:</p><ul><li>الملاعب الستة والخريطة</li><li>التواريخ ونظام البطولة والدول المستضيفة والنهائي</li><li>الرحلات بين المدن المستضيفة</li><li>الأكل والحرف والإقامة المحلية</li><li>خطة كاملة ليوم المباراة مع ميزانية</li></ul>',
+    fallback: '<p>هذا السؤال ليس ضمن إجاباتي الجاهزة بعد. أجيب أفضل عن أسئلة مثل هذه:</p>',
+    route: '<p><strong>من {from} إلى {to}</strong>: {mode}، حوالي {dur}. المسافة نحو {km} كلم برًّا.</p>',
+    plan: '<p>يالله، لننظّمها. اختر أين تقيم وأين تُلعب المباراة، وأنا أحسب الرحلة والتوقيت والميزانية.</p>',
+    planTo: '<p>يالله. ضبطتُ المخطِّط على مباراة في <strong>{city}</strong>. اختر أين تقيم وأنا أتكفل بالباقي.</p>',
+    localIntro: '<p>في <strong>{city}</strong>، ابدأ بهذه:</p>',
+    localGeneric: '<p>في كل مدينة مستضيفة أماكن يذهب فيها مالك مباشرة إلى الطباخين والحرفيين المحليين. اذكر مدينة، أو افتح القائمة الكاملة.</p>'
+  }
+};
+/* ---------- helpers ---------- */
+var LANGS = ['en', 'fr', 'es', 'ar'];
+var CUR = { en: 'MAD', fr: 'MAD', es: 'MAD', ar: 'درهم' };
+var KM = { en: 'km', fr: 'km', es: 'km', ar: 'كلم' };
+var lang = 'en';
+function $(id) { return document.getElementById(id); }
+function fill(s, v) { return v ? s.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }) : s; }
+function t(k, v) { var s = L[lang].ui[k]; if (s == null) s = L.en.ui[k]; return fill(s == null ? k : s, v); }
+function c(k, v) { return fill(L[lang].chat[k], v); }
+function fmt(n) { try { return n.toLocaleString(L[lang].locale); } catch (e) { return String(n); } }
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function clock(min) { min = ((min % 1440) + 1440) % 1440; return pad(Math.floor(min / 60)) + ':' + pad(min % 60); }
+function dur(min) { var h = Math.floor(min / 60), m = min % 60; return !h ? t('durM', { m: m }) : !m ? t('durHonly', { h: h }) : t('durH', { h: h, m: pad(m) }); }
+function cityName(id) { return L[lang].cities[id]; }
+function leg(a, b) { return D.travel[a + '-' + b] || D.travel[b + '-' + a] || null; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+
+/* ---------- mascot ---------- */
+var HEAD = '<g class="izem-mane">' +
+    '<rect x="20" y="20" width="80" height="80" rx="7" fill="var(--mane-2)" transform="rotate(22.5 60 60)"/>' +
+    '<rect x="20" y="20" width="80" height="80" rx="7" fill="var(--mane-2)" transform="rotate(67.5 60 60)"/>' +
+    '<rect x="23" y="23" width="74" height="74" rx="7" fill="var(--mane)"/>' +
+    '<rect x="23" y="23" width="74" height="74" rx="7" fill="var(--mane)" transform="rotate(45 60 60)"/>' +
+  '</g>' +
+  '<circle cx="38" cy="38" r="10" fill="var(--fur)"/><circle cx="82" cy="38" r="10" fill="var(--fur)"/>' +
+  '<circle cx="38" cy="38" r="5" fill="var(--mane-2)"/><circle cx="82" cy="38" r="5" fill="var(--mane-2)"/>' +
+  '<circle cx="60" cy="63" r="30" fill="var(--fur)"/>' +
+  '<polygon points="60,36.5 63.8,48.3 53.8,41 66.2,41 56.2,48.3" fill="none" stroke="var(--star)" stroke-width="1.7" stroke-linejoin="round"/>' +
+  '<circle cx="43" cy="70" r="4.5" fill="var(--blush)" opacity=".3"/><circle cx="77" cy="70" r="4.5" fill="var(--blush)" opacity=".3"/>' +
+  '<ellipse cx="60" cy="75" rx="14.5" ry="11" fill="var(--muzzle)"/>' +
+  '<ellipse class="izem-eye" cx="48.5" cy="60" rx="3.6" ry="4.6" fill="var(--face-ink)"/>' +
+  '<ellipse class="izem-eye" cx="71.5" cy="60" rx="3.6" ry="4.6" fill="var(--face-ink)"/>' +
+  '<circle cx="49.8" cy="58.4" r="1.2" fill="var(--muzzle)"/><circle cx="72.8" cy="58.4" r="1.2" fill="var(--muzzle)"/>' +
+  '<path d="M55.5 68.5h9l-4.5 5.5z" fill="var(--face-ink)" stroke="var(--face-ink)" stroke-width="2" stroke-linejoin="round"/>' +
+  '<path d="M60 75v3M60 78q-4.5 4.5-9 1M60 78q4.5 4.5 9 1" fill="none" stroke="var(--face-ink)" stroke-width="1.8" stroke-linecap="round"/>';
+var IZEM = '<svg class="izem" viewBox="0 0 120 120" role="img" aria-label="Izem">' + HEAD + '</svg>';
+var IZEM_FULL = '<svg class="izem-full" viewBox="0 0 200 240" role="img" aria-label="Izem">' +
+  '<ellipse cx="104" cy="226" rx="66" ry="7" fill="#000000" opacity=".2"/>' +
+  '<g class="izem-body">' +
+    '<path d="M74 176C44 180 30 156 44 138" fill="none" stroke="var(--fur)" stroke-width="7" stroke-linecap="round"/>' +
+    '<rect x="36" y="126" width="16" height="16" rx="2" fill="var(--mane-2)"/><rect x="36" y="126" width="16" height="16" rx="2" fill="var(--mane-2)" transform="rotate(45 44 134)"/>' +
+    '<rect x="80" y="176" width="16" height="36" rx="8" fill="var(--fur)"/><rect x="104" y="176" width="16" height="36" rx="8" fill="var(--fur)"/>' +
+    '<ellipse cx="86" cy="214" rx="13" ry="7.5" fill="var(--face-ink)"/><ellipse cx="114" cy="214" rx="13" ry="7.5" fill="var(--face-ink)"/>' +
+    '<rect x="74" y="162" width="52" height="26" rx="9" fill="var(--kit-2)"/>' +
+    '<path d="M78 124L64 148" fill="none" stroke="var(--kit)" stroke-width="15" stroke-linecap="round"/><circle cx="61" cy="153" r="8" fill="var(--fur)"/>' +
+    '<rect x="70" y="106" width="60" height="66" rx="20" fill="var(--kit)"/>' +
+    '<polygon points="100,137 105.3,153.3 91.4,143.2 108.6,143.2 94.7,153.3" fill="none" stroke="#0B7A4B" stroke-width="2.4" stroke-linejoin="round"/>' +
+    '<circle cx="156" cy="208" r="15" fill="var(--ball)" stroke="var(--face-ink)" stroke-width="2"/>' +
+    '<polygon points="156,202 161.7,206.1 159.5,212.9 152.5,212.9 150.3,206.1" fill="var(--face-ink)"/>' +
+    '<path d="M156 202V193M161.7 206.1L170.3 203.4M159.5 212.9L164.8 220.1M152.5 212.9L147.2 220.1M150.3 206.1L141.7 203.4" fill="none" stroke="var(--face-ink)" stroke-width="1.6"/>' +
+    '<g transform="translate(40 0)">' + HEAD + '</g>' +
+    '<g class="izem-arm"><path d="M124 120L147 99" fill="none" stroke="var(--kit)" stroke-width="15" stroke-linecap="round"/><circle cx="151" cy="94" r="8.5" fill="var(--fur)"/></g>' +
+  '</g></svg>';
+document.querySelectorAll('[data-izem]').forEach(function (el) { el.innerHTML = IZEM; });
+document.querySelectorAll('[data-izem-full]').forEach(function (el) { el.innerHTML = IZEM_FULL; });
+
+/* ---------- navigation ---------- */
+var app = document.querySelector('.app');
+var input = $('chat-input');
+var wide = window.matchMedia('(min-width: 980px)');
+var VIEWS = ['home', 'stadiums', 'planner', 'local'];
+var mainView = 'home';
+function paintNav() {
+  var chatOpen = app.dataset.chat === '1' && !wide.matches;
+  document.querySelectorAll('.nav button').forEach(function (b) {
+    var on = b.dataset.view === 'chat' ? chatOpen : (!chatOpen && b.dataset.view === mainView);
+    b.classList.toggle('on', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+}
+function show(view) {
+  if (view === 'chat') {
+    if (wide.matches) { input.focus(); return; }
+    app.dataset.chat = '1';
+  } else if (VIEWS.indexOf(view) >= 0) {
+    app.dataset.chat = '0'; mainView = view;
+    VIEWS.forEach(function (v) { $('view-' + v).classList.toggle('on', v === view); });
+    $('views').scrollTop = 0;
+  }
+  paintNav(); scrollThread();
+}
+if (wide.addEventListener) wide.addEventListener('change', paintNav);
+
+/* ---------- static text ---------- */
+function applyStatic() {
+  document.querySelectorAll('[data-t]').forEach(function (el) { el.textContent = t(el.dataset.t); });
+  input.placeholder = t('chPlaceholder'); input.setAttribute('aria-label', t('chPlaceholder'));
+  $('lang').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === lang); });
+}
+
+/* ---------- countdown ---------- */
+var KICKOFF = Date.UTC(2030, 5, 8);
+function tick() {
+  var s = Math.max(0, Math.floor((KICKOFF - Date.now()) / 1000));
+  $('cd-d').textContent = Math.floor(s / 86400).toLocaleString('en-US');
+  $('cd-h').textContent = pad(Math.floor(s % 86400 / 3600));
+  $('cd-m').textContent = pad(Math.floor(s % 3600 / 60));
+  $('cd-s').textContent = pad(s % 60);
+}
+
+/* ---------- map ---------- */
+var mapCity = 'casa';
+function px(p) { return [((p[0] + 11.5) * 50).toFixed(1), ((36.6 - p[1]) * 60).toFixed(1)]; }
+function poly(pts) { return pts.map(function (p, i) { var q = px(p); return (i ? 'L' : 'M') + q[0] + ' ' + q[1]; }).join(''); }
+function star(cx, cy, r) {
+  var s = (r * 1.5).toFixed(1), x = (cx - r * 0.75).toFixed(1), y = (cy - r * 0.75).toFixed(1);
+  return '<g class="mk"><rect x="' + x + '" y="' + y + '" width="' + s + '" height="' + s + '"/><rect x="' + x + '" y="' + y + '" width="' + s + '" height="' + s + '" transform="rotate(45 ' + cx + ' ' + cy + ')"/></g>';
+}
+function renderMap() {
+  var h = '<path class="land2" d="' + poly(D.spain) + 'Z"/>' +
+    '<path class="land" d="' + poly(D.coast) + 'L510 466L510 90Z"/>' +
+    '<text class="sea-l" x="16" y="205">' + esc(t('seaAtl')) + '</text>' +
+    '<text class="sea-l" x="372" y="48">' + esc(t('seaMed')) + '</text>' +
+    '<text class="sea-l" x="274" y="14">' + esc(t('spain')) + '</text>';
+  D.routes.forEach(function (r) { h += '<path class="rt ' + r.cls + '" d="' + poly(r.pts) + '"/>'; });
+  D.ids.forEach(function (id) {
+    var ci = D.city[id], q = px([ci.lon, ci.lat]), x = +q[0], y = +q[1], r = 5 + 6 * Math.sqrt(ci.cap / D.maxCap);
+    var end = ci.anchor === 'end';
+    h += '<g class="city' + (end ? ' sea' : '') + (id === mapCity ? ' on' : '') + '" data-map="' + id + '" role="button" tabindex="0" aria-label="' + esc(cityName(id)) + '">' +
+      '<circle cx="' + x + '" cy="' + y + '" r="22" fill="transparent"/>' + star(x, y, r) +
+      '<text x="' + (x + (end ? -r - 8 : r + 8)) + '" y="' + (y + 5) + '" text-anchor="' + ci.anchor + '">' + esc(cityName(id)) + '</text></g>';
+  });
+  $('map').innerHTML = h;
+}
+function renderPanel() {
+  var s = L[lang].stad[mapCity], ci = D.city[mapCity];
+  var rows = D.ids.filter(function (id) { return id !== mapCity; }).map(function (id) { return { id: id, l: leg(mapCity, id) }; })
+    .sort(function (a, b) { return a.l.min - b.l.min; })
+    .map(function (o) {
+      return '<li><b>' + esc(cityName(o.id)) + '</b><span class="t">' + dur(o.l.min) + '</span><small>' + esc(L[lang].modes[o.l.mode]) + ' · ' + fmt(o.l.km) + ' ' + KM[lang] + '</small></li>';
+    }).join('');
+  $('mpanel').innerHTML = '<span class="pill ' + ci.status + '" style="align-self:flex-start">' + esc(s.status) + '</span>' +
+    '<h3>' + esc(s.name) + '</h3><p class="sub">' + esc(s.where) + ' · ' + esc(t('seats', { n: fmt(ci.cap) })) + '</p>' +
+    '<p class="sub"><strong>' + esc(t('mapFrom', { city: cityName(mapCity) })) + '</strong></p><ul class="legs">' + rows + '</ul>' +
+    '<div class="btn-row"><button type="button" class="btn" data-plan-to="' + mapCity + '">' + esc(t('planHere')) + '</button>' +
+    '<button type="button" class="btn btn-quiet" data-stadium="' + mapCity + '">' + esc(t('openCard')) + '</button></div>';
+}
+function pickCity(id) {
+  mapCity = id;
+  document.querySelectorAll('#map .city').forEach(function (g) { g.classList.toggle('on', g.dataset.map === id); });
+  renderPanel();
+}
+
+/* ---------- stadium cards ---------- */
+var sortBy = 'cap';
+function renderStadiums() {
+  var list = D.ids.slice().sort(function (a, b) { return sortBy === 'geo' ? D.city[b].lat - D.city[a].lat : D.city[b].cap - D.city[a].cap; });
+  $('stad-grid').innerHTML = list.map(function (id) {
+    var s = L[lang].stad[id], ci = D.city[id];
+    return '<article class="stad" id="stad-' + id + '">' +
+      '<div class="stad-top"><span class="pill ' + ci.status + '">' + esc(s.status) + '</span><h3>' + esc(s.name) + '</h3></div>' +
+      '<div class="stad-city">' + esc(s.where) + '</div>' +
+      '<div class="cap"><div class="cap-row"><span class="num">' + fmt(ci.cap) + '</span><small>' + esc(t('seatsPlanned')) + '</small></div>' +
+      '<div class="cap-bar"><i style="width:' + (ci.cap / D.maxCap * 100).toFixed(1) + '%"></i></div></div>' +
+      '<dl class="kv"><dt>' + esc(t('lblOpened')) + '</dt><dd>' + esc(s.opened) + '</dd><dt>' + esc(t('lblAirport')) + '</dt><dd>' + esc(s.airport) + '</dd><dt>' + esc(t('lblRail')) + '</dt><dd>' + esc(s.rail) + '</dd></dl>' +
+      '<p>' + esc(s.blurb) + '</p>' +
+      '<div class="btn-row"><button type="button" class="btn" data-plan-to="' + id + '">' + esc(t('planHere')) + '</button>' +
+      '<button type="button" class="btn btn-quiet" data-ask-city="' + id + '">' + esc(t('askAbout')) + '</button></div></article>';
+  }).join('');
+  $('sort-cap').setAttribute('aria-pressed', sortBy !== 'geo');
+  $('sort-geo').setAttribute('aria-pressed', sortBy === 'geo');
+}
+function openStadium(id) {
+  show('stadiums');
+  var card = $('stad-' + id);
+  if (card) card.scrollIntoView({ block: 'start' });
+}
+
+/* ---------- planner ---------- */
+var plan = { from: 'casa', to: 'marrakech', ko: 1200, style: 'comfort', ints: { eat: true, see: true, craft: false }, touched: false };
+var MULT = { saver: 1, comfort: 1.6, premium: 3 };
+var COST = { local: { saver: 40, comfort: 100, premium: 250 }, food: { saver: 120, comfort: 300, premium: 700 }, craft: { saver: 100, comfort: 300, premium: 800 }, see: { saver: 50, comfort: 100, premium: 250 } };
+function computePlan(p) {
+  var same = p.from === p.to, l = same ? null : leg(p.from, p.to), loc = L[lang].local[p.to], st = L[lang].stad[p.to], ci = D.city[p.to];
+  var cats = ['eat', 'see', 'craft'].filter(function (k) { return p.ints[k]; });
+  var go = p.ko - 120 - ci.transfer, arrive = go - (60 + cats.length * 60);
+  var door = l ? (l.mode === 'flight' ? l.min + 150 : l.min) : 0;
+  var depart = Math.floor((arrive - door) / 5) * 5;
+  var dayBefore = !!l && depart < 360;
+  var start = Math.max(arrive, 480);
+  var v = l ? { from: cityName(p.from), to: cityName(p.to), mode: L[lang].modes[l.mode], dur: dur(l.min), km: fmt(l.km), time: clock(depart), stay: loc.stay[0] } : { to: cityName(p.to) };
+  var steps = [];
+  if (l && dayBefore) steps.push({ label: t('dayBefore'), title: t('stDayBefore', v), detail: t('stDayBeforeD', v) });
+  else if (l) steps.push({ time: depart, title: t('stDepart', v), detail: t('stDepartD', v) + (l.alt ? ' ' + t('altFlight', { dur: dur(l.alt) }) : '') });
+  steps.push({ time: start, title: t(l && !dayBefore ? 'stArrive' : 'stMorning', v), detail: t('stFree') });
+  var slot = (go - start - 20) / (cats.length || 1);
+  cats.forEach(function (k, i) {
+    steps.push({ time: Math.round((start + 20 + i * slot) / 5) * 5, title: L[lang].cats[k] + ' · ' + loc[k][0], detail: loc[k][1] });
+  });
+  steps.push({ time: go, title: t('stGo'), detail: t(p.to === 'casa' ? 'goHassan' : 'goOther') });
+  steps.push({ time: p.ko, ko: true, title: t('stKick', { stadium: st.name }), detail: t('stKickD', { n: fmt(ci.cap) }) });
+  var after = same ? t('afterSame', { eat: loc.eat[0] }) : t(door <= 150 && p.ko <= 1020 ? 'afterReturn' : 'afterStay', { from: cityName(p.from), stay: loc.stay[0] });
+  steps.push({ time: p.ko + 120, title: t('stAfter'), detail: after });
+  var b = [];
+  if (l) b.push(['bTravel', Math.round(l.fare * 2 * MULT[p.style] / 10) * 10]);
+  b.push(['bLocal', COST.local[p.style] * (p.to === 'casa' ? 2 : 1)]);
+  b.push(['bFood', COST.food[p.style]]);
+  if (p.ints.see) b.push(['bSee', COST.see[p.style]]);
+  if (p.ints.craft) b.push(['bCraft', COST.craft[p.style]]);
+  var total = b.reduce(function (a, x) { return a + x[1]; }, 0);
+  return { same: same, dayBefore: dayBefore, v: v, steps: steps, budget: b, total: total, eur: Math.round(total / 11 / 5) * 5,
+    say: same ? t('saySame', v) : dayBefore ? t('sayDayBefore', v) : t('sayTravel', v) };
+}
+function renderPlanner() {
+  ['pl-from', 'pl-to'].forEach(function (sid) {
+    var sel = $(sid), val = sid === 'pl-from' ? plan.from : plan.to;
+    sel.innerHTML = D.ids.map(function (id) { return '<option value="' + id + '"' + (id === val ? ' selected' : '') + '>' + esc(cityName(id)) + '</option>'; }).join('');
+  });
+  $('pl-ko').value = String(plan.ko);
+  document.querySelectorAll('#pl-style button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.style === plan.style); });
+  document.querySelectorAll('#pl-int button').forEach(function (b) { b.setAttribute('aria-pressed', !!plan.ints[b.dataset.int]); });
+  var r = computePlan(plan), cur = CUR[lang];
+  $('plan').innerHTML = '<div class="plan-top">' + IZEM +
+    '<span class="plan-tag">' + esc(t(plan.touched ? 'tagYours' : 'tagExample')) + '</span>' +
+    '<h3>' + esc(r.same ? t('planSame', r.v) : t('planHead', r.v)) + '</h3><p>' + esc(r.say) + '</p></div>' +
+    '<ol class="steps">' + r.steps.map(function (s) {
+      return '<li' + (s.ko ? ' class="ko"' : '') + '><span class="tm' + (s.label ? ' txt' : '') + '">' + esc(s.label || clock(s.time)) + '</span><span class="rail"></span>' +
+        '<div class="bd"><b>' + esc(s.title) + '</b><span>' + esc(s.detail) + '</span></div></li>';
+    }).join('') + '</ol>' +
+    '<div class="budget"><h4>' + esc(t('budTitle')) + '</h4><dl>' + r.budget.map(function (x) {
+      return '<dt>' + esc(t(x[0])) + '</dt><dd>' + fmt(x[1]) + ' ' + cur + '</dd>';
+    }).join('') + '<dt class="tot">' + esc(t('bTotal')) + '</dt><dd class="tot">' + fmt(r.total) + ' ' + cur + '</dd></dl>' +
+    '<p class="note">' + esc(t('approxEur', { n: fmt(r.eur) })) + '. ' + esc(t('bNote')) + '</p></div>' +
+    '<div class="plan-foot btn-row"><button type="button" class="btn btn-quiet" data-local="' + plan.to + '">' + esc(t('openLocal')) + '</button>' +
+    '<button type="button" class="btn btn-quiet" data-stadium="' + plan.to + '">' + esc(t('openCard')) + '</button></div>';
+}
+function setPlan(patch, open) {
+  for (var k in patch) plan[k] = patch[k];
+  plan.touched = true; renderPlanner();
+  if (open) show('planner');
+}
+
+/* ---------- local ---------- */
+var localCity = 'marrakech';
+function renderLocal() {
+  $('lo-city').innerHTML = D.ids.map(function (id) {
+    return '<button type="button" data-local="' + id + '" aria-pressed="' + (id === localCity) + '">' + esc(cityName(id)) + '</button>';
+  }).join('');
+  var loc = L[lang].local[localCity];
+  $('picks').innerHTML = ['eat', 'craft', 'see', 'stay'].map(function (k) {
+    return '<article class="pick"><span class="cat ' + k + '">' + esc(L[lang].cats[k]) + '</span><b>' + esc(loc[k][0]) + '</b><p>' + esc(loc[k][1]) + '</p></article>';
+  }).join('');
+  var btn = $('lo-plan'); btn.textContent = t('loPlan', { city: cityName(localCity) }); btn.dataset.planTo = localCity;
+}
+
+/* ---------- chat: scripted answers ---------- */
+var START = ['stadiums', 'plan', 'travel', 'final'];
+var NEXT = { final: ['st:casa', 'dates', 'tickets'], tickets: ['dates', 'stadiums'], weather: ['travel', 'food'], travel: ['plan', 'st:tangier', 'weather'],
+  darija: ['food', 'team'], money: ['food', 'local'], food: ['local', 'darija'], stadiums: ['st:casa', 'st:rabat', 'final'], dates: ['final', 'centenary', 'tickets'],
+  format: ['dates', 'hosts'], centenary: ['hosts', 'dates'], hosts: ['stadiums', 'centenary'], team: ['stadiums', 'darija'], plan: ['travel', 'local'],
+  local: ['food', 'plan'], stadium: ['plan', 'local', 'stadiums'], route: ['plan', 'weather'], localCity: ['plan', 'food'] };
+var TIP = { final: 'dima', tickets: 'bshhal', money: 'bshhal', weather: 'skhoun', travel: 'lagar', route: 'lagar', food: 'bnin', localCity: 'zwin', local: 'zwin',
+  stadiums: 'tiran', stadium: 'tiran', dates: 'fuqash', format: 'koura', team: 'koura', hosts: 'mrehba', mascot: 'sbe3', thanks: 'blajmil', hello: 'labas', plan: 'yallah', centenary: 'mya' };
+var CITY_RE = {
+  casa: /casa|hassan ii|benslimane|البيضاء|بنسليمان|الحسن الثاني/,
+  rabat: /rabat|moulay abdellah|الرباط|مولاي عبد الله/,
+  tangier: /tang|tánger|ibn bat|طنجة/,
+  fez: /\bf[eèé][zs]\b|فاس/,
+  marrakech: /marrak|marraque|مراكش/,
+  agadir: /agadir|adrar|[أا]كادير/
+};
+var RE = {
+  ai: /\ban ai\b|are you (an? )?(ai|real|human)|chatgpt|\bbot\b|robot|scripted|\bdemo\b|artificial|artificielle|\bune? ia\b|\b(la|una) ia\b|humain|humano|ذكاء|روبوت/,
+  final: /\bfinal(e|es|s)?\b|النهائي/,
+  tickets: /ticket|billet|\bentradas?\b|boleto|تذكر|تذاكر/,
+  weather: /weather|m[ée]t[ée]o|clima|\bhot\b|\bheat\b|chaud|calor|temp[ée]rature|temperatura|quel temps|qu[eé] tiempo|طقس|حرارة|الجو/,
+  money: /money|currency|dirham|d[ií]rham|\bmad\b|cash|\bargent\b|monnaie|dinero|moneda|efectivo|درهم|عملة|نقود|فلوس/,
+  darija: /dari[jy]a|phrase|frase|language|langue|idioma|\bspeak|parler|hablar|arab[ei]c?|árabe|amazi|دارجة|لغة|كلمات/,
+  food: /\b(food|eat|dish|tea|restaurant|drink|plat|comer|comida|manger|cuisine|cenar|d[iî]ner)\b|tagine|tajine|taj[ií]n|couscous|cusc[uú]s|[أا]كل|آكل|طعام|طاجين|كسكس|مطعم/,
+  local: /local|artisan|craft|souk|\bshop|riad|artesan|zoco|tienda|boutique|recuerdo|souvenir|حرف|سوق|رياض|محلي|أشتري/,
+  plan: /\bplan\b|\bplann|\bplanif|\bplane[ao]|itiner|itinér|organi[sz]|خطة|برنامج|نظ[ّ]?م/,
+  travel: /travel|\btrain|\btren\b|\brail|boraq|\btgv\b|transport|airport|a[ée]roport|aeropuerto|\bfl(y|ight)|\bvol\b|vuelo|\bbus\b|autob[uú]s|voyag|viaj|d[ée]plac|muev|mover|get (to|around|between)|قطار|سفر|مطار|حافلة|[أا]تنقل|التنقل|البراق/,
+  stadiums: /stadi|\bstades?\b|estadio|venue|capacit|capacidad|seats|ملعب|ملاعب/,
+  team: /atlas|\blions\b|leones|national team|[ée]quipe nationale|selecci[oó]n (nacional|marroqu)|histor|histoire|2022|qatar|catar|semi|أسود|قطر/,
+  centenary: /centen|\b100\b|uruguay|argentin|paraguay|south america|am[ée]rique du sud|sudam[ée]rica|1930|montevideo|مئوي|[أا]وروغواي|[أا]رجنتين|باراغواي|[أا]مريكا الجنوبية/,
+  dates: /\bwhen\b|\bdates?\b|\bstart|\bbegin|kick.?off|schedule|quand|d[ée]but|commence|calendrier|cu[aá]ndo|fecha|empieza|comienza|calendario|متى|تاريخ|موعد|تبد[أا]|يبد[أا]/,
+  format: /\bteams?\b|format|group|how many|\bmatch|[ée]quipe|combien|equipo|cu[aá]nt[oa]s|partido|grupo|\b(48|64|104)\b|qualif|clasific|منتخب|فرق|فريق|مبارا|مباريات|كم /,
+  hosts: /\bhost|countr|\bwhere\b|\bpays\b|h[oô]te|pa[ií]s|\bsede|anfitri|d[oó]nde|spain|espagne|españa|portugal|مستضيف|تستضيف|الدول|[أا]ين|[إا]سبانيا|البرتغال/,
+  mascot: /who are you|your name|izem|mascot|\blion\b|\ble[oó]n\b|qui es[- ]tu|qui [êe]tes|qui[ée]n eres|ton nom|tu nombre|من [أا]نت|اسمك|[إا]يزم|تميمة/,
+  thanks: /thank|shukran|choukran|merci|gracias|شكرا/,
+  hello: /\b(hi|hello|hey|salam|salut|bonjour|hola|buenas|ahlan)\b|سلام|مرحبا|[أا]هلا/,
+  help: /\bhelp|\baide\b|ayuda|what can you|que peux|qu[eé] puedes|مساعدة|ماذا تستطيع/
+};
+var ORDER = ['plan', 'travel', 'stadiums', 'team', 'centenary', 'dates', 'format', 'hosts', 'mascot', 'thanks', 'hello', 'help'];
+function mini(text, attr, label) { return '<div class="mini">' + (text ? '<span>' + esc(text) + '</span>' : '') + '<button type="button" ' + attr + '>' + esc(label) + '</button></div>'; }
+function tipHtml(key) {
+  var id = TIP[key]; if (!id) return '';
+  return '<div class="tip">' + esc(t('darija')) + ': <b dir="ltr">' + D.tips[id][0] + '</b> <span lang="ar" dir="rtl">' + D.tips[id][1] + '</span> = ' + esc(L[lang].tips[id]) + '</div>';
+}
+function reply(key, a, b) {
+  var h = '', s, ci, l;
+  if (key === 'stadium') {
+    s = L[lang].stad[a]; ci = D.city[a];
+    h = '<p><strong>' + esc(s.name) + '</strong>, ' + esc(s.where) + '.</p><p>' + esc(s.blurb) + '</p><ul><li><strong>' + esc(t('seats', { n: fmt(ci.cap) })) + '</strong></li><li><strong>' + esc(t('lblOpened')) + '</strong>: ' + esc(s.opened) + '</li><li><strong>' + esc(t('lblAirport')) + '</strong>: ' + esc(s.airport) + '</li><li><strong>' + esc(t('lblRail')) + '</strong>: ' + esc(s.rail) + '</li></ul>' +
+      mini('', 'data-plan-to="' + a + '"', t('planHere')) ;
+  } else if (key === 'route') {
+    l = leg(a, b);
+    h = c('route', { from: esc(cityName(a)), to: esc(cityName(b)), mode: esc(L[lang].modes[l.mode]), dur: dur(l.min), km: fmt(l.km) }) +
+      (l.alt ? '<p>' + esc(t('altFlight', { dur: dur(l.alt) })) + '</p>' : '') + mini('', 'data-plan-from="' + a + '" data-plan-to="' + b + '"', t('openPlanner'));
+  } else if (key === 'localCity') {
+    s = L[lang].local[a];
+    h = c('localIntro', { city: esc(cityName(a)) }) + '<ul>' + ['eat', 'craft', 'see'].map(function (k) { return '<li><strong>' + esc(s[k][0]) + '</strong>: ' + esc(s[k][1]) + '</li>'; }).join('') + '</ul>' + mini('', 'data-local="' + a + '"', t('openLocal'));
+  } else if (key === 'stadiums') {
+    h = c('stadiumsIntro') + '<ul>' + D.ids.map(function (id) { return '<li><strong>' + esc(cityName(id)) + '</strong>: ' + esc(L[lang].stad[id].name) + ', ' + fmt(D.city[id].cap) + '</li>'; }).join('') + '</ul>' + c('stadiumsOutro') + mini('', 'data-view="stadiums"', t('openGuide'));
+  } else if (key === 'plan') {
+    h = (a ? c('planTo', { city: esc(cityName(a)) }) : c('plan')) + mini('', a ? 'data-plan-to="' + a + '"' : 'data-view="planner"', t('openPlanner'));
+  } else if (key === 'local') {
+    h = c('localGeneric') + mini('', 'data-view="local"', t('openLocal'));
+  } else h = c(key);
+  return { html: h + tipHtml(key), chips: NEXT[key] || START };
+}
+function answer(text) {
+  var q = ' ' + text.toLowerCase() + ' ';
+  var found = D.ids.map(function (id) { var m = CITY_RE[id].exec(q); return m ? { id: id, at: m.index } : null; }).filter(Boolean).sort(function (x, y) { return x.at - y.at; }).map(function (x) { return x.id; });
+  if (/biggest|largest|plus grand|m[aá]s grande|أكبر/.test(q) && !found.length) found = ['casa'];
+  var hit = function (k) { return RE[k].test(q); };
+  if (hit('ai')) return reply('ai');
+  if (hit('final')) return reply('final');
+  if (hit('tickets')) return reply('tickets');
+  if (hit('weather')) return reply('weather');
+  if (hit('money')) return reply('money');
+  if (hit('darija')) return reply('darija');
+  if ((hit('food') || hit('local')) && found.length) return reply('localCity', found[0]);
+  if (hit('food')) return reply('food');
+  if (hit('local')) return reply('local');
+  if (found.length >= 2 && found[0] !== found[1]) return reply('route', found[0], found[1]);
+  if (hit('plan')) return reply('plan', found[0]);
+  if (found.length) return reply('stadium', found[0]);
+  for (var i = 0; i < ORDER.length; i++) if (hit(ORDER[i])) return reply(ORDER[i]);
+  return null;
+}
+
+/* ---------- chat: UI ---------- */
+var thread = $('thread'), chipsEl = $('chips'), avatar = $('chat-avatar');
+var pending = 0, turns = [], sample = null, aiOn = true, aiCtl = null, chatGen = 0;
+var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+function scrollThread() { if (thread) thread.scrollTop = thread.scrollHeight; }
+function think(on) { pending = Math.max(0, pending + (on ? 1 : -1)); avatar.classList.toggle('thinking', pending > 0); }
+function addBot(html) {
+  var m = document.createElement('div'); m.className = 'msg bot';
+  m.innerHTML = IZEM + '<div class="msg-body">' + html + '</div>';
+  thread.appendChild(m); scrollThread(); return m.querySelector('.msg-body');
+}
+function addUser(text) {
+  var m = document.createElement('div'); m.className = 'msg user';
+  var b = document.createElement('div'); b.className = 'msg-body'; b.textContent = text;
+  m.appendChild(b); thread.appendChild(m); scrollThread();
+}
+function chipLabel(id) { return id.indexOf('st:') === 0 ? t('chipStadium', { city: cityName(id.slice(3)) }) : L[lang].chips[id]; }
+function setChips(list) {
+  chipsEl.innerHTML = '';
+  list.forEach(function (id) { var b = document.createElement('button'); b.type = 'button'; b.textContent = chipLabel(id); b.dataset.intent = id; chipsEl.appendChild(b); });
+}
+function remember(role, text) { turns.push({ role: role, content: text }); if (turns.length > 8) turns = turns.slice(-8); }
+function deliver(r) {
+  var gen = chatGen, body = addBot('<span class="dots" aria-label="…"><i></i><i></i><i></i></span>');
+  think(true);
+  setTimeout(function () {
+    think(false); if (gen !== chatGen) return;
+    body.innerHTML = r.html; setChips(r.chips); remember('assistant', body.textContent.slice(0, 600)); scrollThread();
+  }, calm.matches ? 120 : 550 + Math.min(500, r.html.length / 4));
+}
+function status() { $('chat-status').textContent = t(sample && aiOn ? 'chLive' : 'chScript'); }
+function facts() {
+  var E = L.en;
+  return JSON.stringify({
+    tournament: { dates: '8 June to 21 July 2030', centenaryMatches: '8-9 June in Montevideo, Buenos Aires, Asuncion', openers: '13-14 June in Morocco, Spain, Portugal', final: '21 July 2030, venue not chosen (Bernabeu, Camp Nou and Grand Stade Hassan II are candidates)', format: '48 teams, 104 matches planned; 64 teams proposed, not adopted', hosts: 'Morocco, Spain, Portugal; one centenary match each in Uruguay, Argentina, Paraguay', tickets: 'not on sale, no prices announced', schedule: 'not published yet' },
+    stadiums: D.ids.map(function (id) { var s = E.stad[id]; return { city: E.cities[id], name: s.name, location: s.where, plannedCapacity: D.city[id].cap, status: s.status, opened: s.opened, airport: s.airport, rail: s.rail, about: s.blurb }; }),
+    journeys: Object.keys(D.travel).map(function (k) { var x = D.travel[k], p = k.split('-'); return E.cities[p[0]] + ' - ' + E.cities[p[1]] + ': ' + E.modes[x.mode] + ', about ' + x.min + ' min, ' + x.km + ' km by road' + (x.alt ? ', direct flight about ' + x.alt + ' min' : ''); }),
+    localPicks: D.ids.map(function (id) { var o = E.local[id]; return { city: E.cities[id], eat: o.eat.join(': '), craft: o.craft.join(': '), see: o.see.join(': '), stay: o.stay.join(': ') }; }),
+    moroccoHistory: '1970 first World Cup; 1986 first African team in the round of 16; 2022 fourth place; 2026 quarter-finals, lost to France; 2030 co-host'
+  });
+}
+function aiReply(text) {
+  var gen = chatGen, body = addBot('<span class="tag">' + esc(t('liveTag')) + '</span><div class="ai-text">' + esc(t('thinking')) + '</div>');
+  var out = body.querySelector('.ai-text');
+  var rules = 'You are Izem, a friendly Atlas lion mascot and guide to the 2030 FIFA World Cup in Morocco, inside a hackathon demo app. ' +
+    'Reply to the visitor\'s last message in ' + L[lang].langName + '. Keep it under 90 words, plain text only with no Markdown, warm and concrete. ' +
+    'For anything about the tournament, stadiums, journeys or local places, use only the FACTS below. For general football or travel questions about Morocco you may use general knowledge. ' +
+    'If something is unknown or not decided yet, say so plainly and never invent prices, dates or fixtures. Stay on the World Cup, football and visiting Morocco, and politely decline anything else. ' +
+    'You are an unofficial fan concept, not affiliated with FIFA.\n\nFACTS: ' + facts();
+  aiCtl = new AbortController(); think(true);
+  var msgs = [{ role: 'user', content: rules }].concat(turns.slice(0, -1), [{ role: 'user', content: text }]);
+  sample(msgs, { cache: false, modelTier: 'quick', signal: aiCtl.signal, onText: function (u) { if (gen === chatGen) { out.textContent = u.text; scrollThread(); } } })
+    .then(function (res) {
+      if (gen !== chatGen) return;
+      out.textContent = res.text; remember('assistant', res.text.slice(0, 600)); setChips(START); scrollThread();
+    })
+    .catch(function (e) {
+      if (gen !== chatGen) return;
+      var code = e && e.code;
+      if (code === 'cancelled') { body.parentNode.remove(); return; }
+      var gone = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'].indexOf(code) >= 0;
+      if (gone) { aiOn = false; status(); }
+      body.innerHTML = code === 'refused' ? c('fallback') : '<p>' + esc(t(gone ? 'aiOff' : code === 'rate_limited' ? 'aiBusy' : 'aiFail')) + '</p>';
+      setChips(START);
+    })
+    .then(function () { think(false); });
+}
+function ask(text, forced) {
+  text = (text || '').trim(); if (!text) return;
+  if (!wide.matches) { app.dataset.chat = '1'; paintNav(); }
+  addUser(text); remember('user', text.slice(0, 600));
+  var r = forced || answer(text);
+  if (r) deliver(r);
+  else if (sample && aiOn) aiReply(text);
+  else deliver({ html: c('fallback'), chips: START });
+}
+function askIntent(id) {
+  if (id.indexOf('st:') === 0) ask(chipLabel(id), reply('stadium', id.slice(3)));
+  else ask(chipLabel(id), reply(id));
+}
+function greet() {
+  chatGen++; if (aiCtl) aiCtl.abort();
+  turns = []; thread.innerHTML = '';
+  var body = addBot(c('greet')); remember('assistant', body.textContent);
+  setChips(START); status();
+}
+
+/* ---------- language ---------- */
+function setLang(l, keepChat) {
+  if (LANGS.indexOf(l) < 0) l = 'en';
+  lang = l;
+  document.documentElement.lang = l; document.documentElement.dir = L[l].dir;
+  applyStatic(); renderMap(); renderPanel(); renderStadiums(); renderPlanner(); renderLocal();
+  if (!keepChat) greet();
+  try { localStorage.setItem('izem-lang', l); } catch (e) {}
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', function (e) {
+  var el = e.target.closest('[data-lang],[data-view],[data-intent],[data-map],[data-sort],[data-style],[data-int],[data-plan-to],[data-local],[data-stadium],[data-ask-city]');
+  if (!el) return;
+  var d = el.dataset;
+  if (d.lang) setLang(d.lang);
+  else if (d.view) show(d.view);
+  else if (d.intent) askIntent(d.intent);
+  else if (d.map) pickCity(d.map);
+  else if (d.sort) { sortBy = d.sort; renderStadiums(); }
+  else if (d.style) setPlan({ style: d.style });
+  else if (d.int) { plan.ints[d.int] = !plan.ints[d.int]; setPlan({}); }
+  else if (d.planTo) { var patch = { to: d.planTo }; if (d.planFrom) patch.from = d.planFrom; setPlan(patch, true); }
+  else if (d.local) { localCity = d.local; renderLocal(); show('local'); }
+  else if (d.stadium) openStadium(d.stadium);
+  else if (d.askCity) ask(t('chipStadium', { city: cityName(d.askCity) }), reply('stadium', d.askCity));
+});
+$('map').addEventListener('keydown', function (e) {
+  var g = e.target.closest('[data-map]');
+  if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pickCity(g.dataset.map); }
+});
+$('pl-form').addEventListener('change', function () { setPlan({ from: $('pl-from').value, to: $('pl-to').value, ko: +$('pl-ko').value }); });
+$('pl-form').addEventListener('submit', function (e) { e.preventDefault(); });
+$('composer').addEventListener('submit', function (e) { e.preventDefault(); var v = input.value; input.value = ''; ask(v); });
+$('chat-reset').addEventListener('click', greet);
+
+/* ---------- boot ---------- */
+var first = 'en';
+try { first = localStorage.getItem('izem-lang') || ''; } catch (e) { first = ''; }
+if (LANGS.indexOf(first) < 0) { first = (navigator.language || 'en').slice(0, 2).toLowerCase(); if (LANGS.indexOf(first) < 0) first = 'en'; }
+setLang(first);
+tick(); setInterval(tick, 1000);
+var hash = (location.hash || '').replace('#', '');
+show(VIEWS.indexOf(hash) >= 0 || hash === 'chat' ? hash : 'home');
+if (window.claude && typeof window.claude.use === 'function') {
+  window.claude.use('sample').then(function (s) { if (s) { sample = s; status(); } }).catch(function () {});
+}
+})();
+</script>
+
+</body>
+</html>

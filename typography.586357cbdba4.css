@@ -1,0 +1,83 @@
+/* One shared type system, loaded after component styles on every page.
+   Inter's four local faces are declared only in design-tokens.css.
+   Component geometry, timers, document maths and code retain their own sizing. */
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-copy);
+  -webkit-font-smoothing: antialiased;
+}
+body :is(button, input, select, textarea) {
+  font-family: var(--font-sans) !important;
+}
+body :is(button, input, select, textarea) {
+  font-size: var(--text-sm);
+}
+body input:not([type=button]):not([type=submit]), body select, body textarea {
+  font-weight: var(--font-regular);
+}
+body :is(h1, h2, h3, h4) {
+  font-family: var(--font-sans);
+}
+body .ai-example-sheet :is(h1, h2, h3, h4) {
+  font-family: inherit;
+}
+body[data-page] #page h1,
+body .auth-message h1,
+body .auth-card > h2,
+body .auth-access > h2,
+.public-page .public-page-hero h1,
+.public-page .legal h1,
+.public-page .legal-heading h1 {
+  font-size: var(--text-title);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+body[data-page] #page .dashboard-heading h1 {
+  font-size: var(--text-greeting);
+}
+body[data-page] #page :is(.next-action, .activity-panel-head, .chapter-card-head,
+  .connected-panel-head, .day-agenda, .month-toolbar, .task-day-plan) > h2,
+body[data-page] #page .study-chart-head h2,
+body[data-page] #page .subject-hub-card h2,
+body[data-page] #page .project-card h2,
+.public-page :is(.price-card, .how-card, .feature-card, .legal, .legal-page) h2,
+.public-page :is(.section-head, .studio-cnc-copy, .feature-copy, .final-cta) h2,
+.public-page .price-card.soon h2,
+.public-page :is(.how-card, .feature-card, .bento-copy) h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+body[data-page] #page :is(.dashboard-panel-head, .fc-card-title) h2 {
+  font-size: var(--text-panel);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+body :is(.auth-card, .field) label {
+  font-size: var(--text-label);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-copy);
+}
+.public-page .public-hero h1 {
+  font-size: var(--text-display);
+  font-weight: var(--font-bold);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-title);
+}
+/* Numerals stay aligned as study totals and timer digits update. */
+body :is(.dashboard-metric strong, .progress-metric strong, .matieres-stat strong,
+  .admin-metrics strong, .study-chart-total > strong, .fc-clock, .paper-timer,
+  .auth-plan-price, .price-number, .tipe-timer-clock) {
+  font-variant-numeric: tabular-nums;
+}
+@media(max-width:767px) {
+  /* 16px text keeps native phone browsers from zooming form fields. */
+  body input:not([type=checkbox]):not([type=radio]), body select, body textarea {
+    font-size: var(--text-base);
+  }
+}

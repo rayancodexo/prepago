@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="home.css?v=2" media="print" data-app-style onload="this.media='all'">
   <link rel="stylesheet" href="ai-workspace.3e35e54849ea.css" media="print" data-app-style onload="this.media='all'">
   <link rel="stylesheet" href="support.13951affd340.css" media="print" data-app-style onload="this.media='all'">
-<link rel="stylesheet" href="/typography.586357cbdba4.css"><link rel="stylesheet" href="/code-journey.css?v=2"><link rel="stylesheet" href="/pages.css?v=3" media="print" data-app-style onload="this.media='all'"><style>
+<link rel="stylesheet" href="/typography.586357cbdba4.css"><link rel="stylesheet" href="/code-journey.css?v=2"><link rel="stylesheet" href="/pages.css?v=3" media="print" data-app-style onload="this.media='all'"><link rel="stylesheet" href="/auth-redesign.css?v=1" media="print" data-app-style onload="this.media='all'"><style>
 /* The workspace's own styles and scripts arrive after the landing page has painted.
    Until they are in, anything that is not the landing page stays out of sight. */
 html.app-styles-pending body:not(.landing-view) > :not(#prepagoLanding) { visibility: hidden; }
@@ -75,19 +75,35 @@ html.app-booting body:not(.landing-view) .auth-form-panel { visibility: hidden; 
   <section class="auth-gate" id="authGate" aria-live="polite">
     <div class="auth-brand-panel">
       <div class="auth-wordmark"><img class="prepago-mark" src="/branding/prepago-mark.png" alt="" width="40" height="40" aria-hidden="true"><strong class="prepago-wordmark">Prepago</strong></div>
-      <div class="auth-message">
-        <p>TON ESPACE DE TRAVAIL</p>
-        <h1>Ta prépa,<br />enfin bien organisée.</h1>
-        <span>Un seul endroit pour planifier tes journées, rester concentré et suivre tes progrès.</span>
-        <div class="auth-preview" aria-hidden="true">
-          <div class="auth-preview-head"><span>Aujourd’hui</span><strong>68% terminé</strong></div>
-          <div class="auth-preview-progress"><i></i></div>
-          <div class="auth-preview-row"><span><b>✓</b> Revoir les intégrales</span><small>Maths</small></div>
-          <div class="auth-preview-row"><span><b>•</b> Thermodynamique</span><small>Physique</small></div>
-        </div>
+      <div class="auth-countdown" id="authCountdown" hidden>
+        <p class="auth-countdown-value" id="authCountdownValue"></p>
+        <p class="auth-countdown-label" id="authCountdownLabel"></p>
+        <p class="auth-countdown-date" id="authCountdownDate"></p>
       </div>
-      <p class="auth-brand-foot">Pensé pour les étudiants en classes préparatoires.</p>
+      <div class="auth-paper-foot">
+        <h1>Ta prépa, enfin bien organisée.</h1>
+        <p>Matières, tâches, calendrier, concentration et annales CNC, réunis dans ton espace.</p>
+      </div>
     </div>
+    <script>
+    /* Days left before the CNC written exams. Same estimate as the Accueil card (14 May, rolling to next year a week after). */
+    (function () {
+      var box = document.getElementById('authCountdown');
+      if (!box) return;
+      var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var exam = new Date(today.getFullYear(), 4, 14);
+      if ((exam - today) / 864e5 < -7) exam = new Date(today.getFullYear() + 1, 4, 14);
+      var days = Math.round((exam - today) / 864e5);
+      var value = days > 0 ? 'J−' + days : days === 0 ? 'Jour J' : 'J+' + (-days);
+      var label = days > 0 ? 'avant le début des écrits du CNC' : days === 0 ? 'Les écrits du CNC commencent aujourd’hui' : 'depuis le début des écrits du CNC';
+      var el = document.getElementById('authCountdownValue');
+      el.textContent = value;
+      el.setAttribute('aria-label', days > 0 ? days + ' jours' : value);
+      document.getElementById('authCountdownLabel').textContent = label;
+      try { document.getElementById('authCountdownDate').textContent = 'Date estimée : ' + new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(exam); } catch (e) {}
+      box.hidden = false;
+    })();
+    </script>
     <div class="auth-form-panel">
       <div class="auth-card" id="authCard">
         <div class="auth-mobile-brand"><img class="prepago-mark" src="/branding/prepago-mark.png" alt="" width="40" height="40" aria-hidden="true"><strong class="prepago-wordmark">Prepago</strong></div>
@@ -109,8 +125,8 @@ html.app-booting body:not(.landing-view) .auth-form-panel { visibility: hidden; 
           <button class="auth-forgot" id="forgotPassword" type="button">Mot de passe oublié ?</button>
           <p class="auth-status" id="authStatus" role="status"></p>
         </form>
-        <p class="auth-legal-links">Avant de créer ton compte, consulte les <a href="/conditions/" target="_blank" rel="noopener">conditions d’utilisation</a> et la <a href="/confidentialite/" target="_blank" rel="noopener">politique de confidentialité</a>.</p>
         <div class="auth-trial-note"><span class="auth-check">✓</span><span><strong>Accès par code d’activation</strong><small>Pas encore de code ? <a href="https://www.instagram.com/prepago.ma/" target="_blank" rel="noopener">Demande-le sur Instagram @prepago.ma</a></small></span></div>
+        <p class="auth-legal-links">Avant de créer ton compte, consulte les <a href="/conditions/" target="_blank" rel="noopener">conditions d’utilisation</a> et la <a href="/confidentialite/" target="_blank" rel="noopener">politique de confidentialité</a>.</p>
       </div>
       <div class="auth-card auth-confirm-card" id="confirmCard" hidden>
         <div class="auth-mobile-brand"><img class="prepago-mark" src="/branding/prepago-mark.png" alt="" width="40" height="40" aria-hidden="true"><strong class="prepago-wordmark">Prepago</strong></div>

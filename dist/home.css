@@ -329,3 +329,20 @@ body[data-page] #sidebar #sideXpRatio { display: none; }
 @media (prefers-reduced-motion: reduce) {
   body .home .home-ring-value, body .home .home-check, body .home .home-hero-button { transition: none; }
 }
+
+/* Concours countdown: switch between followed concours without changing the card's size. */
+body .home .home-cnc .home-card-head { min-height: 24px; }
+body .home .home-exam-switch { display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; height: 24px; color: var(--secondary); font-size: 12px; line-height: 24px; font-variant-numeric: tabular-nums; }
+body .home .home-exam-switch button { display: inline-grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--secondary); font-size: 17px; line-height: 1; cursor: pointer; }
+body .home .home-exam-switch button:hover { background: var(--surface-muted, rgba(0, 0, 0, .05)); color: var(--brand); }
+body .home .home-exam-switch button:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+body .home .home-exam-switch span { min-width: 26px; text-align: center; }
+body .home .home-cnc h2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* "Mes concours" dialog. */
+.home-exam-list { display: grid; gap: 6px; margin: 12px 0 4px; }
+.home-exam-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; }
+.home-exam-row label { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 14px; cursor: pointer; }
+.home-exam-row input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 auto; accent-color: var(--brand); }
+.home-exam-row input[type="date"] { flex: 0 0 auto; width: 150px; min-height: 36px; padding: 4px 8px; font-size: 13px; }
+@media (max-width: 420px) { .home-exam-row input[type="date"] { width: 132px; } }

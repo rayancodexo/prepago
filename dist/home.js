@@ -199,11 +199,11 @@
 
   /* ---- Days left before the concours the student follows ------------------------------ */
   /* Estimates are the first day of the 2026 written exams, reused each year until the student
-     sets the official date. Moroccan concours open the annales; French ones link to the SCEI calendar. */
-  const SCEI = 'https://www.scei-concours.fr/';
+     sets the official date. The card shows up to MAX_SHOWN concours: names and days left only. */
+  const MAX_SHOWN = 4;
   const EXAMS = [
-    { id: 'CNC', name: 'CNC', month: CNC_ESTIMATE.month, day: CNC_ESTIMATE.day, annales: true },
-    { id: 'CNAEM', name: 'CNAEM', month: 5, day: 11, annales: true },
+    { id: 'CNC', name: 'CNC', month: CNC_ESTIMATE.month, day: CNC_ESTIMATE.day },
+    { id: 'CNAEM', name: 'CNAEM', month: 5, day: 11 },
     { id: 'X', name: 'X-ENS', label: 'X-ENS (Polytechnique)', month: 4, day: 13 },
     { id: 'MINES', name: 'Mines-Ponts', month: 4, day: 27 },
     { id: 'CENTRALE', name: 'Centrale-Supélec', month: 5, day: 4 },
@@ -212,90 +212,76 @@
   ];
   const examById = id => EXAMS.find(exam => exam.id === id);
   const ISO = /^\d{4}-\d{2}-\d{2}$/;
+  const GEAR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>';
 
   function examSettings() {
     const saved = state.examCountdown && typeof state.examCountdown === 'object' ? state.examCountdown : {};
-    let follow = Array.isArray(saved.follow) ? saved.follow.filter(examById) : [];
+    let follow = Array.isArray(saved.follow) ? saved.follow.filter(examById).slice(0, MAX_SHOWN) : [];
     if (!follow.length) {
       const track = window.PrepagoCurriculum?.normalizeTrack?.(window.PrepagoAccount?.profile?.filiere);
       follow = [track === 'ECS' || track === 'ECT' ? 'CNAEM' : 'CNC'];
     }
     const dates = { ...(saved.dates && typeof saved.dates === 'object' ? saved.dates : {}) };
     if (!dates.CNC && ISO.test(String(state.cncExamDate || ''))) dates.CNC = state.cncExamDate;
-    return { follow, dates, current: follow.includes(saved.current) ? saved.current : null };
+    return { follow, dates };
   }
 
   function examDate(exam, dates) {
     const today = dateFromISO(todayISO());
     const saved = String(dates[exam.id] || '');
-    if (ISO.test(saved) && (dateFromISO(saved) - today) / 86400000 >= -7) return { iso: saved, estimated: false };
+    if (ISO.test(saved) && (dateFromISO(saved) - today) / 86400000 >= -7) return saved;
     let year = today.getFullYear();
     const pad = value => String(value).padStart(2, '0');
     const estimate = () => `${year}-${pad(exam.month)}-${pad(exam.day)}`;
     if ((dateFromISO(estimate()) - today) / 86400000 < -7) year += 1;
-    return { iso: estimate(), estimated: true };
-  }
-
-  /* Followed concours, soonest first; the card shows the chosen one or the soonest. */
-  function followedExams() {
-    const settings = examSettings();
-    const list = settings.follow.map(id => ({ exam: examById(id), ...examDate(examById(id), settings.dates) }))
-      .sort((x, y) => x.iso.localeCompare(y.iso));
-    const index = Math.max(0, list.findIndex(item => item.exam.id === settings.current));
-    return { settings, list, index };
+    return estimate();
   }
 
   function cncCard() {
-    const { list, index } = followedExams();
-    const item = list[index];
-    const days = Math.round((dateFromISO(item.iso) - dateFromISO(todayISO())) / 86400000);
-    const count = days > 0 ? `J-${days}` : days === 0 ? 'Jour J' : `J+${-days}`;
-    const spoken = days > 0 ? `${plural(days, 'jour')} avant le début des écrits` : days === 0 ? 'Les écrits commencent aujourd’hui' : `Écrits commencés depuis ${plural(-days, 'jour')}`;
-    const date = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(dateFromISO(item.iso));
-    const switcher = list.length > 1 ? `<div class="home-exam-switch" role="group" aria-label="Changer de concours">
-        <button type="button" data-home-exam="-1" aria-label="Concours précédent">‹</button><span>${index + 1}/${list.length}</span><button type="button" data-home-exam="1" aria-label="Concours suivant">›</button>
-      </div>` : '';
-    const link = item.exam.annales
-      ? `<button type="button" class="home-link home-cnc-link" data-go="cnc">Ouvrir les annales →</button>`
-      : `<a class="home-link home-cnc-link" href="${SCEI}" target="_blank" rel="noopener noreferrer">Calendrier officiel →</a>`;
-    return `<section class="home-card home-cnc" aria-labelledby="homeCncTitle">
-      <div class="home-card-head"><h2 id="homeCncTitle">${esc(item.exam.name)}</h2>${switcher}</div>
-      <p class="home-cnc-count" aria-label="${esc(spoken)}">${count}</p>
-      <p class="home-cnc-date">Début des écrits : ${esc(date)}</p>
-      <p class="home-cnc-note">${item.estimated ? 'Date estimée · ' : ''}<button type="button" class="home-inline-link" data-home-cnc-date>${list.length > 1 ? 'Mes concours' : item.estimated ? 'Modifier' : 'Modifier la date'}</button></p>
-      ${link}
+    const { follow, dates } = examSettings();
+    const items = follow.map(id => ({ exam: examById(id), iso: examDate(examById(id), dates) }))
+      .sort((x, y) => x.iso.localeCompare(y.iso));
+    const tiles = items.map(({ exam, iso }) => {
+      const days = Math.round((dateFromISO(iso) - dateFromISO(todayISO())) / 86400000);
+      const count = days > 0 ? `J-${days}` : days === 0 ? 'Jour J' : `J+${-days}`;
+      const spoken = days > 0 ? `${exam.name} : ${plural(days, 'jour')} avant les écrits` : days === 0 ? `${exam.name} : les écrits commencent aujourd’hui` : `${exam.name} : écrits commencés depuis ${plural(-days, 'jour')}`;
+      return `<div class="home-exam" aria-label="${esc(spoken)}"><span class="home-exam-name" aria-hidden="true">${esc(exam.name)}</span><strong class="home-exam-count" aria-hidden="true">${count}</strong></div>`;
+    }).join('');
+    return `<section class="home-card home-cnc" aria-label="Compte à rebours des concours">
+      <button type="button" class="home-exam-settings" data-home-cnc-date aria-label="Gérer mes concours" title="Gérer mes concours">${GEAR}</button>
+      <div class="home-exams" data-count="${items.length}">${tiles}</div>
     </section>`;
   }
 
-  function stepExam(step) {
-    const { settings, list, index } = followedExams();
-    if (list.length < 2) return;
-    const next = list[(index + step + list.length) % list.length].exam.id;
-    state.examCountdown = { follow: settings.follow, dates: settings.dates, current: next };
-    save();
-    render();
-  }
-
   function editCncDate() {
-    const { settings } = followedExams();
+    const { follow, dates } = examSettings();
     const rows = EXAMS.map(exam => {
-      const followed = settings.follow.includes(exam.id);
-      const saved = ISO.test(String(settings.dates[exam.id] || '')) ? settings.dates[exam.id] : '';
+      const followed = follow.includes(exam.id);
+      const saved = ISO.test(String(dates[exam.id] || '')) ? dates[exam.id] : '';
       return `<div class="home-exam-row">
-        <label><input type="checkbox" name="follow_${exam.id}" ${followed ? 'checked' : ''}> ${esc(exam.label || exam.name)}</label>
-        <input type="date" name="date_${exam.id}" value="${esc(saved)}" aria-label="Premier jour des écrits · ${esc(exam.name)}" placeholder="${esc(examDate(exam, {}).iso)}">
+        <label><input type="checkbox" name="follow_${exam.id}" data-home-exam-follow ${followed ? 'checked' : ''}> ${esc(exam.label || exam.name)}</label>
+        <input type="date" name="date_${exam.id}" value="${esc(saved)}" aria-label="Premier jour des écrits · ${esc(exam.name)}">
       </div>`;
     }).join('');
     openModal('Mes concours',
-      `<p class="helper">Coche les concours qui t’intéressent. Le compte à rebours vise une date estimée ; indique le premier jour des écrits dès que la date officielle est publiée.</p><div class="home-exam-list">${rows}</div>`,
+      `<p class="helper">Choisis jusqu’à ${MAX_SHOWN} concours à afficher. Sans date, le compte à rebours vise une date estimée.</p><div class="home-exam-list">${rows}</div>`,
       data => {
-        const follow = EXAMS.filter(exam => data[`follow_${exam.id}`]).map(exam => exam.id);
-        const dates = {};
-        EXAMS.forEach(exam => { const value = String(data[`date_${exam.id}`] || ''); if (ISO.test(value)) dates[exam.id] = value; });
-        state.examCountdown = { follow: follow.length ? follow : settings.follow, dates, current: follow.includes(settings.current) ? settings.current : null };
-        if (dates.CNC) state.cncExamDate = dates.CNC; else delete state.cncExamDate;
+        const picked = EXAMS.filter(exam => data[`follow_${exam.id}`]).map(exam => exam.id).slice(0, MAX_SHOWN);
+        const next = {};
+        EXAMS.forEach(exam => { const value = String(data[`date_${exam.id}`] || ''); if (ISO.test(value)) next[exam.id] = value; });
+        state.examCountdown = { follow: picked.length ? picked : follow, dates: next };
+        if (next.CNC) state.cncExamDate = next.CNC; else delete state.cncExamDate;
       });
+    limitFollowed();
   }
+
+  /* Once MAX_SHOWN concours are ticked, the others are disabled until one is unticked. */
+  function limitFollowed() {
+    const boxes = [...document.querySelectorAll('#modalForm [data-home-exam-follow]')];
+    const full = boxes.filter(box => box.checked).length >= MAX_SHOWN;
+    boxes.forEach(box => { box.disabled = full && !box.checked; });
+  }
+  document.addEventListener('change', event => { if (event.target.matches?.('[data-home-exam-follow]')) limitFollowed(); });
 
   /* ---- Page --------------------------------------------------------------------------- */
   renderOverview = function () {
@@ -324,8 +310,6 @@
 
   document.addEventListener('click', event => {
     if (event.target.closest('[data-home-cnc-date]')) { editCncDate(); return; }
-    const examStep = event.target.closest('[data-home-exam]');
-    if (examStep) { stepExam(Number(examStep.dataset.homeExam) || 1); return; }
     const button = event.target.closest('[data-home-start]');
     if (!button) return;
     const kind = button.dataset.homeStart;

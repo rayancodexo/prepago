@@ -1,0 +1,42 @@
+/* Prepago — visual foundations. Shared by the public site and the workspace. */
+@font-face{font-family:Inter;src:url('/fonts/inter-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Inter;src:url('/fonts/inter-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:Inter;src:url('/fonts/inter-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:Inter;src:url('/fonts/inter-latin-700-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{
+  color-scheme:light;
+  --font-sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-regular:400;--font-medium:500;--font-semibold:600;--font-bold:700;
+  --text-label:13px;--text-panel:18px;--text-title:32px;--text-greeting:34px;--text-stat:36px;
+  --leading-title:1.2;--leading-heading:1.35;--leading-copy:1.5;
+  --tracking-title:-.035em;--tracking-heading:-.02em;
+  --text-display:clamp(40px,4.5vw,64px);
+  --ink:#14213A;--background:#F6F8FC;--surface:#FFFFFF;--surface-hover:#F0F4FA;
+  --hairline:#E3E9F2;--secondary:#626E82;--muted:#667184;
+  --brand:#0A5CFF;--brand-hover:#004BDD;--brand-tint:#EDF3FF;
+  --brand-solid:#0A5CFF;--brand-solid-hover:#004BDD;
+  --success:#18734A;--success-tint:#EDF7F0;--warning:#946000;--warning-tint:#FFF7E5;
+  --danger:#C33337;--danger-tint:#FFF0F0;
+  --text-xs:12px;--text-sm:14px;--text-base:16px;--text-lg:20px;
+  --text-xl:28px;--text-2xl:40px;--text-hero:64px;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
+  --space-5:20px;--space-6:24px;--space-8:32px;--space-10:40px;
+  --space-12:48px;--space-16:64px;--space-20:80px;--space-30:120px;
+  --radius-control:8px;--radius-card:12px;--radius-large:16px;
+  --shadow-menu:0 8px 32px #0B122014,0 2px 6px #0B122008;
+  --shadow-card:0 2px 5px -2px #14213A0A;
+  --shadow-preview:0 20px 48px -20px #14213A30,0 4px 12px -6px #14213A12;
+  --motion:180ms ease-out;--focus-ring:0 0 0 2px var(--surface),0 0 0 4px var(--brand);
+  --sidebar-width:232px;--topbar-height:64px;--app-width:1240px;--landing-width:1200px;
+  /* Compatibility aliases keep existing components and subject colours intact. */
+  --blue:var(--brand);--text:var(--ink);--bg:var(--background);--border:var(--hairline);
+}
+@media(max-width:767px){:root{--text-title:30px;--text-greeting:32px;--text-stat:32px}}
+[data-theme="dark"]{
+  color-scheme:dark;--ink:#F3F4F6;--background:#111317;--surface:#191C21;--surface-hover:#22262D;
+  --hairline:#30343C;--secondary:#B4BAC4;--muted:#A1A9B5;--brand:#73A2FF;
+  --brand-hover:#91B5FF;--brand-tint:#20304D;--success:#7ED5A6;--success-tint:#193B2B;
+  --warning:#F0C46D;--warning-tint:#3E321B;--danger:#FF9396;--danger-tint:#442529;
+  --shadow-menu:0 8px 32px #0005;--shadow-card:none;--shadow-preview:0 28px 72px -24px #0008;
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

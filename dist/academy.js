@@ -3,7 +3,7 @@ iconPaths.cnc='<path d="M7 3h8l4 4v14H7Z"/><path d="M15 3v5h5M10 12h6m-6 4h6M4 7
 iconPaths.note='<path d="M5 3h14v18H5Z"/><path d="M8 8h8m-8 4h8m-8 4h5"/>';
 iconPaths.check='<path d="m5 12 4 4L19 6"/>';
 iconPaths.link='<path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/>';
-pageNames.cnc='Annales CNC';
+pageNames.cnc='CNC et CNAEM';
 
 const LEARNING_STEPS=[
  {key:'course',label:'Cours',xp:10},
@@ -66,7 +66,7 @@ function cncHasDocument(paper){return Boolean(window.PrepagoCncLibrary?.find(pap
 function paperStatus(paper){return paper.done?'Terminé':cncHasDocument(paper)?'Prêt':'À ajouter'}
 function openPaper(filiere,subject,year){settleCncTimer();const paper=getPaper(filiere,subject,year);if(cncTimer.paperId!==paper.id){const d=cncDuration(paper);cncTimer={paperId:paper.id,duration:d,left:Number.isFinite(Number(paper.timerLeft))?Math.min(d,Math.max(0,Number(paper.timerLeft))):d,running:false,stamp:0}}cncView={screen:'paper',filiere,subject,year};persistCnc();render()}
 function persistCnc(){state.cnc.timer=cncTimer;save()}
-function cncCrumbs(){const items=[`<button class="crumb-btn" data-cnc-home>Annales CNC</button>`];if(cncView.filiere)items.push('›',`<button class="crumb-btn" data-cnc-filiere="${cncView.filiere}">${cncView.filiere}</button>`);if(cncView.subject)items.push('›',`<button class="crumb-btn" data-cnc-subject>${esc(cncView.subject)}</button>`);if(cncView.year)items.push('›',String(cncView.year));return `<div class="cnc-breadcrumb">${items.join(' ')}</div>`}
+function cncCrumbs(){const items=[`<button class="crumb-btn" data-cnc-home>CNC et CNAEM</button>`];if(cncView.filiere)items.push('›',`<button class="crumb-btn" data-cnc-filiere="${cncView.filiere}">${cncView.filiere}</button>`);if(cncView.subject)items.push('›',`<button class="crumb-btn" data-cnc-subject>${esc(cncView.subject)}</button>`);if(cncView.year)items.push('›',String(cncView.year));return `<div class="cnc-breadcrumb">${items.join(' ')}</div>`}
 function renderCnc(){
  let content='';
  if(cncView.screen==='filieres'){content=`${header('Annales CNC et CNAEM','Choisis ta filière pour retrouver les annales, tes notes et ton chrono.')}<div class="filiere-grid">${Object.keys(CNC_SUBJECTS).map(f=>`<button class="choice-card" data-cnc-filiere="${f}" style="--filiere-accent:${CNC_FILIERE_COLORS[f]||'#1D6BF3'}"><span class="choice-code">${f}</span><strong>${FILIERE_NAMES[f]}</strong><small>${CNC_SUBJECTS[f].length} matières</small></button>`).join('')}</div>`}

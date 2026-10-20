@@ -88,13 +88,12 @@
   function hasWorkspaceAccess(account, now = Date.now()) {
     if (account?.isAdmin === true) return true;
     const profile = account?.profile;
-    // A promo code (the free month) opens the tutor whatever the plan. Mirrors private.ai_entitlement_core.
-    if (profile?.subscription_status === 'promo') {
-      return Boolean(profile.subscription_ends_at) && new Date(profile.subscription_ends_at).getTime() > now;
-    }
     if (profile?.subscription_plan !== 'ai_plus') return false;
     if (profile.subscription_status === 'active') {
       return !profile.subscription_ends_at || new Date(profile.subscription_ends_at).getTime() > now;
+    }
+    if (profile.subscription_status === 'promo') {
+      return Boolean(profile.subscription_ends_at) && new Date(profile.subscription_ends_at).getTime() > now;
     }
     return profile.subscription_status === 'trial'
       && Boolean(profile.trial_ends_at)

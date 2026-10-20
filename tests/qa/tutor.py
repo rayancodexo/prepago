@@ -43,11 +43,11 @@ def ask_first(page):
 
 with Site() as site:
     for viewport in ('desktop', 'phone'):
-        # A student on the free month (promo code, standard plan) gets the tutor.
-        page, problems = site.workspace(viewport, tutor=True)
+        # A student on Prepago AI+ gets the tutor.
+        page, problems = site.workspace(viewport, tutor=True, plan='ai_plus')
         qa.goto_page(page, 'ai')
         page.wait_for_timeout(400)
-        check(f'{viewport}: promo student sees the tutor button', page.is_visible('[data-ai-live-open]'))
+        check(f'{viewport}: AI+ student sees the tutor button', page.is_visible('[data-ai-live-open]'))
         chosen = ask_first(page)
         check(f'{viewport}: a chapter can be chosen', chosen, chosen)
         shot(page, f'{viewport}-1-setup')
@@ -73,8 +73,16 @@ with Site() as site:
         check(f'{viewport}: no errors', not problems, '; '.join(problems[:3]))
         page.context.close()
 
+    # A free-month student (promo code, standard plan) does not get the tutor.
+    page, problems = site.workspace('desktop', tutor=True)
+    qa.goto_page(page, 'ai')
+    page.wait_for_timeout(400)
+    check('promo student does not see the tutor', not page.query_selector('[data-ai-live-open]'))
+    check('promo student: no errors', not problems, '; '.join(problems[:3]))
+    page.context.close()
+
     # A failure gives the student their text back and keeps their choices.
-    page, problems = site.workspace('desktop', tutor=True, tutorFail=True)
+    page, problems = site.workspace('desktop', tutor=True, tutorFail=True, plan='ai_plus')
     qa.goto_page(page, 'ai')
     chosen = ask_first(page)
     page.click('#aiLiveForm [type=submit]')

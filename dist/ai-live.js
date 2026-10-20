@@ -21,7 +21,7 @@
   ];
   const messages = {
     authentication_required: 'Reconnecte-toi pour utiliser le tuteur.',
-    subscription_required: 'Un accès Prepago AI+ ou un code promo valide est nécessaire.',
+    subscription_required: 'Un accès Prepago AI+ valide est nécessaire.',
     not_configured: 'Le tuteur est en cours d’activation.',
     invalid_question: 'Saisis un énoncé de 10 à 5 000 caractères.',
     invalid_context: 'Choisis une matière et un chapitre de ton programme.',

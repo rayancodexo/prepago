@@ -13,7 +13,7 @@
     full_name: cfg.name === undefined ? 'Yasmine El Idrissi' : cfg.name, filiere: cfg.filiere || 'MP',
     trial_started_at: null, trial_ends_at: null,
     subscription_status: inactive ? 'inactive' : 'promo',
-    subscription_ends_at: inactive ? null : days(21), subscription_plan: 'standard',
+    subscription_ends_at: inactive ? null : days(21), subscription_plan: cfg.plan || 'standard',
   };
   let workspace = cfg.state ? { data: cfg.state, updated_at: stamp() } : null;
   let settings = { config: { work: 25, break: 5, dailyHours: 4, cycles: 1, streakMinutes: 30, sound: true, subjectId: '', chapterId: '', goal: '', notes: '' } };

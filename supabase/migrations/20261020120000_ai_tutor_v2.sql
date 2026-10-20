@@ -1,20 +1,9 @@
 -- AI tutor v2
--- 1. Students on a promo code (the free month) can use the tutor, whatever their plan.
--- 2. Longer answers for explanations and corrections (output cap 800 -> 4000 tokens).
--- 3. A request that failed on the provider side no longer counts against the daily quota.
+-- 1. Longer answers for explanations and corrections (output cap 800 -> 4000 tokens).
+-- 2. A request that failed on the provider side no longer counts against the daily quota.
 
 alter table private.ai_requests drop constraint if exists ai_requests_output_tokens_check;
 alter table private.ai_requests add constraint ai_requests_output_tokens_check check(output_tokens between 0 and 4000);
-
-create or replace function private.ai_entitlement_core(target_user uuid) returns boolean
-language sql stable security invoker set search_path='' as $$
- select exists(select 1 from public.user_roles where user_id=target_user and role='admin')
- or exists(select 1 from public.profiles where id=target_user and (
-  (subscription_status='promo' and subscription_ends_at>now())
-  or (subscription_plan='ai_plus' and (
-   (subscription_status='active' and (subscription_ends_at is null or subscription_ends_at>now()))
-   or (subscription_status='trial' and trial_ends_at>now())))));
-$$;
 
 create or replace function private.ai_tutor_status_core() returns jsonb
 language plpgsql stable security definer set search_path='' as $$

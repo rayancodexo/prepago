@@ -285,10 +285,10 @@ async function refreshCloudState(manual=false) {
     if (workspaceResult.error || profileResult.error) throw workspaceResult.error || profileResult.error;
     const data=workspaceResult.data;
     if (currentUser?.id!==userId || generation!==sessionGeneration || syncRevision!==revision || pendingState || syncConflict || workspaceIsBusy()) return false;
-    const previousTrack=currentProfile.filiere,previousName=currentProfile.full_name,previousPlan=currentProfile.subscription_plan;
+    const previousTrack=currentProfile.filiere,previousName=currentProfile.full_name,previousPlan=currentProfile.subscription_plan,previousStatus=currentProfile.subscription_status;
     Object.assign(currentProfile,profileResult.data);
     if(!profileHasAccess(currentProfile)){accessAllowed=false;appState.onSave(null);showAccess();return false;}
-    if(previousPlan!==currentProfile.subscription_plan)void window.PrepagoAILive?.connect(supabase,userId);
+    if(previousPlan!==currentProfile.subscription_plan||previousStatus!==currentProfile.subscription_status)void window.PrepagoAILive?.connect(supabase,userId);
     if (data?.data && (data.updated_at!==syncRevision || previousTrack!==currentProfile.filiere || previousName!==currentProfile.full_name)) {
       syncRevision=data.updated_at;
       const next=window.PrepagoCurriculum.prepare(data.data,currentProfile.filiere,window.PrepagoCurriculumCatalog).state;

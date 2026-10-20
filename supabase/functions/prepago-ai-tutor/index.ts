@@ -6,7 +6,7 @@ const env = Object.fromEntries(['SUPABASE_URL','SUPABASE_ANON_KEY','SUPABASE_SER
 
 async function checkedJson(url:string,headers:Record<string,string>,body?:unknown) {
   const response=await fetch(url,{method:body === undefined ? 'GET' : 'POST',headers,
-    ...(body === undefined ? {} : {body:JSON.stringify(body)}),signal:AbortSignal.timeout(25000)});
+    ...(body === undefined ? {} : {body:JSON.stringify(body)}),signal:AbortSignal.timeout(90000)});
   if (!response.ok) throw new Error('service_unavailable');
   return response.json();
 }

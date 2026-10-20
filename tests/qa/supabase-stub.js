@@ -96,7 +96,18 @@
     from: table,
     async rpc(name, args) { calls.push({ rpc: name, args }); return rpc[name] ? ok(rpc[name](args || {})) : { data: null, error: { code: 'QA_UNSTUBBED', message: 'unstubbed rpc ' + name } }; },
     storage: { from: () => ({ async createSignedUrl() { return ok({ signedUrl: 'about:blank' }); }, async upload() { return ok({}); } }) },
-    functions: { async invoke(name, o) { calls.push({ fn: name }); return ok({ allowed: false, enabled: false, used_today: 0, daily_limit: 10, mode: 'text' }); } },
+    functions: { async invoke(name, o) {
+      calls.push({ fn: name, body: o && o.body });
+      if (!cfg.tutor) return ok({ allowed: false, enabled: false, used_today: 0, daily_limit: 10, mode: 'text' });
+      // A stand-in tutor: status first, then canned answers (or a failure when cfg.tutorFail is set).
+      const used = calls.filter(c => c.fn === name && c.body && !c.body.action).length;
+      if (o && o.body && o.body.action === 'status') return ok({ allowed: true, enabled: true, used_today: 0, daily_limit: 10, mode: 'text', followups: true });
+      if (cfg.tutorFail) return { data: null, error: { message: 'failed', context: { json: async () => ({ code: 'service_unavailable' }) } } };
+      const answer = used === 1
+        ? '**Idée.** Écris la deuxième loi de Newton projetée sur l’axe :\n$$m\\ddot{x}(t) = -k\\,x(t)$$\n- On pose $\\omega_0 = \\sqrt{k/m}$\n- Puis on reconnaît un oscillateur harmonique.\n\nQuelle est la solution générale de $\\ddot{x} + \\omega_0^2 x = 0$ ?'
+        : 'La solution générale est $x(t) = C\\cos(\\omega_0 t) + D\\sin(\\omega_0 t)$. Utilise $x(0)=A$ et $\\dot{x}(0)=0$.';
+      return ok({ answer, incomplete: false, reference: { label: 'Mécanique', url: 'https://www.cpge.ac.ma/documents/x.pdf' }, used_today: used, daily_limit: 10 });
+    } },
   };
   window.supabase = { createClient: () => client };
 })();

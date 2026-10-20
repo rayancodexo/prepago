@@ -88,19 +88,75 @@
   function hasWorkspaceAccess(account, now = Date.now()) {
     if (account?.isAdmin === true) return true;
     const profile = account?.profile;
+    // A promo code (the free month) opens the tutor whatever the plan. Mirrors private.ai_entitlement_core.
+    if (profile?.subscription_status === 'promo') {
+      return Boolean(profile.subscription_ends_at) && new Date(profile.subscription_ends_at).getTime() > now;
+    }
     if (profile?.subscription_plan !== 'ai_plus') return false;
     if (profile.subscription_status === 'active') {
       return !profile.subscription_ends_at || new Date(profile.subscription_ends_at).getTime() > now;
-    }
-    if (profile.subscription_status === 'promo') {
-      return Boolean(profile.subscription_ends_at) && new Date(profile.subscription_ends_at).getTime() > now;
     }
     return profile.subscription_status === 'trial'
       && Boolean(profile.trial_ends_at)
       && new Date(profile.trial_ends_at).getTime() > now;
   }
 
-  const api = Object.freeze({MAX_FILE_BYTES, fileType, validateFile, hints, lesson, chaptersFor, hasWorkspaceAccess});
+  /* Turns a tutor answer into safe HTML: escaped text, light markdown, and LaTeX rendered by KaTeX.
+   * Math is cut out first (so markdown never touches it), the rest is escaped, then math is put back. */
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[char]));
+  const MATH = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$((?:\\\$|[^$\n])+?)\$/g;
+
+  function renderMath(tex, display, katex) {
+    if (katex && typeof katex.renderToString === 'function') {
+      try {
+        return katex.renderToString(tex, {displayMode: display, throwOnError: false, trust: false, strict: 'ignore', maxSize: 20, maxExpand: 200, output: 'html'});
+      } catch { /* Falls through to plain source. */ }
+    }
+    return display ? `<pre class="ai-math-source">${escapeHtml(tex)}</pre>` : `<code>${escapeHtml(tex)}</code>`;
+  }
+
+  function inline(text) {
+    return text
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
+  }
+
+  function formatAnswer(source, katex) {
+    const maths = [];
+    const text = String(source ?? '').replace(/\r\n?/g, '\n').replace(MATH, (match, block, bracket, paren, dollar) => {
+      const display = block !== undefined || bracket !== undefined;
+      maths.push(renderMath((block ?? bracket ?? paren ?? dollar).trim(), display, katex));
+      return `\u0000${maths.length - 1}\u0000`;
+    });
+    const html = [];
+    let list = null;
+    const closeList = () => { if (list) { html.push(`</${list}>`); list = null; } };
+    let paragraph = [];
+    const flush = () => { if (paragraph.length) { html.push(`<p>${paragraph.join('<br>')}</p>`); paragraph = []; } };
+    for (const rawLine of escapeHtml(text).split('\n')) {
+      const line = rawLine.trim();
+      const bullet = /^[-•*]\s+(.*)$/.exec(line);
+      const numbered = /^(\d{1,2})[.)]\s+(.*)$/.exec(line);
+      const heading = /^#{1,4}\s+(.*)$/.exec(line);
+      if (!line) { flush(); closeList(); continue; }
+      if (bullet || numbered) {
+        flush();
+        const kind = bullet ? 'ul' : 'ol';
+        if (list !== kind) { closeList(); html.push(`<${kind}>`); list = kind; }
+        html.push(`<li>${inline(bullet ? bullet[1] : numbered[2])}</li>`);
+        continue;
+      }
+      closeList();
+      if (heading) { flush(); html.push(`<p class="ai-answer-heading"><strong>${inline(heading[1])}</strong></p>`); continue; }
+      if (/^\u0000\d+\u0000$/.test(line)) { flush(); html.push(line); continue; }
+      paragraph.push(inline(line));
+    }
+    flush(); closeList();
+    return html.join('').replace(/\u0000(\d+)\u0000/g, (match, index) => maths[Number(index)] ?? '');
+  }
+
+  const api = Object.freeze({MAX_FILE_BYTES, fileType, validateFile, hints, lesson, chaptersFor, hasWorkspaceAccess, formatAnswer, escapeHtml});
   root.PrepagoAICore = api;
   if (typeof module === 'object' && module.exports) module.exports = api;
 })(typeof window === 'object' ? window : globalThis);

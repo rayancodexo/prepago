@@ -29,7 +29,7 @@ VIEWPORTS = {
     'tablet': {'width': 820, 'height': 1180},
     'desktop': {'width': 1366, 'height': 900},
 }
-PAGES = ['overview', 'subjects', 'cnc', 'tasks', 'calendar', 'focus', 'progress', 'projects', 'account']
+PAGES = ['overview', 'subjects', 'cnc', 'grades', 'tasks', 'calendar', 'focus', 'progress', 'projects', 'account']
 
 
 def sample_workspace():

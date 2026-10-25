@@ -1,6 +1,6 @@
 # Prepago
 
-Study workspace for Moroccan CPGE students: subjects and chapters, tasks, calendar, focus sessions, progress, CNC past papers and a TIPE space.
+Study workspace for Moroccan CPGE students: subjects and chapters, tasks, calendar, focus sessions, progress, colle and DS grades, CNC past papers and a TIPE space.
 
 - **Site:** https://www.prepago.site
 - **Backend:** Supabase (auth, database, storage, one Edge Function)
@@ -33,7 +33,7 @@ Logging in from a local address talks to the real Supabase project.
 npm test
 ```
 
-This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) and `tests/qa/landing.py` (public home page: product tour video, XP section). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
+This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) `tests/qa/landing.py` (public home page: product tour video, XP section) and `tests/qa/grades.py` (Colles et DS: grades, averages, chapters to revisit). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
 
 ## Publish
 

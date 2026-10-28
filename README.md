@@ -1,6 +1,6 @@
 # Prepago
 
-Study workspace for Moroccan CPGE students: subjects and chapters, tasks, calendar, focus sessions, progress, colle and DS grades, CNC past papers and a TIPE space.
+Study workspace for Moroccan CPGE students: subjects and chapters, tasks, calendar, focus sessions, progress, a colle simulator, timed past papers (Mode Épreuve), CNC past papers and a TIPE space.
 
 - **Site:** https://www.prepago.site
 - **Backend:** Supabase (auth, database, storage, one Edge Function)
@@ -14,6 +14,7 @@ Study workspace for Moroccan CPGE students: subjects and chapters, tasks, calend
 | `supabase/functions/prepago-ai-tutor/` | Source of the AI tutor Edge Function. |
 | `tests/qa/` | Local checks that run the site against a stand-in backend. |
 | `tests/*.sql` | Database tests (run inside a transaction that is rolled back). |
+| `dist/plans-config.js` | Plan limits for Colle and Épreuve (free, organizer, AI+), in one place. |
 | `tools/publish.sh` | Publishes `dist/` by hand. |
 | `RESCUE.md` | How this copy was recovered from production on 7 October 2026. |
 | `AUDIT.md`, `CNC-LIBRARY.md`, `db/` | Notes and SQL kept from September 2026. |
@@ -33,7 +34,7 @@ Logging in from a local address talks to the real Supabase project.
 npm test
 ```
 
-This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) `tests/qa/landing.py` (public home page: product tour video, XP section) and `tests/qa/grades.py` (Colles et DS: grades, averages, chapters to revisit). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
+This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) `tests/qa/landing.py` (public home page: product tour video, XP section) `tests/qa/colle.py` (Colle: solo, duo on two phones, question submission, moderation, upgrade screen) and `tests/qa/epreuve.py` (Mode Épreuve: full-screen exam, barème, Mes épreuves). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
 
 ## Publish
 

@@ -337,6 +337,8 @@ async function loadUserData(session) {
   window.PrepagoPromos?.clear();
   window.PrepagoSupport?.clear();
   window.PrepagoAILive?.clear();
+  window.PrepagoColle?.clear();
+  window.PrepagoEpreuve?.clear();
   const generation = sessionGeneration;
   const cached = appState.useUser(currentUser.id);
   const { data: profile, error: profileError } = await supabase
@@ -383,6 +385,8 @@ async function loadUserData(session) {
   };
   window.PrepagoAdmin?.connect(supabase,roleResult.data?.role === 'admin');
   window.PrepagoSupport?.connect(supabase,userId,roleResult.data?.role === 'admin');
+  window.PrepagoColle?.connect(supabase,userId,roleResult.data?.role === 'admin');
+  window.PrepagoEpreuve?.connect(supabase,userId,roleResult.data?.role === 'admin');
   void window.PrepagoAILive?.connect(supabase,userId);
   accessAllowed = profileHasAccess(profile);
   let activationNotice = null;
@@ -701,6 +705,8 @@ async function signOut() {
   window.PrepagoAdmin?.clear();
   window.PrepagoSupport?.clear();
   window.PrepagoAILive?.clear();
+  window.PrepagoColle?.clear();
+  window.PrepagoEpreuve?.clear();
   window.PrepagoCncLibrary?.clear();
   window.PrepagoFocus?.clear();
   window.PrepagoLeaderboard?.clear();

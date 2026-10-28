@@ -62,7 +62,7 @@
         document.querySelector('#addSubject')?.click();
         break;
       case 'focus': navigate('focus'); break;
-      case 'grade': window.PrepagoGrades?.edit(); break;
+      case 'colle': navigate('colle'); break;
     }
   });
 

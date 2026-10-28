@@ -78,7 +78,7 @@
    else if(values.subject_path&&values.correction_url&&row?.source_url){values.source_label=`${row.source_label?.replace(/ · corrigé$/,'')||'Source'} · corrigé`}
    if(g!==generation)return;status('Enregistrement…');
    if(row)await updateRow(row,values,c);else {const r=await c.from('cnc_exams').insert({id,...values});if(r.error)throw r.error}
-   if(g!==generation)return;await load();editor();status(values.published?'Annale publiée. Les étudiants la verront dans CNC et CNAEM.':'Brouillon enregistré. Il reste privé.');
+   if(g!==generation)return;await load();editor();status(values.published?'Annale publiée. Les étudiants la verront dans Concours.':'Brouillon enregistré. Il reste privé.');
   }catch(err){if(g===generation)status(message(err))}finally{busy=false;if(g===generation)setBusy(false)}
  });
  dialog.addEventListener('click',async e=>{

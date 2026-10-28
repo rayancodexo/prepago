@@ -496,7 +496,14 @@ body[data-page] #page .cnc-library-note > div { display: flex; flex-wrap: wrap; 
 body[data-page] #page .cnc-library-note .link-btn { min-height: 28px; padding: 0; font-size: 13px; }
 body[data-page] #page .cnc-library-note.is-status { color: var(--ink); }
 body[data-page] #page .cnc-shell:has(> .cnc-library-note) > .section-head { min-height: 0; margin-bottom: 4px; }
-body[data-page] #page :is(.filiere-grid, .cnc-subject-grid) { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+body[data-page] #page :is(.filiere-grid, .cnc-subject-grid, .concours-fr-grid) { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+/* Concours page: Moroccan concours, then a place for the French ones (coming later). */
+body[data-page] #page .concours-section-title { display: flex; align-items: baseline; gap: 8px; margin: 8px 0 12px; color: var(--ink); font-size: var(--text-panel); line-height: var(--leading-heading); font-weight: var(--font-semibold); letter-spacing: var(--tracking-heading); }
+body[data-page] #page .concours-section-title span { color: var(--secondary); font-size: var(--text-sm); font-weight: var(--font-regular); }
+body[data-page] #page .filiere-grid + .concours-section-title { margin-top: 28px; }
+body[data-page] #page .cnc-shell .choice-card.is-soon { cursor: default; }
+body[data-page] #page .cnc-shell .choice-card.is-soon:hover { border-color: var(--hairline); }
+body[data-page] #page .cnc-shell .choice-card.is-soon .choice-code { background: var(--chip); color: var(--secondary); font-size: 13px; }
 body[data-page] #page .cnc-subject-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 body[data-page] #page .cnc-shell .choice-card {
   display: grid;

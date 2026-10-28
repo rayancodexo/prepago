@@ -1,0 +1,151 @@
+/* Mode Épreuve, in the Accueil language of pages.css: white 16px cards, one accent.
+   Chart colours: reference categorical palette, one fixed slot per subject family. */
+body[data-page="epreuve"] #page {
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+}
+[data-theme="dark"] body[data-page="epreuve"] #page {
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+}
+body[data-page="epreuve"] #page .epreuve-page { display: grid; gap: 16px; min-width: 0; }
+body[data-page="epreuve"] #page .epreuve-page > .section-head { margin: 0; }
+body[data-page="epreuve"] #page .epreuve-page h2 { margin: 0 0 6px; color: var(--ink); font-size: var(--text-panel); line-height: var(--leading-heading); letter-spacing: var(--tracking-heading); }
+body[data-page="epreuve"] #page .epreuve-page h3 { margin: 12px 0 4px; color: var(--secondary); font-size: var(--text-xs); font-weight: var(--font-semibold); letter-spacing: .04em; text-transform: uppercase; }
+body[data-page="epreuve"] #page .epreuve-page .card { padding: 20px; min-width: 0; }
+body[data-page="epreuve"] #page .epreuve-muted { margin: 0; color: var(--secondary); font-size: var(--text-sm); line-height: 20px; }
+body[data-page="epreuve"] #page .is-low { color: var(--danger); }
+body[data-page="epreuve"] #page .epreuve-page .field { display: grid; gap: 6px; margin: 0; min-width: 0; }
+body[data-page="epreuve"] #page .epreuve-page .field > span { color: var(--ink); font-size: var(--text-sm); font-weight: var(--font-medium); }
+body[data-page="epreuve"] #page .epreuve-tabs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); }
+body[data-page="epreuve"] #page .epreuve-tabs button { height: 34px; margin: 0; padding: 0 12px; border: 0; border-radius: 7px; background: transparent; color: var(--secondary); font-size: var(--text-sm); font-weight: var(--font-medium); cursor: pointer; }
+body[data-page="epreuve"] #page .epreuve-tabs button[aria-selected="true"] { background: var(--brand-tint); color: var(--brand); }
+
+/* Picking a paper. */
+body[data-page="epreuve"] #page .epreuve-resume { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border-color: var(--brand); }
+body[data-page="epreuve"] #page .epreuve-resume div { display: grid; }
+body[data-page="epreuve"] #page .epreuve-resume strong { color: var(--ink); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-resume span { color: var(--secondary); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+body[data-page="epreuve"] #page .epreuve-list-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+body[data-page="epreuve"] #page .epreuve-list-head span { color: var(--secondary); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-paper-row { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; min-height: 56px; margin: 0; padding: 8px 10px; border: 0; border-top: 1px solid var(--hairline); border-radius: 0; background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+body[data-page="epreuve"] #page .epreuve-paper-row:hover { background: var(--surface-hover); }
+body[data-page="epreuve"] #page .epreuve-year, body[data-page="epreuve"] #page .epreuve-date { color: var(--secondary); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+body[data-page="epreuve"] #page .epreuve-paper-name { display: grid; min-width: 0; }
+body[data-page="epreuve"] #page .epreuve-paper-name strong { overflow: hidden; color: var(--ink); font-size: var(--text-sm); line-height: 20px; text-overflow: ellipsis; white-space: nowrap; }
+body[data-page="epreuve"] #page .epreuve-paper-name small { color: var(--secondary); font-size: var(--text-xs); line-height: 16px; }
+body[data-page="epreuve"] #page .epreuve-paper-row em { color: var(--ink); font-size: var(--text-sm); font-style: normal; font-weight: var(--font-semibold); white-space: nowrap; }
+body[data-page="epreuve"] #page .epreuve-paper-row em.is-new { padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--secondary); font-weight: var(--font-medium); }
+
+/* Setup. */
+body[data-page="epreuve"] #page .epreuve-setup { display: grid; gap: 14px; max-width: 720px; }
+body[data-page="epreuve"] #page .epreuve-kicker { color: var(--brand); font-size: var(--text-xs); font-weight: var(--font-semibold); letter-spacing: .06em; text-transform: uppercase; }
+body[data-page="epreuve"] #page .epreuve-setup h2 { font-size: 20px; line-height: 26px; }
+body[data-page="epreuve"] #page .epreuve-durations { display: flex; flex-wrap: wrap; gap: 8px; }
+body[data-page="epreuve"] #page .epreuve-durations button { display: grid; min-width: 96px; margin: 0; padding: 10px 14px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--ink); font-size: 18px; font-weight: var(--font-semibold); cursor: pointer; }
+body[data-page="epreuve"] #page .epreuve-durations button small { color: var(--secondary); font-size: var(--text-xs); font-weight: var(--font-regular); }
+body[data-page="epreuve"] #page .epreuve-durations button[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-tint); color: var(--brand); }
+body[data-page="epreuve"] #page .epreuve-admin { max-width: 280px; }
+body[data-page="epreuve"] #page .epreuve-rules { display: grid; gap: 6px; margin: 0; padding-left: 18px; color: var(--secondary); font-size: var(--text-sm); line-height: 20px; }
+body[data-page="epreuve"] #page .epreuve-start { justify-self: start; }
+
+/* Grading. */
+body[data-page="epreuve"] #page .epreuve-done { display: grid; gap: 2px; }
+body[data-page="epreuve"] #page .epreuve-done strong { color: var(--ink); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-done span { color: var(--secondary); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-grid, body[data-page="epreuve"] #page .epreuve-bareme, body[data-page="epreuve"] #page .epreuve-skip { display: grid; gap: 16px; }
+body[data-page="epreuve"] #page .epreuve-grid-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+body[data-page="epreuve"] #page .epreuve-total { display: grid; justify-items: end; }
+body[data-page="epreuve"] #page #epreuveTotal { color: var(--ink); font-size: 32px; line-height: 38px; font-weight: var(--font-semibold); }
+body[data-page="epreuve"] #page #epreuveTotal small { color: var(--secondary); font-size: var(--text-sm); font-weight: var(--font-regular); }
+body[data-page="epreuve"] #page #epreuveRaw { color: var(--secondary); font-size: var(--text-xs); }
+body[data-page="epreuve"] #page .epreuve-score-rows { display: grid; }
+body[data-page="epreuve"] #page .epreuve-score-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) 96px 56px; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--hairline); cursor: text; }
+body[data-page="epreuve"] #page .epreuve-qnum { color: var(--ink); font-size: var(--text-sm); font-weight: var(--font-semibold); }
+body[data-page="epreuve"] #page .epreuve-qlabel { display: grid; min-width: 0; color: var(--ink); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-qlabel small { color: var(--secondary); font-size: var(--text-xs); }
+body[data-page="epreuve"] #page .epreuve-score-row em { color: var(--secondary); font-size: var(--text-sm); font-style: normal; }
+body[data-page="epreuve"] #page .epreuve-page input[type=number], body[data-page="epreuve"] #page .epreuve-bareme-row input { width: 100%; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--hairline); border-radius: var(--control-radius); background: var(--surface); color: var(--ink); font: inherit; font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-bareme-quick { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+body[data-page="epreuve"] #page .epreuve-bareme-quick .field { width: 180px; }
+body[data-page="epreuve"] #page .epreuve-bareme-rows { display: grid; gap: 6px; }
+body[data-page="epreuve"] #page .epreuve-bareme-head, body[data-page="epreuve"] #page .epreuve-bareme-row { display: grid; grid-template-columns: 64px minmax(0, 1.4fr) minmax(0, 1fr) 88px auto; gap: 8px; align-items: center; }
+body[data-page="epreuve"] #page .epreuve-bareme-head span { color: var(--secondary); font-size: var(--text-xs); font-weight: var(--font-medium); }
+body[data-page="epreuve"] #page .epreuve-bareme-row .link-btn { padding: 0; font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-photos input { font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-photos small { color: var(--secondary); font-size: var(--text-xs); }
+body[data-page="epreuve"] #page .epreuve-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
+
+/* Mes épreuves. */
+body[data-page="epreuve"] #page .epreuve-stats { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); gap: 16px; align-items: start; }
+body[data-page="epreuve"] #page .epreuve-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 4px 0 8px; color: var(--secondary); font-size: var(--text-xs); }
+body[data-page="epreuve"] #page .epreuve-legend span { display: inline-flex; align-items: center; gap: 6px; }
+body[data-page="epreuve"] #page .epreuve-legend i { width: 10px; height: 10px; border-radius: 50%; }
+body[data-page="epreuve"] #page .epreuve-chart-box { position: relative; }
+body[data-page="epreuve"] #page .epreuve-chart-svg { display: block; width: 100%; height: auto; overflow: visible; }
+body[data-page="epreuve"] #page .epreuve-grid-line { stroke: var(--hairline); stroke-width: 1; }
+body[data-page="epreuve"] #page .epreuve-grid-line.is-mid { stroke-dasharray: 3 3; }
+body[data-page="epreuve"] #page .epreuve-axis { fill: var(--secondary); font-size: 11px; }
+body[data-page="epreuve"] #page .epreuve-line { fill: none; stroke: var(--line); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+body[data-page="epreuve"] #page .epreuve-dot { fill: var(--line); stroke: var(--surface); stroke-width: 2; }
+body[data-page="epreuve"] #page .epreuve-hit { fill: transparent; cursor: pointer; outline: none; }
+body[data-page="epreuve"] #page .epreuve-hit:focus-visible { stroke: var(--brand); stroke-width: 2; }
+body[data-page="epreuve"] #page .epreuve-end-label { fill: var(--secondary); font-size: 11px; }
+body[data-page="epreuve"] #page .epreuve-tip { position: absolute; z-index: 2; max-width: 260px; padding: 6px 10px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: var(--text-xs); line-height: 16px; pointer-events: none; box-shadow: 0 4px 16px rgba(15, 23, 42, .12); }
+body[data-page="epreuve"] #page .epreuve-table { margin-top: 8px; color: var(--secondary); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-table summary { cursor: pointer; color: var(--brand); }
+body[data-page="epreuve"] #page .epreuve-table table { width: 100%; margin-top: 8px; border-collapse: collapse; }
+body[data-page="epreuve"] #page .epreuve-table th, body[data-page="epreuve"] #page .epreuve-table td { padding: 6px 4px; border-top: 1px solid var(--hairline); color: var(--ink); font-size: var(--text-xs); text-align: left; }
+body[data-page="epreuve"] #page .epreuve-weak-row, body[data-page="epreuve"] #page .epreuve-history-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--hairline); }
+body[data-page="epreuve"] #page .epreuve-weak-row span { display: grid; min-width: 0; color: var(--ink); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-weak-row small { color: var(--secondary); font-size: var(--text-xs); }
+body[data-page="epreuve"] #page .epreuve-weak-row strong, body[data-page="epreuve"] #page .epreuve-history-row > strong { flex: none; color: var(--ink); font-size: var(--text-sm); }
+body[data-page="epreuve"] #page .epreuve-history-row > strong.is-low { color: var(--danger); }
+body[data-page="epreuve"] #page .epreuve-history-row .epreuve-paper-name { flex: 1; }
+body[data-page="epreuve"] #page .epreuve-date { width: 56px; flex: none; }
+
+/* Full-screen exam, outside #page. */
+.epreuve-focus { position: fixed; inset: 0; z-index: 1000; display: grid; grid-template-rows: auto minmax(0, 1fr); background: var(--surface, #fff); color: var(--ink, #0b1220); }
+.epreuve-focus-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--hairline, #e5e7eb); }
+.epreuve-focus-title { display: grid; min-width: 0; }
+.epreuve-focus-title span { color: var(--brand, #0a5cff); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.epreuve-focus-title strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.epreuve-focus-clock { display: grid; justify-items: center; }
+.epreuve-focus-clock strong { font-size: 40px; line-height: 44px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.epreuve-focus-clock strong.is-low { color: var(--danger, #d92d20); }
+.epreuve-focus-clock small { color: var(--secondary, #5b6475); font-size: 12px; }
+.epreuve-focus-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.epreuve-focus-actions button { min-height: 40px; padding: 0 16px; border-radius: 10px; font-size: 14px; }
+.epreuve-focus-body { position: relative; min-height: 0; }
+.epreuve-paper { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+.epreuve-paper[hidden] { display: none; }
+.epreuve-paper > p { margin: 24px; color: var(--secondary, #5b6475); }
+.epreuve-frame { width: 100%; height: 100%; border: 0; background: var(--surface-hover, #f4f6fa); }
+.epreuve-open { justify-self: center; padding: 8px; color: var(--brand, #0a5cff); font-size: 13px; }
+.epreuve-paused { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px; text-align: center; background: var(--surface, #fff); }
+.epreuve-paused[hidden] { display: none; }
+.epreuve-paused strong { font-size: 22px; }
+.epreuve-paused p { margin: 0 0 8px; color: var(--secondary, #5b6475); }
+/* The workspace reserves a scrollbar gutter; the exam covers the whole screen instead. */
+html:has(body.epreuve-running) { overflow: hidden; scrollbar-gutter: auto; }
+body.epreuve-running { overflow: hidden; }
+body.epreuve-running .studio-bottom-nav { display: none; }
+
+@media (max-width: 1099px) {
+  body[data-page="epreuve"] #page .epreuve-stats { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  body[data-page="epreuve"] #page .epreuve-page .card { padding: 16px; }
+  body[data-page="epreuve"] #page .epreuve-filters { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  body[data-page="epreuve"] #page .epreuve-score-row { grid-template-columns: 40px minmax(0, 1fr) 80px; }
+  body[data-page="epreuve"] #page .epreuve-score-row em { display: none; }
+  body[data-page="epreuve"] #page .epreuve-bareme-head { display: none; }
+  body[data-page="epreuve"] #page .epreuve-bareme-row { grid-template-columns: 56px minmax(0, 1fr) 80px; }
+  body[data-page="epreuve"] #page .epreuve-bareme-row input[name=chapter] { grid-column: 1 / 3; }
+  body[data-page="epreuve"] #page .epreuve-start, body[data-page="epreuve"] #page .epreuve-actions button { width: 100%; }
+  .epreuve-focus-bar { grid-template-columns: minmax(0, 1fr) auto; padding: 10px 12px; }
+  .epreuve-focus-title { grid-column: 1 / -1; }
+  .epreuve-focus-clock { justify-items: start; }
+  .epreuve-focus-clock strong { font-size: 30px; line-height: 34px; }
+}

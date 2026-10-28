@@ -1,0 +1,105 @@
+@layer prepago-legacy {
+/* Scoped to Concentration: no visual changes to other sections. */
+body[data-page="focus"]{zoom:1!important}
+body[data-page="focus"] #page{max-width:1560px;padding:32px 34px 48px}
+.focus-cockpit{--fc-blue:#0750e8;--fc-ink:#17243b;--fc-muted:#69778e;--fc-border:#e0e7f1;color:var(--fc-ink);font-size:var(--text-sm);line-height:1.5}
+.focus-cockpit *{box-sizing:border-box}
+.focus-cockpit h1,.focus-cockpit h2,.focus-cockpit h3,.focus-cockpit p{margin:0}
+.fc-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}
+.fc-eyebrow{display:block;font-size:11px;letter-spacing:.1em;font-weight:var(--font-semibold);color:#78859a;margin-bottom:6px}
+.fc-heading h1{font-size:30px;line-height:1.25;letter-spacing:-.8px}
+.fc-heading p{color:var(--fc-muted);font-size:var(--text-sm);margin-top:7px}
+.fc-connection{font-size:var(--text-xs);color:#62758f;white-space:nowrap}
+.focus-cockpit .fc-card{background:white;border:1px solid var(--fc-border);border-radius:15px;padding:22px;box-shadow:0 3px 15px #18375b04;min-width:0}
+.fc-workspace{display:grid;grid-template-columns:minmax(0,1fr) 355px;gap:20px;align-items:start}
+.fc-main-column{display:grid;gap:18px;min-width:0}
+.focus-cockpit .fc-timer{padding:24px 28px 18px;position:relative;overflow:hidden}
+.fc-timer-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fc-mode{font-size:11px;letter-spacing:.13em;color:var(--fc-blue);font-weight:var(--font-bold)}
+.focus-cockpit button{font:inherit;cursor:pointer}
+.focus-cockpit button:disabled{cursor:not-allowed;opacity:.5}
+.focus-cockpit .primary-btn,.focus-cockpit .secondary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:10px 18px;border-radius:9px;font-size:var(--text-sm);line-height:1.3}
+.focus-cockpit .primary-btn{background:var(--fc-blue);border:1px solid var(--fc-blue);color:white;box-shadow:0 3px 8px #0750e81a}
+.focus-cockpit .secondary-btn{background:#fff;border:1px solid #dce3ee;color:#40516c}
+.focus-cockpit .icon-svg{width:18px;height:18px}
+.fc-immersive{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;background:#f2f6fd;color:#355378;border:1px solid #e4ebf5;border-radius:8px;font-size:var(--text-xs)!important;min-height:38px}
+.fc-session-context{text-align:center;margin:30px 0 8px}
+.fc-session-context>span{display:block;color:var(--fc-blue);font-weight:var(--font-semibold);font-size:var(--text-label)}
+.fc-session-context h2{font-size:var(--text-lg);line-height:1.4;letter-spacing:-.3px;margin-top:6px;overflow-wrap:anywhere}
+.fc-clock-wrap{text-align:center;padding:9px 0 0}
+.fc-clock{font-size:clamp(66px,7vw,108px);font-weight:var(--font-semibold);line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-4px;color:#172941}
+#fcTimerState{font-size:var(--text-xs);color:#76849a;margin-top:5px}
+.fc-timer-track{height:4px;width:180px;margin:19px auto 24px;background:#eef2f8;border-radius:4px;overflow:hidden}
+.fc-timer-track>span{height:100%;display:block;background:var(--fc-blue);width:0;transition:width .3s linear}
+.fc-timer-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.fc-timer-actions .primary-btn{min-width:145px}
+.fc-goal{padding:20px 0 6px;margin-top:24px;border-top:1px solid #eaf0f7;text-align:center}
+.fc-goal>span{font-size:10px;font-weight:var(--font-semibold);letter-spacing:.12em;color:#8290a4}
+.fc-goal>p{font-size:var(--text-sm);color:#4f627d;margin:7px auto 0;max-width:500px;overflow-wrap:anywhere}
+.fc-goal details{font-size:var(--text-xs);margin-top:8px;color:#69778e}.fc-goal details p{white-space:pre-wrap;overflow-wrap:anywhere}
+.focus-cockpit .fc-caption{font-size:var(--text-xs);color:#78859a;line-height:1.6}
+.fc-timer-foot{text-align:center;margin:15px auto 0!important;max-width:500px;font-size:11px!important}
+.fc-announcement:empty{display:none}
+.fc-card-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.fc-card-title h2{font-size:17px;font-weight:var(--font-semibold);line-height:1.3;letter-spacing:-.3px}
+.fc-today .fc-card-title{margin-bottom:10px}
+.fc-streak{font-size:var(--text-xs);padding:5px 9px;border-radius:7px;background:#fff7e9;color:#966416}
+.fc-today-number{display:flex;align-items:baseline;gap:10px;font-size:28px;letter-spacing:-.6px;font-weight:var(--font-semibold)}
+.fc-today-number>span{font-size:var(--text-label);letter-spacing:0;font-weight:var(--font-regular);color:#78859a}
+.fc-today-meta{display:flex;justify-content:space-between;font-size:var(--text-xs);color:#718098;margin:13px 0 8px}.fc-today-meta strong{color:#3c5b86}
+.fc-progress{height:6px;border-radius:9px;background:#edf2f9;overflow:hidden}.fc-progress span{display:block;height:100%;background:#4f83e8;border-radius:9px}
+.fc-text-button{border:0;background:transparent;padding:12px 0 5px;color:#3867b4;font-size:var(--text-xs)!important;display:flex;align-items:center;gap:6px}.fc-text-button .icon-svg{width:13px;height:13px}
+.focus-cockpit fieldset{border:0;padding:0;margin:0;min-width:0}
+.focus-cockpit legend{font-size:var(--text-xs);color:#718098;margin-bottom:10px;padding:0}
+.fc-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:17px}
+.fc-presets button{padding:11px 10px;border:1px solid #e2e8f1;background:#fff;border-radius:9px;text-align:left;color:#465b77}
+.fc-presets button.selected{border-color:#93b4f1;background:#f0f5ff;color:#1557ce}
+.fc-presets strong,.fc-presets span{display:block}.fc-presets strong{font-size:var(--text-xs);font-weight:var(--font-semibold)}.fc-presets span{font-size:11px;margin-top:3px;color:#78869c}
+.focus-cockpit label{font-size:var(--text-xs);color:#566982;font-weight:var(--font-medium);display:block;margin-bottom:13px}
+#page .focus-cockpit input:not([type=checkbox]),#page .focus-cockpit select,#page .focus-cockpit textarea{width:100%;min-width:0;background:#fff;border:1px solid #dce4ef;border-radius:8px;color:#243957;min-height:39px;padding:9px 10px;font-size:var(--text-sm);font-family:inherit;line-height:1.4;margin-top:6px}
+#page .focus-cockpit textarea{resize:vertical;min-height:80px}
+#page .focus-cockpit input:disabled,#page .focus-cockpit select:disabled{background:#f7f9fc;color:#71819b}
+.fc-duration-fields{display:grid;grid-template-columns:1fr 1fr 64px;gap:9px}
+.fc-selector-grid{display:grid;grid-template-columns:1fr;gap:0}
+.fc-note{border-bottom:1px solid #edf1f6;padding:0 0 13px;margin-bottom:13px}.fc-note summary{font-size:var(--text-xs);cursor:pointer;color:#6c7e96}.fc-note label{margin-top:8px}
+.focus-cockpit .fc-sound{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:var(--text-xs)}
+.fc-sound input{accent-color:var(--fc-blue);width:15px;height:15px}
+.fc-setup .secondary-btn{width:100%;font-size:var(--text-label)}.fc-setup .fc-caption{margin-top:13px;font-size:11px}
+.fc-analytics{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-top:20px}
+.fc-week-total{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.fc-week-total strong{font-size:28px;letter-spacing:-.7px}.fc-week-total>span{font-size:var(--text-xs);color:#647b98}
+.fc-chart{height:180px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin-top:16px}
+.fc-bar{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;color:#77869e;min-width:0}
+.fc-bar-value{font-size:10px;white-space:nowrap}
+.fc-bar-track{height:120px;width:100%;max-width:38px;display:flex;align-items:flex-end;background:#f6f8fc;border-radius:6px}
+.fc-bar-track>span{width:100%;background:#c4d6fa;border-radius:5px;min-height:0}.fc-bar-track>span.today{background:var(--fc-blue)}
+.fc-breakdown{display:grid;gap:19px;margin-top:25px}.fc-breakdown-label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;font-size:var(--text-xs)}.fc-breakdown-label strong{font-weight:var(--font-medium);overflow-wrap:anywhere}.fc-breakdown-label>span{white-space:nowrap;color:#667b98}.fc-breakdown+.fc-caption{margin-top:22px}
+.fc-history{margin-top:20px}.fc-history-filters{display:flex;gap:10px;flex-wrap:wrap}.fc-history-filters select{flex:1;min-width:150px!important;margin:0!important}.fc-history-filters label{display:flex;align-items:center;gap:8px;margin:0}.fc-history-filters input{margin:0!important}
+.fc-history-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:19px 0;margin:6px 0 4px}.fc-history-metrics>div{border-right:1px solid #e8edf5}.fc-history-metrics>div:last-child{border:0}.fc-history-metrics strong{display:block;font-size:21px;font-weight:var(--font-semibold)}.fc-history-metrics span{font-size:11px;color:#7c8a9e}
+.fc-session{display:flex;align-items:center;gap:14px;padding:17px 0;border-top:1px solid #e9eef6}
+.fc-session-symbol{display:grid;place-items:center;width:35px;height:35px;border-radius:9px;background:#f0f5ff;flex-shrink:0}
+.fc-session-copy{flex:1;min-width:0}.fc-session-copy>strong,.fc-session-copy>span{display:block}.fc-session-copy>strong{font-size:var(--text-label);font-weight:var(--font-semibold)}.fc-session-copy>span{font-size:var(--text-xs);color:#6d819d;margin-top:2px}.fc-session-copy p{font-size:var(--text-xs);overflow-wrap:anywhere;color:#77879e;margin-top:5px}.fc-session-copy details{font-size:11px;margin-top:5px}.fc-session-copy details p{white-space:pre-wrap}
+.fc-session-time{min-width:115px}.fc-session-time strong{display:block;font-size:var(--text-label);font-weight:var(--font-semibold)}.fc-session-time span{display:block;font-size:11px;color:#77879e;margin-top:3px}
+.fc-status{font-size:11px;padding:4px 8px;border-radius:6px;color:#75839a;background:#f1f4f8;white-space:nowrap}.fc-status.completed{color:#287662;background:#edf8f2;text-decoration:none;opacity:1}
+.fc-session .icon-btn{width:34px;height:34px;flex-shrink:0}.fc-session .icon-svg{width:15px;height:15px}.fc-history>.fc-caption{margin-top:15px}
+.fc-empty{padding:30px 16px;text-align:center;color:#74849b}.fc-empty>.icon-svg{width:27px;height:27px;margin:0 auto 12px;opacity:.6}.fc-empty h3{font-size:var(--text-base);font-weight:var(--font-semibold);color:#405778;margin-bottom:7px}.fc-empty p{font-size:var(--text-label);line-height:1.7;max-width:390px;margin:0 auto 16px}.fc-empty button{font-size:var(--text-xs)!important}
+.fc-error{display:flex;align-items:center;justify-content:space-between;gap:15px;border:1px solid #ead5ba;background:#fffaf2;padding:15px 20px;border-radius:10px;margin-bottom:18px;font-size:var(--text-label);color:#87612e}.fc-error button{white-space:nowrap}
+.fc-loading{padding:45px!important}.fc-loading h2{font-size:var(--text-lg)}.fc-loading p{color:#78859a;margin-top:10px}
+.fc-timer.is-break{background:#f7fbfa;border-color:#d9ebe4}.fc-timer.is-break .fc-mode{color:#31816f}.fc-timer.is-break .fc-clock{color:#235849}
+body.focus-cockpit-immersive #sidebar,body.focus-cockpit-immersive .topbar,body.focus-cockpit-immersive .mobile-header{display:none!important}
+body.focus-cockpit-immersive .main{margin:0!important;padding:0!important}
+body.focus-cockpit-immersive #page{padding:24px!important;max-width:100%!important;min-height:100dvh;display:grid;place-items:center}
+body.focus-cockpit-immersive .focus-cockpit{width:min(780px,100%)}
+body.focus-cockpit-immersive .fc-heading,body.focus-cockpit-immersive .fc-setup,body.focus-cockpit-immersive .fc-today,body.focus-cockpit-immersive .fc-analytics,body.focus-cockpit-immersive .fc-history{display:none!important}
+body.focus-cockpit-immersive .fc-workspace{display:block}
+body.focus-cockpit-immersive .fc-timer{padding:30px 40px;border:0;box-shadow:none;background:transparent}
+body.focus-cockpit-immersive .fc-session-context{margin-top:55px}
+body.focus-cockpit-immersive .fc-clock{font-size:clamp(88px,14vw,148px);font-weight:var(--font-medium)}
+body.focus-cockpit-immersive .fc-timer-actions{margin-top:32px}
+@media(min-width:1450px){.fc-workspace{grid-template-columns:minmax(0,1fr) 385px}.fc-selector-grid{grid-template-columns:1fr 1fr;gap:10px}.fc-timer .fc-clock{font-size:108px}}
+@media(max-width:1150px){body[data-page="focus"] #page{padding:26px 23px}.fc-workspace{grid-template-columns:minmax(0,1fr) 310px;gap:16px}.focus-cockpit .fc-timer{padding:20px}.fc-clock{font-size:76px}.fc-immersive{font-size:11px!important;padding:8px}.fc-session-symbol{display:none}.fc-analytics{grid-template-columns:1.2fr 1fr;gap:16px}.fc-session{gap:10px}.fc-status{font-size:10px}}
+@media(max-width:1020px){.fc-workspace{grid-template-columns:1fr}.fc-main-column{grid-template-columns:minmax(0,1fr) 240px;align-items:start}.fc-setup form fieldset{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.fc-setup legend{grid-column:1/-1}.fc-presets{grid-column:1}.fc-duration-fields{grid-column:2;align-content:start}.fc-selector-grid{grid-column:1}.fc-setup fieldset>label,.fc-note{grid-column:2}.fc-setup .secondary-btn{width:auto}.fc-analytics{grid-template-columns:1fr 1fr}.fc-heading{align-items:flex-start}.fc-connection{font-size:11px}}
+@media(max-width:820px){body[data-page="focus"] #page{padding:24px 20px 45px}.fc-heading h1{font-size:28px}.fc-main-column{grid-template-columns:minmax(0,1fr) 230px}.fc-connection{display:none}.fc-analytics{grid-template-columns:1fr 1fr}.fc-session{flex-wrap:wrap}.fc-session-copy{flex-basis:45%}.fc-session-time{min-width:100px}.fc-status{margin-left:0}.fc-history-filters select{min-width:130px!important}.fc-heading p{font-size:var(--text-label)}}
+@media(max-width:640px){.fc-main-column,.fc-analytics{grid-template-columns:1fr}.fc-timer-top{align-items:flex-start}.fc-mode{font-size:10px;margin-top:10px}.fc-immersive{max-width:170px;min-height:42px}.fc-session-context{margin-top:26px}.fc-session-context h2{font-size:var(--text-lg)}.fc-clock{font-size:82px}.focus-cockpit .fc-card{padding:19px}.fc-heading{margin-bottom:20px}.fc-heading h1{font-size:27px}.fc-setup form fieldset{display:block}.fc-duration-fields{grid-template-columns:1fr 1fr 70px}.fc-selector-grid{grid-template-columns:1fr}.fc-workspace{gap:17px}.fc-setup .secondary-btn{width:100%}.fc-history-filters{display:grid;grid-template-columns:1fr}.fc-history-metrics{grid-template-columns:1fr 1fr;row-gap:16px}.fc-history-metrics>div:nth-child(2){border:0}.fc-session{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}.fc-session-copy{grid-column:1}.fc-session-time{grid-column:1;grid-row:2}.fc-status{grid-column:2;grid-row:2;font-size:10px}.fc-session .icon-btn{grid-column:2;grid-row:1;justify-self:end}.fc-card-title{gap:8px}.fc-card-title h2{font-size:var(--text-base)}.fc-chart{gap:7px}.fc-bar-value{font-size:9px}.fc-error{flex-direction:column;align-items:flex-start}.fc-timer-foot{font-size:11px!important}.fc-today-number{font-size:29px}.fc-goal{margin-top:20px}.fc-timer-actions button{min-height:46px!important}.fc-session-context h2{overflow-wrap:anywhere}body.focus-cockpit-immersive #page{padding:18px!important}body.focus-cockpit-immersive .fc-timer{padding:0}body.focus-cockpit-immersive .fc-session-context{margin-top:40px}}
+@media(prefers-reduced-motion:reduce){.focus-cockpit *{transition:none!important;scroll-behavior:auto!important}}
+
+}

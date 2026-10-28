@@ -86,7 +86,7 @@
       if (box) box.innerHTML = `<iframe class="epreuve-frame" src="${esc(doc.previewUrl)}" title="Sujet ${esc(label(paper))}"></iframe><a class="epreuve-open" href="${esc(doc.subjectUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le sujet dans un nouvel onglet</a>`;
     } catch {
       const box = overlay?.querySelector('#epreuvePaper');
-      if (box) box.innerHTML = '<p>Le sujet ne s’affiche pas ici. Ouvre-le depuis la page CNC et CNAEM, le chronomètre continue.</p>';
+      if (box) box.innerHTML = '<p>Le sujet ne s’affiche pas ici. Ouvre-le depuis la page Concours, le chronomètre continue.</p>';
     }
   }
   function onTick() {

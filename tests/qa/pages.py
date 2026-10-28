@@ -1,4 +1,4 @@
-"""Checks for Concentration, Calendrier, Matières and Annales CNC: they share the Accueil look
+"""Checks for Concentration, Calendrier, Matières and Concours (annales): they share the Accueil look
 (22px title, 16px white cards, one accent) and still work. Run: python3 tests/qa/pages.py"""
 import datetime as dt
 import sys
@@ -175,6 +175,11 @@ with Site() as site:
         tallest: Math.round(Math.max(...[...document.querySelectorAll('.filiere-grid .choice-card')].map(c => c.getBoundingClientRect().height))) }; }''')
     check('first screen: title, privacy line, then the filières', 'restent privés' in (home['note'] or '') and 'Actualiser' in home['note'] and home['order'] and home['cards'] == 6, home)
     check('filière cards are compact', home['tallest'] <= 140, home['tallest'])
+    concours = page.evaluate('''() => ({ title: document.querySelector('#page h1')?.innerText, nav: document.querySelector('.nav-item[data-page=cnc]')?.innerText.trim(),
+      sections: [...document.querySelectorAll('.concours-section-title')].map(h => h.innerText.replace(/\\s+/g, ' ').trim()),
+      french: [...document.querySelectorAll('.concours-fr-grid .choice-card.is-soon')].map(c => c.querySelector('strong').innerText) })''')
+    check('page and menu are named Concours', concours['title'] == 'Concours' and concours['nav'] == 'Concours', concours)
+    check('Moroccan concours first, then a place for the French ones', concours['sections'] == ['Concours marocains CNC et CNAEM', 'Concours français Bientôt'] and concours['french'] == ['X-ENS', 'Mines-Ponts', 'Centrale-Supélec', 'CCINP', 'e3a-Polytech'], concours)
     click(page, '.choice-card')
     check('a filière lists its subjects, without the privacy line', page.evaluate("document.querySelectorAll('.cnc-subject-grid .choice-card').length >= 7 && !document.querySelector('.cnc-library-note')") and text(page, '#page h1') == 'Filière MP', text(page, '#page h1'))
     look(page, 'CNC (matières)', problems)

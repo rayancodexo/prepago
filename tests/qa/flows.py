@@ -1,7 +1,7 @@
 """Behaviour checks for the activation-code journey. Run: python3 tests/qa/flows.py"""
 import sys
 
-from qa import Site
+from qa import Site, wait_for
 
 IG = 'https://www.instagram.com/prepago.ma/'
 results = []
@@ -142,7 +142,7 @@ with Site() as site:
     # 12. Going to login from there loads the workspace and the form works.
     page.click('.public-menu')
     page.click('.public-actions a[href="/#connexion"]')
-    page.wait_for_function('!document.documentElement.classList.contains("app-booting")', timeout=8000)
+    wait_for(page, '!document.documentElement.classList.contains("app-booting")', timeout=8000)
     check('login form appears once it is wired up', page.is_visible('#authForm input[name="email"]') and page.evaluate('getComputedStyle(document.querySelector(".auth-form-panel")).visibility') == 'visible')
     page.fill('#authForm input[name="email"]', 'qa@example.invalid')
     page.fill('#authForm input[name="password"]', 'motdepasse123')

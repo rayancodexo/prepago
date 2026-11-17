@@ -6,7 +6,7 @@ import datetime as dt
 import sys
 
 import qa
-from qa import Site, goto_page
+from qa import Site, goto_page, wait_for
 
 results = []
 A = '11111111-1111-4111-8111-111111111111'
@@ -136,7 +136,7 @@ with Site() as site:
     page.wait_for_timeout(600)
     check('after a reload the exam can be resumed', page.locator('.epreuve-resume [data-epreuve-resume]').count() == 1, text(page, '#page'))
     page.locator('.epreuve-resume [data-epreuve-resume]').click()
-    page.wait_for_function("document.querySelector('.epreuve-score-row')", timeout=6000)
+    wait_for(page, "document.querySelector('.epreuve-score-row')", timeout=6000)
     check('when time runs out the exam closes for grading', page.locator('.epreuve-focus').count() == 0 and (text(page, '.epreuve-done') or '').startswith('CNC MP'))
     check('no errors in Mode Épreuve', not problems, '; '.join(problems[:3]))
     page.context.close()

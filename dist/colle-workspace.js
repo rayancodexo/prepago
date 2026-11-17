@@ -24,6 +24,24 @@
   nav.innerHTML = '<span class="icon"></span>Colle';
   document.querySelector('[data-page="cnc"]').after(nav);
 
+  /* While the simulator is being finished (PrepagoPlans.COLLE_OPEN false), the page only says it
+     is coming. Local checks turn it on with window.__QA.colleOpen. */
+  const isOpen = () => plans.COLLE_OPEN || window.__QA?.colleOpen === true;
+  if (!isOpen()) {
+    nav.dataset.soon = '';
+    nav.insertAdjacentHTML('beforeend', '<span class="nav-pill">Bientôt</span>');
+    document.querySelector('[data-header-create="colle"]')?.remove();
+  }
+  function soonView() {
+    return `<div class="colle-page colle-soon"><header class="section-head page-header"><div><h1>Colle</h1></div></header>
+      <section class="card colle-soon-card"><span class="colle-soon-tag">Bientôt disponible</span>
+        <h2>Le simulateur de colle arrive bientôt</h2>
+        <p class="colle-muted">On termine le simulateur : un sujet tiré de ton chapitre, le temps de préparation, ton passage chronométré et la grille du colleur pour te corriger, seul ou à deux.</p>
+        <p class="colle-muted">En attendant, entraîne-toi avec Prepago AI ou une épreuve chronométrée.</p>
+        <div class="colle-head-actions"><button type="button" class="primary-btn" data-go="ai">Ouvrir Prepago AI</button><button type="button" class="secondary-btn" data-go="epreuve">Mode Épreuve</button></div>
+      </section></div>`;
+  }
+
   /* ---- Math (KaTeX, loaded on first use) --------------------------------------------------- */
   let mathReady = null;
   function loadMath() {
@@ -384,8 +402,9 @@
 
   /* ---- Page ------------------------------------------------------------------------------------ */
   function renderColle() {
-    if (!setup) setup = loadSetup();
     const page = document.querySelector('#page');
+    if (!isOpen()) {page.innerHTML = soonView(); return;}
+    if (!setup) setup = loadSetup();
     page.innerHTML = view === 'run' && run ? runView() : view === 'upgrade' && upgrade ? `<div class="colle-page"><header class="section-head page-header"><div><h1>Colle</h1></div></header>${window.PrepagoUpgrade.html(upgrade, 'data-colle-home')}</div>`
       : view === 'submit' && form ? formView() : view === 'moderation' && admin ? moderationView() : homeView();
     typeset(page);
@@ -456,7 +475,7 @@
     generation++; stopPolling(); client = c; userId = id; admin = !!isAdmin;
     pools.clear(); attempts = []; contribution = null; submissions = []; pendingReview = 0;
     run = null; form = null; upgrade = null; view = 'home'; query = ''; setup = loadSetup();
-    void refreshMine();
+    if (isOpen()) void refreshMine();
     if (currentPage === 'colle') render();
   }
   function clear() {

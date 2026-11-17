@@ -145,3 +145,9 @@ body[data-page] #page .upgrade-actions a.primary-btn { text-decoration: none; }
   body[data-page="colle"] #page .colle-row-trap input[name=trapAnswer] { grid-column: 1; grid-row: 2; }
   body[data-page="colle"] #page .colle-bareme { display: block; overflow-x: auto; }
 }
+
+/* Coming soon (PrepagoPlans.COLLE_OPEN false). */
+body[data-page="colle"] #page .colle-soon-card { display: grid; gap: 12px; justify-items: start; max-width: 640px; padding: 28px; }
+body[data-page="colle"] #page .colle-soon-card h2 { margin: 0; }
+body[data-page="colle"] #page .colle-soon-card .colle-head-actions { margin-top: 8px; }
+body[data-page="colle"] #page .colle-soon-tag { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--brand-soft, #eef3ff); color: var(--brand, #0a5cff); font-size: 12px; font-weight: 600; }

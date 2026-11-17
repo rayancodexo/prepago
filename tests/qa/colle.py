@@ -47,8 +47,24 @@ def select(page, selector, value):
 
 
 with Site() as site:
-    # ---- Solo colle ---------------------------------------------------------------------------
+    # ---- Closed (PrepagoPlans.COLLE_OPEN false): coming-soon page, Prepago AI under Accueil ----
     page, problems = site.workspace('desktop', colleQuestions=QUESTIONS)
+    goto_page(page, 'colle')
+    check('closed: page says the simulator is coming', 'Bientôt disponible' in (text(page, '#page') or ''), text(page, '#page'))
+    check('closed: no simulator controls', page.locator('[data-colle-start]').count() == 0)
+    check('closed: sidebar Colle item is marked Bientôt', 'Bientôt' in (text(page, '#mainNav [data-page="colle"]') or ''))
+    check('closed: no "Nouvelle colle" in the Nouveau menu', page.locator('[data-header-create="colle"]').count() == 0)
+    check('Prepago AI is in the sidebar, right under Accueil',
+          page.evaluate('''() => { const ai = document.querySelector('#mainNav [data-page="ai"]');
+              return !!ai && ai.offsetParent !== null && ai.previousElementSibling?.dataset.page === 'overview' && ai.innerText.includes('Prepago AI'); }'''))
+    page.locator('.colle-soon [data-go="ai"]').click()
+    page.wait_for_timeout(300)
+    check('closed: "Ouvrir Prepago AI" opens Prepago AI', page.evaluate('currentPage') == 'ai')
+    check('no errors on the closed page', not problems, '; '.join(problems[:3]))
+    page.context.close()
+
+    # ---- Solo colle ---------------------------------------------------------------------------
+    page, problems = site.workspace('desktop', colleOpen=True, colleQuestions=QUESTIONS)
     goto_page(page, 'colle')
     page.wait_for_timeout(500)
     look = page.evaluate("(() => ({title: getComputedStyle(document.querySelector('#page h1')).fontSize, nav: !!document.querySelector('.nav-item[data-page=colle][aria-current=page]')}))()")
@@ -128,7 +144,7 @@ with Site() as site:
 
     # ---- Upgrade screen (free plan) -----------------------------------------------------------
     week = [{'id': f'w{i}', 'user_id': A, 'question_id': QUESTIONS[0]['id'], 'mode': 'solo', 'score': 12, 'checked_items': [], 'created_at': dt.datetime.now(dt.timezone.utc).isoformat()} for i in range(3)]
-    page, problems = site.workspace('desktop', colleQuestions=QUESTIONS, colleAttempts=week)
+    page, problems = site.workspace('desktop', colleOpen=True, colleQuestions=QUESTIONS, colleAttempts=week)
     page.evaluate("window.PrepagoPlans.setOverride('free')")
     goto_page(page, 'colle')
     page.wait_for_timeout(500)
@@ -149,7 +165,7 @@ with Site() as site:
 
     # ---- Moderation (admin) -------------------------------------------------------------------
     baremes = [{'id': 'bbbbbbbb-0000-4000-8000-000000000001', 'paper_id': PAPER['id'], 'questions': [{'number': '1', 'max_points': 4}, {'number': '2', 'max_points': 6}], 'status': 'pending', 'author_user_id': B, 'created_at': '2026-10-02T10:00:00Z'}]
-    page, problems = site.workspace('desktop', admin=True, colleQuestions=QUESTIONS, baremes=baremes, exams=[PAPER])
+    page, problems = site.workspace('desktop', colleOpen=True, admin=True, colleQuestions=QUESTIONS, baremes=baremes, exams=[PAPER])
     goto_page(page, 'colle')
     page.wait_for_timeout(700)
     check('admin sees Modération with the pending count', 'Modération (2)' in (text(page, '.colle-head-actions') or ''), text(page, '.colle-head-actions'))
@@ -173,11 +189,11 @@ with Site() as site:
     page.context.close()
 
     # ---- Duo: A is the colleur, B the étudiant, two phones ------------------------------------
-    host, problems = site.workspace('phone', colleQuestions=QUESTIONS, duoCode='4821')
+    host, problems = site.workspace('phone', colleOpen=True, colleQuestions=QUESTIONS, duoCode='4821')
     guest = host.context.new_page()
     guest_problems = []
     guest.on('pageerror', lambda e: guest_problems.append('script error: ' + str(e)[:300]))
-    guest.add_init_script('window.__QA = Object.assign(window.__QA || {}, {uid: "%s", name: "Mehdi Alaoui"});' % B)
+    guest.add_init_script('window.__QA = Object.assign(window.__QA || {}, {uid: "%s", name: "Mehdi Alaoui", colleOpen: true});' % B)
     guest.goto(site.base + '/#dashboard', wait_until='load')
     guest.wait_for_timeout(1500)
     goto_page(host, 'colle')

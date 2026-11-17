@@ -216,9 +216,12 @@
   };
 
   pageNames.ai = 'Prepago AI';
-  document.querySelector('[data-page="ai"]').innerHTML = '<span class="icon"></span>Prepago AI';
+  // Prepago AI sits right under Accueil in the sidebar and first in the phone "Plus" menu.
+  const aiNav = document.querySelector('[data-page="ai"]');
+  aiNav.innerHTML = '<span class="icon"></span>Prepago AI';
+  document.querySelector('#mainNav [data-page="overview"]')?.after(aiNav);
   const mobileLink = document.querySelector('.studio-more [data-go="ai"]');
-  if (mobileLink) mobileLink.innerHTML = uiIcon('ai') + 'Prepago AI';
+  if (mobileLink) {mobileLink.innerHTML = uiIcon('ai') + 'Prepago AI'; mobileLink.parentElement.prepend(mobileLink);}
   refreshIcons();
 
   document.addEventListener('click', event => {

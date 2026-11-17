@@ -5,7 +5,7 @@ import datetime as dt
 import sys
 
 import qa
-from qa import Site, goto_page
+from qa import Site, goto_page, wait_for
 
 results = []
 KEY = 'mp:sup:math:4e38fac7d8'
@@ -69,7 +69,7 @@ with Site() as site:
     check('preparation timer starts at 3 minutes', text(page, '.colle-phase') == 'PRÉPARATION' or 'Préparation' in (text(page, '.colle-timer') or ''), text(page, '.colle-timer'))
     clock = text(page, '#colleClock') or ''
     check('clock counts down from 03:00', clock in ('03:00', '02:59', '02:58'), clock)
-    page.wait_for_function("document.querySelector('.colle-statement .katex')", timeout=5000)
+    wait_for(page, "document.querySelector('.colle-statement .katex')", timeout=5000)
     check('formulas are rendered with KaTeX', page.locator('.colle-statement .katex').count() > 0)
     check('checklist hidden during the colle', page.locator('.colle-check').count() == 0)
     first = page.evaluate('document.querySelector(".colle-statement").innerText')
@@ -196,14 +196,14 @@ with Site() as site:
     guest.locator('.colle-join [type=submit]').click()
     guest.wait_for_timeout(800)
     check('duo: étudiant waits for the colleur', 'Le colleur va lancer la colle' in (text(guest, '#page') or ''), text(guest, '#page'))
-    host.wait_for_function("document.querySelector('.colle-code')?.innerText.includes('connecté')", timeout=6000)
+    wait_for(host, "document.querySelector('.colle-code')?.innerText.includes('connecté')", timeout=6000)
     check('duo: colleur sees the étudiant join', True)
     host.locator('.colle-code [data-colle-drive=start]').click()
-    guest.wait_for_function("document.querySelector('#colleClock')", timeout=6000)
+    wait_for(guest, "document.querySelector('#colleClock')", timeout=6000)
     check('duo: étudiant sees the question and the timer', guest.locator('.colle-statement').count() == 1 and 'Préparation' in (text(guest, '.colle-timer') or ''), text(guest, '.colle-timer'))
     check('duo: étudiant does not see the checklist', guest.locator('.colle-check, .colle-trap').count() == 0)
     host.locator('[data-colle-drive=pass]').click()
-    guest.wait_for_function("document.querySelector('.colle-timer')?.innerText.includes('Passage')", timeout=6000)
+    wait_for(guest, "document.querySelector('.colle-timer')?.innerText.includes('Passage')", timeout=6000)
     check('duo: phases follow on the étudiant phone', True)
     host.locator('.colle-check input').nth(0).check()
     host.locator('.colle-check input').nth(2).check()
@@ -211,12 +211,12 @@ with Site() as site:
     host.wait_for_timeout(600)
     host.locator('[data-colle-drive=review]').click()
     host.wait_for_timeout(600)
-    guest.wait_for_function("document.querySelector('#page')?.innerText.includes('Le colleur note ta colle')", timeout=6000)
+    wait_for(guest, "document.querySelector('#page')?.innerText.includes('Le colleur note ta colle')", timeout=6000)
     check('duo: étudiant waits while the colleur grades', True)
     host.locator('[data-colle-finish]').click()
     host.wait_for_timeout(800)
     check('duo: colleur sees the final score', '11' in (text(host, '.colle-result') or ''), text(host, '.colle-result'))
-    guest.wait_for_function("document.querySelector('.colle-result')?.innerText.includes('Ta note')", timeout=6000)
+    wait_for(guest, "document.querySelector('.colle-result')?.innerText.includes('Ta note')", timeout=6000)
     check('duo: étudiant sees the same score', '11' in (text(guest, '.colle-result') or ''), text(guest, '.colle-result'))
     duo = [a for a in db(guest, 'colle_attempts') if a['mode'] == 'duo']
     check('duo: attempt saved for the étudiant', len(duo) == 1 and duo[0]['user_id'] == B and duo[0]['score'] == 11 and duo[0]['checked_items'] == [0, 2, 4], duo)

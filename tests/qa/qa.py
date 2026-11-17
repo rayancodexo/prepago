@@ -72,6 +72,22 @@ def sample_sessions():
     return rows
 
 
+
+def wait_for(page, expression, timeout=5000):
+    """Poll a JS expression until it is truthy.
+
+    Playwright's wait_for_function compiles its predicate with eval inside the page, which the
+    site's Content-Security-Policy (no 'unsafe-eval') rightly blocks. page.evaluate goes through
+    the DevTools protocol instead, so the policy stays enforced during every check."""
+    import time
+    end = time.monotonic() + timeout / 1000
+    while True:
+        if page.evaluate('() => Boolean(' + expression + ')'):
+            return
+        if time.monotonic() > end:
+            raise TimeoutError('timed out waiting for: ' + expression)
+        page.wait_for_timeout(50)
+
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass

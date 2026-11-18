@@ -33,14 +33,8 @@ body[data-page="ai"] #page .ai-start-hero h1{margin:6px 0 0;font-size:40px;line-
 .ai-ask-send:hover:not(:disabled){background:var(--brand-hover,var(--brand))}
 .ai-ask-send:disabled{opacity:.5;cursor:default}
 .ai-ask-send .ai-icon{filter:brightness(0) invert(1)}
-.ai-ask-context{display:grid;grid-template-columns:110px repeat(2,minmax(0,1fr));gap:8px;padding-top:10px;border-top:1px solid var(--hairline)}
-.ai-ask-context label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:var(--font-semibold);color:var(--secondary)}
-.ai-ask-context select{min-height:36px;padding:0 8px;border:1px solid var(--hairline);border-radius:8px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:400}
-.ai-ask-consent{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--secondary)}
-.ai-ask-consent input{margin-top:2px;width:16px;height:16px;flex:none}
 .ai-start-status:empty{display:none}
 .ai-start-status{margin:0;font-size:14px;color:#B42318;text-align:center}
-.ai-start-note{margin:0;padding:10px 14px;border-radius:12px;background:var(--brand-tint,#EEF3FF);color:var(--ink);font-size:14px;text-align:center}
 .ai-start-suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .ai-start-suggestions button{display:flex;flex-direction:column;gap:4px;padding:16px;border:1px solid var(--hairline);border-radius:14px;background:var(--surface);text-align:left;cursor:pointer}
 .ai-start-suggestions button:hover{border-color:#C9D5EA;background:var(--surface-hover)}
@@ -62,7 +56,5 @@ body[data-page="ai"] #page .ai-start-hero h1{margin:6px 0 0;font-size:40px;line-
   body[data-page="ai"] #page .ai-start-hero h1{font-size:30px}
   .ai-start-hero p{font-size:15px}
   .ai-ask-modes{margin-left:0}
-  .ai-ask-context{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ai-ask-context label:last-child{grid-column:1 / -1}
-  .ai-start-suggestions{grid-template-columns:minmax(0,1fr)}
+      .ai-start-suggestions{grid-template-columns:minmax(0,1fr)}
 }

@@ -13,7 +13,7 @@
     full_name: cfg.name === undefined ? 'Yasmine El Idrissi' : cfg.name, filiere: cfg.filiere || 'MP',
     trial_started_at: null, trial_ends_at: null,
     subscription_status: inactive ? 'inactive' : 'promo',
-    subscription_ends_at: inactive ? null : days(21), subscription_plan: 'standard',
+    subscription_ends_at: inactive ? null : days(21), subscription_plan: cfg.plan || 'standard',
   };
   let workspace = cfg.state ? { data: cfg.state, updated_at: stamp() } : null;
   let settings = { config: { work: 25, break: 5, dailyHours: 4, cycles: 1, streakMinutes: 30, sound: true, subjectId: '', chapterId: '', goal: '', notes: '' } };
@@ -180,7 +180,13 @@
       return rpc[name] ? ok(rpc[name](args || {})) : { data: null, error: { code: 'QA_UNSTUBBED', message: 'unstubbed rpc ' + name } };
     },
     storage: { from: bucket => ({ async createSignedUrl() { return ok({ signedUrl: 'about:blank' }); }, async upload(path, file) { (window.__QA_UPLOADS = window.__QA_UPLOADS || []).push({ bucket, path, type: file && file.type }); return ok({ path }); } }) },
-    functions: { async invoke(name, o) { calls.push({ fn: name }); return ok({ allowed: false, enabled: false, used_today: 0, daily_limit: 10, mode: 'text' }); } },
+    functions: { async invoke(name, o) {
+      calls.push({ fn: name, body: o && o.body });
+      if (!cfg.aiEnabled) return ok({ allowed: false, enabled: false, used_today: 0, daily_limit: 10, mode: 'text' });
+      if (o && o.body && o.body.action === 'status') return ok({ allowed: true, enabled: true, used_today: 2, daily_limit: 10, mode: 'text' });
+      return ok({ answer: 'Commence par un bilan des forces.\nQue vaut la force du ressort ?', incomplete: false, used_today: 3, daily_limit: 10,
+        reference: { url: 'https://www.cpge.ac.ma/programme', label: 'Programme officiel' } });
+    } },
   };
   window.supabase = { createClient: () => client };
 })();

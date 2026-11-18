@@ -15,11 +15,136 @@
 
   function initialState() {
     return {
-      view: 'workspace', stage: 'demo', mode: 'hint', step: 0,
+      view: 'start', stage: 'demo', mode: 'hint', step: 0,
       file: null, fileKind: null, objectUrl: null, zoom: 100,
       pane: 'document', draft: '', messages: [], notice: '', loading: false,
-      context: {subjectId: '', chapterId: '', level: 'spe'}
+      context: {subjectId: '', chapterId: '', level: 'spe'},
+      // Start screen (design A): a chat-first page. Questions are text, sent only on submit.
+      thread: [], ask: '', askMode: 'hint', asking: false, askNotice: ''
     };
+  }
+
+  const CONSENT_KEY = 'prepago.ai.consent.v1';
+  function hasConsent() {
+    try { return localStorage.getItem(CONSENT_KEY) === 'yes'; } catch { return false; }
+  }
+  function saveConsent() {
+    try { localStorage.setItem(CONSENT_KEY, 'yes'); } catch { /* Asked again next time. */ }
+  }
+
+  // Only subjects and chapters that map to the official programme can be sent to the tutor.
+  function liveSubjects() {
+    return (state.subjects || []).filter(subject => subject.curriculumKey && subject.chapters.some(chapter => chapter.curriculumId));
+  }
+  function liveChapters() {
+    const subject = liveSubjects().find(item => item.id === workspace.context.subjectId);
+    return (subject?.chapters || []).filter(chapter => chapter.curriculumId && chapter.studyLevel === workspace.context.level);
+  }
+
+  const SUGGESTIONS = {
+    photo: null,
+    chapter: {mode: 'explanation', text: 'Résume-moi les méthodes à connaître sur ce chapitre, avec un exemple court pour chacune.'},
+    redaction: {mode: 'correction', text: 'Voici ma rédaction. Dis-moi ce qui me ferait perdre des points au concours :\n\n'},
+    cours: {mode: 'explanation', text: 'Pose-moi 3 questions de cours sur ce chapitre, comme en colle, une à la fois.'}
+  };
+
+  function startMessage(message) {
+    if (message.role === 'me') return `<div class="ai-chat-me"><p>${esc(message.text)}</p></div>`;
+    if (message.role === 'error') return `<div class="ai-chat-error" role="alert">${esc(message.text)}</div>`;
+    return `<article class="ai-chat-ai"><span class="ai-kicker">PREPAGO AI</span><div class="ai-chat-text">${esc(message.text)}</div>
+      ${message.incomplete ? '<p class="ai-chat-meta">La réponse a atteint sa limite de longueur.</p>' : ''}
+      ${message.reference ? `<p class="ai-chat-meta">Programme associé : <a href="${esc(message.reference.url)}" target="_blank" rel="noopener noreferrer">${esc(message.reference.label)} ↗</a></p>` : ''}</article>`;
+  }
+
+  function renderStart() {
+    const live = window.PrepagoAILive?.info?.() || {enabled: false};
+    const subjects = liveSubjects();
+    const chapters = liveChapters();
+    const modes = [['hint', 'Indice'], ['explanation', 'Explication'], ['correction', 'Correction']];
+    const empty = !workspace.thread.length;
+    const recent = workspace.thread.filter(message => message.role === 'me').slice(-6).reverse();
+    const liveNote = live.enabled ? '' : `<p class="ai-start-note">${live.checking ? 'Vérification du tuteur…' : live.unavailable ? 'Connexion au tuteur indisponible pour le moment.' : 'Le tuteur est en cours d’activation. Tu peux déjà essayer l’exemple guidé.'}</p>`;
+    document.querySelector('#page').innerHTML = `<section class="ai-workspace ai-start" aria-label="Prepago AI">
+      <div class="ai-start-layout">
+        <aside class="ai-start-side" aria-label="Tes questions">
+          <button type="button" class="ai-start-new" data-ai-ask-reset>${icon('plus')}Nouvelle question</button>
+          <div class="ai-start-recent"><span class="ai-start-label">RÉCENTS</span>
+            ${recent.length ? recent.map(message => `<p class="ai-start-recent-item">${esc(message.text.slice(0, 60))}</p>`).join('') : '<p class="ai-start-recent-empty">Tes questions de cette séance apparaîtront ici.</p>'}
+          </div>
+          ${live.enabled ? `<div class="ai-start-usage"><div><strong>Questions du jour</strong><span>${live.limit - live.remaining} / ${live.limit}</span></div>
+            <div class="ai-start-bar" role="progressbar" aria-label="Questions utilisées aujourd’hui" aria-valuemin="0" aria-valuemax="${live.limit}" aria-valuenow="${live.limit - live.remaining}"><span style="width:${Math.round(100 * (live.limit - live.remaining) / Math.max(1, live.limit))}%"></span></div>
+            <p>Remis à zéro à minuit (UTC).</p></div>` : ''}
+          <div class="ai-start-links"><button type="button" class="link-btn" data-ai-demo>Voir l’exemple guidé</button><button type="button" class="link-btn" data-ai-planner>Plan de révision</button></div>
+        </aside>
+        <div class="ai-start-main">
+          ${empty ? `<div class="ai-start-hero"><span class="ai-start-pill">Tuteur prépa · ${esc(trackLabel())}</span>
+            <h1>Sur quoi tu bloques&#160;?</h1>
+            <p>Envoie ton exercice. Je te guide un indice à la fois, sans te donner la réponse trop tôt.</p></div>`
+            : `<div class="ai-chat" aria-live="polite">${workspace.thread.map(startMessage).join('')}${workspace.asking ? '<p class="ai-chat-wait">Prepago AI réfléchit…</p>' : ''}</div>`}
+          <form id="aiAskForm" class="ai-ask" aria-busy="${workspace.asking}">
+            <label class="sr-only" for="aiAskText">Ta question</label>
+            <textarea id="aiAskText" rows="${empty ? 3 : 2}" maxlength="5000" placeholder="${empty ? 'Colle ton énoncé, ou décris où tu bloques…' : 'Ta réponse ou ta prochaine question…'}" ${workspace.asking ? 'disabled' : ''}>${esc(workspace.ask)}</textarea>
+            <div class="ai-ask-tools">
+              <button type="button" class="ai-ask-chip" data-ai-ask-file>${icon('paperclip')}Photo ou PDF</button>
+              <div class="ai-ask-modes" role="group" aria-label="Niveau d’aide">${modes.map(([mode, label]) => `<button type="button" data-ai-ask-mode="${mode}" aria-pressed="${workspace.askMode === mode}">${label}</button>`).join('')}</div>
+              <button type="submit" class="ai-ask-send" aria-label="Envoyer" ${workspace.asking ? 'disabled' : ''}>${icon('send')}</button>
+            </div>
+            <div class="ai-ask-context">
+              <label>Année<select id="aiAskLevel"><option value="sup" ${workspace.context.level === 'sup' ? 'selected' : ''}>Sup</option><option value="spe" ${workspace.context.level === 'spe' ? 'selected' : ''}>Spé</option></select></label>
+              <label>Matière<select id="aiAskSubject"><option value="">Choisir</option>${subjects.map(subject => `<option value="${esc(subject.id)}" ${subject.id === workspace.context.subjectId ? 'selected' : ''}>${esc(subject.name)}</option>`).join('')}</select></label>
+              <label>Chapitre<select id="aiAskChapter" ${chapters.length ? '' : 'disabled'}><option value="">${chapters.length ? 'Choisir' : 'Choisis une matière'}</option>${chapters.map(chapter => `<option value="${esc(chapter.id)}" ${chapter.id === workspace.context.chapterId ? 'selected' : ''}>${esc(chapter.name)}</option>`).join('')}</select></label>
+            </div>
+            ${hasConsent() ? '' : '<label class="ai-ask-consent"><input type="checkbox" id="aiAskConsent"> Mon texte est envoyé à OpenAI pour obtenir une réponse. Mes notes et mes fichiers restent dans mon espace.</label>'}
+          </form>
+          <p class="ai-start-status" id="aiAskStatus" role="status">${esc(workspace.askNotice)}</p>
+          ${liveNote}
+          ${empty ? `<div class="ai-start-suggestions">
+            <button type="button" data-ai-suggest="photo"><strong>Photographier un exercice</strong><span>Ouvre ton énoncé à côté du tuteur.</span></button>
+            <button type="button" data-ai-suggest="chapter"><strong>Revoir un chapitre</strong><span>Les méthodes à connaître, en 5 minutes.</span></button>
+            <button type="button" data-ai-suggest="redaction"><strong>Vérifier ma rédaction</strong><span>Ce qui coûte des points au concours.</span></button>
+            <button type="button" data-ai-suggest="cours"><strong>Questions de cours</strong><span>Interroge-moi comme en colle.</span></button>
+          </div>` : ''}
+          <p class="ai-start-foot">Prepago AI peut se tromper. Vérifie avec ton cours.</p>
+        </div>
+      </div>
+      <input type="file" id="aiFileInput" accept="application/pdf,image/jpeg,image/png,image/webp" aria-label="Importer un exercice" hidden>
+    </section>`;
+  }
+
+  async function submitAsk() {
+    const text = workspace.ask.trim();
+    const live = window.PrepagoAILive?.info?.() || {enabled: false};
+    const notice = message => { workspace.askNotice = message; const node = document.querySelector('#aiAskStatus'); if (node) node.textContent = message; };
+    if (workspace.asking) return;
+    if (text.length < 10) return notice('Écris au moins une phrase (10 caractères).');
+    const subject = liveSubjects().find(item => item.id === workspace.context.subjectId);
+    const chapter = liveChapters().find(item => item.id === workspace.context.chapterId);
+    if (!subject || !chapter) { notice('Choisis la matière et le chapitre de ta question.'); document.querySelector(subject ? '#aiAskChapter' : '#aiAskSubject')?.focus(); return; }
+    if (!hasConsent()) {
+      if (!document.querySelector('#aiAskConsent')?.checked) { notice('Coche la case pour accepter l’envoi de ton texte.'); document.querySelector('#aiAskConsent')?.focus(); return; }
+      saveConsent();
+    }
+    if (!live.enabled) return notice(live.unavailable ? 'Connexion au tuteur indisponible pour le moment.' : 'Le tuteur est en cours d’activation. Ta question n’a pas été envoyée.');
+    const request = generation;
+    workspace.thread.push({role: 'me', text});
+    workspace.ask = '';
+    workspace.askNotice = '';
+    workspace.asking = true;
+    repaint();
+    try {
+      const result = await window.PrepagoAILive.ask({question: text, mode: workspace.askMode, level: workspace.context.level, subject: subject.curriculumKey, chapter: chapter.curriculumId});
+      if (request !== generation) return;
+      workspace.thread.push({role: 'ai', text: result.answer, incomplete: result.incomplete, reference: result.reference});
+    } catch (error) {
+      if (request !== generation) return;
+      workspace.thread.push({role: 'error', text: error.message || 'Connexion au tuteur impossible.'});
+    } finally {
+      if (request === generation) {
+        workspace.asking = false;
+        workspace.thread = workspace.thread.slice(-30);
+        repaint('#aiAskText');
+      }
+    }
   }
 
   function releaseDocument() {
@@ -136,7 +261,7 @@
     const isDemo = workspace.stage === 'demo';
     const fileName = workspace.file?.name || (isDemo ? 'Oscillateur harmonique · exemple' : 'Photo ou PDF');
     document.querySelector('#page').innerHTML = `<section class="ai-workspace" data-pane="${workspace.pane}" aria-label="Prepago AI">
-      <header class="ai-workspace-bar"><div><h1>Prepago AI</h1><span class="ai-discovery-label">Mode découverte</span></div><div class="ai-workspace-actions"><button type="button" class="link-btn" data-ai-planner>Plan de révision</button><button type="button" class="primary-btn" data-ai-new>${icon('plus')}Nouvel exercice</button></div></header>
+      <header class="ai-workspace-bar"><div><h1>Prepago AI</h1><span class="ai-discovery-label">Mode découverte</span></div><div class="ai-workspace-actions"><button type="button" class="link-btn" data-ai-ask-reset>Poser une question</button><button type="button" class="link-btn" data-ai-planner>Plan de révision</button><button type="button" class="primary-btn" data-ai-new>${icon('plus')}Nouvel exercice</button></div></header>
       ${window.PrepagoAILive?.markup() || ''}
       <div class="ai-heading"><p class="ai-breadcrumb">${esc(contextLabel())}</p><h2>Travaillons cet exercice ensemble</h2>${!isDemo ? contextControls() : ''}</div>
       <div class="ai-mobile-switch" role="group" aria-label="Afficher une partie de l’espace"><button type="button" data-ai-pane="document" aria-pressed="${workspace.pane === 'document'}">L’exercice</button><button type="button" data-ai-pane="tutor" aria-pressed="${workspace.pane === 'tutor'}">Le tuteur</button></div>
@@ -181,6 +306,7 @@
       workspace.fileKind = kind;
       workspace.objectUrl = objectUrl;
       workspace.stage = 'file';
+      workspace.view = 'workspace';
       workspace.mode = 'hint';
       workspace.step = 0;
       workspace.zoom = 100;
@@ -208,7 +334,10 @@
     if (workspace.view === 'planner') {
       renderPlanner();
       document.querySelector('#page .section-head').insertAdjacentHTML('afterend', '<button type="button" class="ai-back link-btn" data-ai-workspace>Retour à Prepago AI</button>');
-    } else if (canUseWorkspace()) renderWorkspace();
+    } else if (canUseWorkspace()) {
+      if (workspace.view === 'start') renderStart();
+      else renderWorkspace();
+    }
     else {
       clear();
       renderLocked();
@@ -230,10 +359,12 @@
     if (!canUseWorkspace() && !target.hasAttribute('data-ai-planner') && !target.hasAttribute('data-ai-workspace')) return;
     if (target.hasAttribute('data-ai-new')) {
       clear();
+      workspace.view = 'workspace';
       workspace.stage = 'empty';
       repaint('[data-ai-import]');
     } else if (target.hasAttribute('data-ai-demo')) {
       clear();
+      workspace.view = 'workspace';
       repaint('[data-ai-mode="hint"]');
     } else if (target.hasAttribute('data-ai-import')) {
       document.querySelector('#aiFileInput')?.click();
@@ -259,20 +390,52 @@
       workspace.view = 'planner';
       repaint('#revisionForm input');
     } else if (target.hasAttribute('data-ai-workspace')) {
-      workspace.view = 'workspace';
-      repaint('[data-ai-new]');
+      workspace.view = 'start';
+      repaint('#aiAskText');
     } else if (target.hasAttribute('data-ai-source')) {
       document.querySelector('#aiDocumentDialog')?.showModal();
     }
   });
 
+  // Start screen controls.
+  document.addEventListener('click', event => {
+    const target = event.target.closest('[data-ai-ask-reset],[data-ai-ask-mode],[data-ai-ask-file],[data-ai-suggest]');
+    if (!target || currentPage !== 'ai' || target.disabled || !canUseWorkspace() || document.body.classList.contains('auth-pending')) return;
+    if (target.hasAttribute('data-ai-ask-reset')) {
+      const context = workspace.context;
+      clear();
+      workspace.context = context;
+      repaint('#aiAskText');
+    } else if (target.hasAttribute('data-ai-ask-mode')) {
+      workspace.askMode = target.dataset.aiAskMode;
+      repaint(`[data-ai-ask-mode="${workspace.askMode}"]`);
+    } else if (target.hasAttribute('data-ai-ask-file') || target.dataset.aiSuggest === 'photo') {
+      document.querySelector('#aiFileInput')?.click();
+    } else {
+      const suggestion = SUGGESTIONS[target.dataset.aiSuggest];
+      if (!suggestion) return;
+      workspace.ask = suggestion.text;
+      workspace.askMode = suggestion.mode;
+      repaint();
+      const field = document.querySelector('#aiAskText');
+      field?.focus();
+      field?.setSelectionRange(field.value.length, field.value.length);
+    }
+  });
+
   document.addEventListener('input', event => {
+    if (event.target.id === 'aiAskText' && currentPage === 'ai') { workspace.ask = event.target.value.slice(0, 5000); return; }
     if (event.target.id !== 'aiMessage' || currentPage !== 'ai' || !canUseWorkspace()) return;
     workspace.draft = event.target.value.slice(0, 2000);
     document.querySelector('.ai-send').disabled = !workspace.draft.trim();
   });
 
   document.addEventListener('submit', event => {
+    if (event.target.id === 'aiAskForm') {
+      event.preventDefault();
+      if (currentPage === 'ai' && canUseWorkspace() && !document.body.classList.contains('auth-pending')) void submitAsk();
+      return;
+    }
     if (event.target.id !== 'aiComposer') return;
     event.preventDefault();
     if (currentPage !== 'ai' || workspace.stage !== 'demo' || !canUseWorkspace() || document.body.classList.contains('auth-pending')) return;
@@ -289,6 +452,11 @@
     if (currentPage !== 'ai' || !canUseWorkspace() || document.body.classList.contains('auth-pending')) return;
     if (event.target.id === 'aiFileInput' && event.target.files?.[0]) {
       acceptFile(event.target.files[0]);
+    } else if (['aiAskLevel', 'aiAskSubject', 'aiAskChapter'].includes(event.target.id)) {
+      if (event.target.id === 'aiAskLevel') { workspace.context.level = event.target.value; workspace.context.chapterId = ''; }
+      else if (event.target.id === 'aiAskSubject') { workspace.context.subjectId = event.target.value; workspace.context.chapterId = ''; }
+      else workspace.context.chapterId = event.target.value;
+      repaint('#' + event.target.id);
     } else if (['aiLevel', 'aiSubject', 'aiChapter'].includes(event.target.id)) {
       if (event.target.id === 'aiLevel') {
         workspace.context.level = event.target.value;
@@ -318,6 +486,12 @@
     event.preventDefault();
     document.querySelector('#aiDocumentViewer').classList.remove('is-dragging');
     if (event.dataTransfer.files?.[0]) acceptFile(event.dataTransfer.files[0]);
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.target.id !== 'aiAskText' || event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
+    event.preventDefault();
+    document.querySelector('#aiAskForm')?.requestSubmit();
   });
 
   window.addEventListener('prepago:state-replaced', clear);

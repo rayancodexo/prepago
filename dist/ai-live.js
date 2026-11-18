@@ -93,6 +93,24 @@
     }catch(error){if(request===generation){notice.textContent=error.message;void window.PrepagoSupport?.record('ai_request_failed','ai');}}
     finally{if(request===generation){busy=false;controls.forEach((control,index)=>control.disabled=disabledBefore[index]);}}
   });
+  /* Used by the Prepago AI start screen (ai-workspace.js). */
+  function info() {
+    if(status?.enabled)return {enabled:true,remaining:Math.max(0,status.daily_limit-status.used_today),limit:status.daily_limit};
+    return {enabled:false,checking:!!client && !status,unavailable:!!status?.unavailable};
+  }
+  async function ask(body) {
+    if(busy || !client || !userId || !status?.enabled || !window.PrepagoAICore.hasWorkspaceAccess(window.PrepagoAccount))throw new Error(messages.not_configured);
+    const request=generation;busy=true;
+    try{
+      const result=await invoke({request_id:crypto.randomUUID(),...body});
+      if(request!==generation)throw new Error(messages.authentication_required);
+      status={...status,used_today:result.used_today,daily_limit:result.daily_limit};
+      let reference=null;
+      try{const url=new URL(result.reference?.url);if(url.protocol==='https:' && url.hostname==='www.cpge.ac.ma')reference={url:url.href,label:String(result.reference.label || 'Programme officiel')};}catch{/* No arbitrary links. */}
+      return {answer:String(result.answer || ''),incomplete:!!result.incomplete,reference};
+    }catch(error){void window.PrepagoSupport?.record('ai_request_failed','ai');throw error;}
+    finally{if(request===generation)busy=false;}
+  }
   window.addEventListener('pagehide',clear);
-  window.PrepagoAILive=Object.freeze({connect,clear,markup});
+  window.PrepagoAILive=Object.freeze({connect,clear,markup,info,ask});
 })();

@@ -278,11 +278,12 @@ body #sidebar .nav-item.active .icon-svg { filter: brightness(0) invert(1); opac
   body[data-page] .topbar-avatar { width: 34px; height: 34px; flex-basis: 34px; border-radius: 50%; background: var(--brand-solid); color: #fff; font-size: var(--text-sm); }
   body[data-page] #sidebar { width: var(--sidebar-width); top: var(--topbar-height); padding: 20px 12px 16px; background: var(--surface); }
   body[data-page] #sidebar > .brand,
-  body[data-page] #sidebar > .nav-label,
-  body[data-page] .sidebar .nav-item[data-page="ai"] { display: none; }
+  body[data-page] #sidebar > .nav-label { display: none; }
   body[data-page] #mainNav { margin: 0; padding: 0; }
   body[data-page] #sidebar .nav-item { min-height: 44px; height: 44px; margin: 0 0 4px; padding: 0 14px; gap: 12px; border-radius: 8px; font-size: var(--text-sm); line-height: 20px; font-weight: var(--font-medium); color: var(--secondary); }
   body[data-page] #sidebar .nav-item.active { color: #fff; }
+  body[data-page] #sidebar .nav-item .nav-pill { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--hairline); color: var(--secondary); font-size: 11px; font-weight: 600; line-height: 16px; }
+  body[data-page] #sidebar .nav-item[data-soon] { color: var(--tertiary, var(--secondary)); }
   body[data-page] #sidebar .nav-item .icon { display: flex; align-items: center; width: 19px; height: 19px; flex: 0 0 19px; }
   body[data-page] #sidebar .nav-item .icon-svg { width: 19px; height: 19px; opacity: .85; }
   body[data-page] .sidebar-footer { display: flex; flex-direction: column; padding: 12px 0 0; border-top: 1px solid var(--hairline); }

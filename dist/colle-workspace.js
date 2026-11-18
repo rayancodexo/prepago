@@ -37,8 +37,8 @@
       <section class="card colle-soon-card"><span class="colle-soon-tag">Bientôt disponible</span>
         <h2>Le simulateur de colle arrive bientôt</h2>
         <p class="colle-muted">On termine le simulateur : un sujet tiré de ton chapitre, le temps de préparation, ton passage chronométré et la grille du colleur pour te corriger, seul ou à deux.</p>
-        <p class="colle-muted">En attendant, entraîne-toi avec Prepago AI ou une épreuve chronométrée.</p>
-        <div class="colle-head-actions"><button type="button" class="primary-btn" data-go="ai">Ouvrir Prepago AI</button><button type="button" class="secondary-btn" data-go="epreuve">Mode Épreuve</button></div>
+        <p class="colle-muted">En attendant, entraîne-toi avec Prepago AI ou les annales des concours.</p>
+        <div class="colle-head-actions"><button type="button" class="primary-btn" data-go="ai">Ouvrir Prepago AI</button><button type="button" class="secondary-btn" data-go="cnc">Voir les concours</button></div>
       </section></div>`;
   }
 

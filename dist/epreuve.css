@@ -149,3 +149,6 @@ body.epreuve-running .studio-bottom-nav { display: none; }
   .epreuve-focus-clock { justify-items: start; }
   .epreuve-focus-clock strong { font-size: 30px; line-height: 34px; }
 }
+
+/* Mode Épreuve hidden (PrepagoPlans.EPREUVE_OPEN false). */
+html[data-epreuve-closed] [data-page="epreuve"], html[data-epreuve-closed] [data-go="epreuve"] { display: none !important; }

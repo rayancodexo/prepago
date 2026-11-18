@@ -41,3 +41,17 @@ body .weekly-xp-status{display:block;margin-top:8px;font-size:var(--text-xs);col
 body .weekly-xp-card :is(button,input,summary):focus-visible{outline:2px solid var(--brand,#005bff);outline-offset:3px}
 .weekly-xp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:767px){body .weekly-xp-card{margin-top:20px;border-radius:14px}body .weekly-xp-head{padding:20px 16px;gap:12px}body .weekly-xp-head h2{font-size:21px}body .weekly-xp-refresh{width:40px;padding:8px}body .weekly-xp-refresh>span{display:none}body .weekly-xp-personal{padding:16px;align-items:flex-start;flex-wrap:wrap}body .weekly-xp-personal p{max-width:none}body .weekly-xp-table th:first-child,body .weekly-xp-table td:first-child{width:48px;padding-left:12px}body .weekly-xp-table th:nth-child(3){width:48px}body .weekly-xp-table th:last-child{width:92px}body .weekly-xp-table th:last-child,body .weekly-xp-table td:last-child{padding-right:12px}body .weekly-xp-table th,body .weekly-xp-table td{padding:12px 6px}body .weekly-xp-table th:last-child{line-height:1.35}body .weekly-xp-table{font-size:var(--text-sm)}body .weekly-xp-rank{width:24px}body .weekly-xp-foot,body .weekly-xp-message{padding:16px}}
+body .weekly-xp-alias{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;font-size:var(--text-sm);color:var(--secondary,#6b7280)}
+body .weekly-xp-alias strong{color:var(--ink,#111827)}
+body .weekly-xp-alias form{display:grid;gap:6px;width:100%}
+body .weekly-xp-alias label{color:var(--ink,#111827);font-weight:var(--font-medium)}
+body .weekly-xp-alias-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+body .weekly-xp-alias-row input{flex:1 1 180px;min-height:44px;padding:0 12px;border:1px solid var(--hairline,#e5e7eb);border-radius:10px;font-size:var(--text-sm)}
+body .weekly-xp-alias p{margin:0;line-height:1.5}
+body .weekly-xp-alias-error{color:#b42318}
+body .weekly-xp-admin{display:grid;gap:8px;font-size:var(--text-sm);color:var(--secondary,#6b7280)}
+body .weekly-xp-admin form{display:grid;gap:8px}
+body .weekly-xp-admin strong{color:var(--ink,#111827)}
+body .weekly-xp-admin p{margin:0}
+body .weekly-xp-admin-list{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+body .weekly-xp-admin-list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;border-top:1px solid var(--hairline,#e5e7eb)}

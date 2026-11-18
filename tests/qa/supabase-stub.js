@@ -155,6 +155,22 @@
       self: { position: 2, xp: 515, participating: true, is_admin: !!cfg.admin },
     }),
     set_weekly_xp_participation: () => rpc.weekly_xp_leaderboard(),
+    set_weekly_xp_alias: (args) => {
+      const a = (args && args.new_alias) || null;
+      if (a && a.toLowerCase() === 'pris') throw Object.assign(new Error('taken'), { code: '23505' });
+      window.__QA_ALIAS = a;
+      const r = rpc.weekly_xp_leaderboard();
+      r.self.alias = a;
+      if (a) r.top10[1] = { ...r.top10[1], display_name: a, filiere: null, is_alias: true };
+      return r;
+    },
+    admin_weekly_xp_aliases: () => (window.__QA_ADMIN_ALIASES = window.__QA_ADMIN_ALIASES || []),
+    admin_set_weekly_xp_alias: (args) => {
+      if (!/@/.test(args.student_email || '')) throw Object.assign(new Error('none'), { code: 'P0002' });
+      let list = (window.__QA_ADMIN_ALIASES || []).filter(x => x.email !== args.student_email);
+      if (args.new_alias) list = [...list, { email: args.student_email, name: 'Omar K.', alias: args.new_alias, participating: true }];
+      return (window.__QA_ADMIN_ALIASES = list);
+    },
     record_workspace_fault: () => true,
     submit_support_report: () => uid,
     admin_dashboard: () => ({ accounts: [], activity: [] }),
@@ -177,7 +193,8 @@
     async rpc(name, args) {
       calls.push({ rpc: name, args });
       if (colleRpc[name]) { try { return ok(colleRpc[name](args || {})); } catch (e) { return { data: null, error: e }; } }
-      return rpc[name] ? ok(rpc[name](args || {})) : { data: null, error: { code: 'QA_UNSTUBBED', message: 'unstubbed rpc ' + name } };
+      if (rpc[name]) { try { return ok(rpc[name](args || {})); } catch (e) { return { data: null, error: e }; } }
+      return { data: null, error: { code: 'QA_UNSTUBBED', message: 'unstubbed rpc ' + name } };
     },
     storage: { from: bucket => ({ async createSignedUrl() { return ok({ signedUrl: 'about:blank' }); }, async upload(path, file) { (window.__QA_UPLOADS = window.__QA_UPLOADS || []).push({ bucket, path, type: file && file.type }); return ok({ path }); } }) },
     functions: { async invoke(name, o) {

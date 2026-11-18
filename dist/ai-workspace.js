@@ -24,14 +24,6 @@
     };
   }
 
-  const CONSENT_KEY = 'prepago.ai.consent.v1';
-  function hasConsent() {
-    try { return localStorage.getItem(CONSENT_KEY) === 'yes'; } catch { return false; }
-  }
-  function saveConsent() {
-    try { localStorage.setItem(CONSENT_KEY, 'yes'); } catch { /* Asked again next time. */ }
-  }
-
   // Only subjects and chapters that map to the official programme can be sent to the tutor.
   function liveSubjects() {
     return (state.subjects || []).filter(subject => subject.curriculumKey && subject.chapters.some(chapter => chapter.curriculumId));
@@ -58,12 +50,9 @@
 
   function renderStart() {
     const live = window.PrepagoAILive?.info?.() || {enabled: false};
-    const subjects = liveSubjects();
-    const chapters = liveChapters();
     const modes = [['hint', 'Indice'], ['explanation', 'Explication'], ['correction', 'Correction']];
     const empty = !workspace.thread.length;
     const recent = workspace.thread.filter(message => message.role === 'me').slice(-6).reverse();
-    const liveNote = live.enabled ? '' : `<p class="ai-start-note">${live.checking ? 'Vérification du tuteur…' : live.unavailable ? 'Connexion au tuteur indisponible pour le moment.' : 'Le tuteur est en cours d’activation. Tu peux déjà essayer l’exemple guidé.'}</p>`;
     document.querySelector('#page').innerHTML = `<section class="ai-workspace ai-start" aria-label="Prepago AI">
       <div class="ai-start-layout">
         <aside class="ai-start-side" aria-label="Tes questions">
@@ -89,15 +78,8 @@
               <div class="ai-ask-modes" role="group" aria-label="Niveau d’aide">${modes.map(([mode, label]) => `<button type="button" data-ai-ask-mode="${mode}" aria-pressed="${workspace.askMode === mode}">${label}</button>`).join('')}</div>
               <button type="submit" class="ai-ask-send" aria-label="Envoyer" ${workspace.asking ? 'disabled' : ''}>${icon('send')}</button>
             </div>
-            <div class="ai-ask-context">
-              <label>Année<select id="aiAskLevel"><option value="sup" ${workspace.context.level === 'sup' ? 'selected' : ''}>Sup</option><option value="spe" ${workspace.context.level === 'spe' ? 'selected' : ''}>Spé</option></select></label>
-              <label>Matière<select id="aiAskSubject"><option value="">Choisir</option>${subjects.map(subject => `<option value="${esc(subject.id)}" ${subject.id === workspace.context.subjectId ? 'selected' : ''}>${esc(subject.name)}</option>`).join('')}</select></label>
-              <label>Chapitre<select id="aiAskChapter" ${chapters.length ? '' : 'disabled'}><option value="">${chapters.length ? 'Choisir' : 'Choisis une matière'}</option>${chapters.map(chapter => `<option value="${esc(chapter.id)}" ${chapter.id === workspace.context.chapterId ? 'selected' : ''}>${esc(chapter.name)}</option>`).join('')}</select></label>
-            </div>
-            ${hasConsent() ? '' : '<label class="ai-ask-consent"><input type="checkbox" id="aiAskConsent"> Mon texte est envoyé à OpenAI pour obtenir une réponse. Mes notes et mes fichiers restent dans mon espace.</label>'}
           </form>
           <p class="ai-start-status" id="aiAskStatus" role="status">${esc(workspace.askNotice)}</p>
-          ${liveNote}
           ${empty ? `<div class="ai-start-suggestions">
             <button type="button" data-ai-suggest="photo"><strong>Photographier un exercice</strong><span>Ouvre ton énoncé à côté du tuteur.</span></button>
             <button type="button" data-ai-suggest="chapter"><strong>Revoir un chapitre</strong><span>Les méthodes à connaître, en 5 minutes.</span></button>
@@ -117,13 +99,9 @@
     const notice = message => { workspace.askNotice = message; const node = document.querySelector('#aiAskStatus'); if (node) node.textContent = message; };
     if (workspace.asking) return;
     if (text.length < 10) return notice('Écris au moins une phrase (10 caractères).');
+    // No subject/chapter picker on this screen: send them when known (the guided workspace sets them).
     const subject = liveSubjects().find(item => item.id === workspace.context.subjectId);
     const chapter = liveChapters().find(item => item.id === workspace.context.chapterId);
-    if (!subject || !chapter) { notice('Choisis la matière et le chapitre de ta question.'); document.querySelector(subject ? '#aiAskChapter' : '#aiAskSubject')?.focus(); return; }
-    if (!hasConsent()) {
-      if (!document.querySelector('#aiAskConsent')?.checked) { notice('Coche la case pour accepter l’envoi de ton texte.'); document.querySelector('#aiAskConsent')?.focus(); return; }
-      saveConsent();
-    }
     if (!live.enabled) return notice(live.unavailable ? 'Connexion au tuteur indisponible pour le moment.' : 'Le tuteur est en cours d’activation. Ta question n’a pas été envoyée.');
     const request = generation;
     workspace.thread.push({role: 'me', text});
@@ -132,7 +110,7 @@
     workspace.asking = true;
     repaint();
     try {
-      const result = await window.PrepagoAILive.ask({question: text, mode: workspace.askMode, level: workspace.context.level, subject: subject.curriculumKey, chapter: chapter.curriculumId});
+      const result = await window.PrepagoAILive.ask({question: text, mode: workspace.askMode, level: workspace.context.level, ...(subject && chapter ? {subject: subject.curriculumKey, chapter: chapter.curriculumId} : {})});
       if (request !== generation) return;
       workspace.thread.push({role: 'ai', text: result.answer, incomplete: result.incomplete, reference: result.reference});
     } catch (error) {
@@ -452,11 +430,6 @@
     if (currentPage !== 'ai' || !canUseWorkspace() || document.body.classList.contains('auth-pending')) return;
     if (event.target.id === 'aiFileInput' && event.target.files?.[0]) {
       acceptFile(event.target.files[0]);
-    } else if (['aiAskLevel', 'aiAskSubject', 'aiAskChapter'].includes(event.target.id)) {
-      if (event.target.id === 'aiAskLevel') { workspace.context.level = event.target.value; workspace.context.chapterId = ''; }
-      else if (event.target.id === 'aiAskSubject') { workspace.context.subjectId = event.target.value; workspace.context.chapterId = ''; }
-      else workspace.context.chapterId = event.target.value;
-      repaint('#' + event.target.id);
     } else if (['aiLevel', 'aiSubject', 'aiChapter'].includes(event.target.id)) {
       if (event.target.id === 'aiLevel') {
         workspace.context.level = event.target.value;

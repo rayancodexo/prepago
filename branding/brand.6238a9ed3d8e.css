@@ -1,0 +1,14 @@
+@layer prepago-legacy {
+
+.prepago-mark{display:block!important;width:40px!important;height:40px!important;object-fit:contain;flex:0 0 auto;border:0!important;background:none!important;border-radius:0!important;box-shadow:none!important}
+.prepago-wordmark{font-family:Inter,Arial,sans-serif!important;font-size:27px!important;font-weight:700!important;letter-spacing:-1.35px!important;line-height:1.2!important;color:#0b1f44!important}
+#prepagoLanding .lp-brand,.brand,.auth-wordmark,.auth-mobile-brand,.topbar-brand{align-items:center;gap:7px!important;text-decoration:none}
+#prepagoLanding .lp-brand,.brand,.topbar-brand{display:flex}
+#prepagoLanding .lp-brand:before,#prepagoLanding .lp-brand:after,.brand:before,.brand:after,.topbar-brand:before,.topbar-brand:after{content:none!important}
+.auth-wordmark .prepago-wordmark{color:inherit}.auth-wordmark .prepago-mark{background:white!important;border-radius:8px!important}
+.auth-mobile-brand .prepago-wordmark{font-size:24px!important}.brand .prepago-wordmark{font-size:26px!important}
+.topbar-brand .prepago-mark{width:30px!important;height:30px!important}.topbar-brand .prepago-wordmark{font-size:22px!important}
+#prepagoLanding .lp-footer .prepago-mark{width:32px!important;height:32px!important}#prepagoLanding .lp-footer .prepago-wordmark{font-size:23px!important}
+@media(max-width:700px){#prepagoLanding .lp-nav .prepago-mark{width:34px!important;height:34px!important}#prepagoLanding .lp-nav .prepago-wordmark{font-size:24px!important}}
+
+}

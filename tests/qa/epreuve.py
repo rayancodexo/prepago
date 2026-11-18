@@ -34,7 +34,7 @@ def finish(page):
 
 
 with Site() as site:
-    page, problems = site.workspace('desktop', exams=[P1, P2, P3], baremes=[BAREME])
+    page, problems = site.workspace('desktop', epreuveOpen=True, exams=[P1, P2, P3], baremes=[BAREME])
     goto_page(page, 'epreuve')
     page.wait_for_timeout(700)
     look = page.evaluate("(() => ({title: getComputedStyle(document.querySelector('#page h1')).fontSize, nav: !!document.querySelector('.nav-item[data-page=epreuve][aria-current=page]')}))()")
@@ -143,7 +143,7 @@ with Site() as site:
 
     # ---- Free plan: timer only, no chart --------------------------------------------------------
     old = [{'id': 'e1', 'user_id': A, 'paper_id': P1['id'], 'bareme_id': None, 'duration_seconds': 14400, 'used_seconds': 13000, 'pauses': 0, 'scores': [], 'total_20': 12, 'copy_photos': None, 'created_at': '2026-10-20T10:00:00Z'}]
-    page, problems = site.workspace('phone', exams=[P1, P2], examAttempts=old)
+    page, problems = site.workspace('phone', epreuveOpen=True, exams=[P1, P2], examAttempts=old)
     page.evaluate("window.PrepagoPlans.setOverride('free')")
     goto_page(page, 'epreuve')
     page.wait_for_timeout(700)

@@ -23,6 +23,9 @@
   nav.className = 'nav-item'; nav.dataset.page = 'epreuve';
   nav.innerHTML = '<span class="icon"></span>Épreuve';
   (document.querySelector('[data-page="colle"]') || document.querySelector('[data-page="cnc"]')).after(nav);
+  // Hidden while PrepagoPlans.EPREUVE_OPEN is false (local checks turn it on with window.__QA.epreuveOpen).
+  const isOpen = () => plans.EPREUVE_OPEN || window.__QA?.epreuveOpen === true;
+  if (!isOpen()) document.documentElement.dataset.epreuveClosed = '';
 
   /* ---- Data -------------------------------------------------------------------------------- */
   async function load() {
@@ -267,6 +270,7 @@
   const baseRender = render;
   render = function () {
     if (currentPage !== 'epreuve') return baseRender();
+    if (!isOpen()) return navigate('cnc');
     window.PrepagoFocus?.leaveImmersive();
     renderEpreuve();
     document.body.dataset.page = 'epreuve';

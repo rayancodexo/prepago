@@ -25,8 +25,8 @@
    if(g===generation){loading=false;controls();if(dialog.open)renderList();if(currentPage==='cnc')renderCnc()}
   }
  }
- function connect(c,id){generation++;client=c;userId=id;admin=false;rows=[];loaded=false;loading=false;error='';controls();void load()}
- function clear(){generation++;documentRequest++;client=null;userId=null;admin=false;rows=[];loaded=false;loading=false;error='';editing=null;dialog.close();controls()}
+ function connect(c,id){generation++;filters={contest:'',filiere:'',subject:'',year:''};client=c;userId=id;admin=false;rows=[];loaded=false;loading=false;error='';controls();void load()}
+ function clear(){generation++;documentRequest++;filters={contest:'',filiere:'',subject:'',year:''};client=null;userId=null;admin=false;rows=[];loaded=false;loading=false;error='';editing=null;dialog.close();controls()}
  async function pdfUrl(path){const result=await client.storage.from(bucket).createSignedUrl(path,900);if(result.error)throw result.error;return result.data.signedUrl}
  async function validatePdf(file){
   if(!file||file.size===0||file.size>20*1024*1024||!file.name.toLowerCase().endsWith('.pdf'))throw new Error('pdf');
@@ -94,11 +94,36 @@
   try{await updateRow(row,values);if(g!==generation)return;await load();if(editing?.id===id)editor();status('Bibliothèque mise à jour.')}catch(err){if(g===generation)status(message(err))}finally{busy=false;if(g===generation)setBusy(false)}
  });
  document.addEventListener('click',e=>{if(e.target.closest('[data-cnc-manage]'))open();if(e.target.closest('[data-cnc-refresh]'))void load()});
+ /* Filter bar above the filière cards: Concours / Filière / Matière / Année over the published annales.
+    With any filter set, the matching sujets replace the cards; each opens like a year in a filière. */
+ let filters={contest:'',filiere:'',subject:'',year:''};
+ const published=()=>rows.filter(r=>!r.archived&&r.published);
+ function matches(r,keys){return keys.every(k=>!filters[k]||(k==='contest'?cncContest(r.filiere)===filters.contest:String(r[k])===String(filters[k])))}
+ function filterBar(shell){
+  const all=published(),scope=all.filter(r=>matches(r,['contest','filiere']));
+  const select=(key,label,values)=>`<label class="cnc-filter"><span>${label}</span><select data-cnc-filter="${key}"><option value="">Tous</option>${values.map(v=>`<option value="${esc(v)}" ${String(filters[key])===String(v)?'selected':''}>${esc(v)}</option>`).join('')}</select></label>`;
+  const bar=`<section class="card cnc-filters" aria-label="Filtrer les annales">${select('contest','Concours',['CNC','CNAEM'])}${select('filiere','Filière',[...new Set([...Object.keys(CNC_SUBJECTS),...all.map(r=>r.filiere)])].filter(f=>!filters.contest||cncContest(f)===filters.contest))}${select('subject','Matière',[...new Set(scope.map(r=>r.subject))].sort((a,b)=>a.localeCompare(b,'fr')))}${select('year','Année',[...new Set(scope.map(r=>String(r.year)))].sort().reverse())}</section>`;
+  const head=shell.querySelector('.page-header');
+  if(head)head.insertAdjacentHTML('afterend',bar);else shell.insertAdjacentHTML('afterbegin',bar);
+  if(!Object.values(filters).some(Boolean))return;
+  const list=all.filter(r=>matches(r,['contest','filiere','subject','year'])).sort((a,b)=>b.year-a.year||a.filiere.localeCompare(b.filiere)||a.subject.localeCompare(b.subject,'fr'));
+  shell.querySelectorAll('.concours-section-title,.filiere-grid,.concours-fr-grid').forEach(n=>n.remove());
+  shell.querySelector('.cnc-filters').insertAdjacentHTML('afterend',`<section class="card cnc-results"><div class="cnc-results-head"><h2>${list.length} sujet${list.length>1?'s':''}</h2><button type="button" class="link-btn" data-cnc-filter-clear>Effacer les filtres</button></div>
+   ${list.length?list.slice(0,200).map(r=>{const p=getPaper(r.filiere,r.subject,r.year);return `<button type="button" class="cnc-result-row" data-cnc-open="${esc(r.filiere)}|${esc(r.subject)}|${r.year}"><span class="cnc-result-year">${r.year}</span><span class="cnc-result-name"><strong>${esc(r.subject)}</strong><small>${cncContest(r.filiere)} ${esc(r.filiere)}${r.correction_path||r.correction_url?' · corrigé disponible':''}</small></span><span class="paper-status ${p.done?'finished':'ready'}">${paperStatus(p)}</span></button>`}).join(''):`<p class="cnc-results-empty">${loading?'Chargement…':'Aucun sujet pour ces filtres.'}</p>`}</section>`);
+ }
+ document.addEventListener('change',e=>{const f=e.target.closest('[data-cnc-filter]');if(!f||currentPage!=='cnc')return;const key=f.dataset.cncFilter;filters[key]=f.value;
+  // Narrower choices reset the ones that depend on them.
+  if(key==='contest'||key==='filiere'){filters.subject='';filters.year=''}if(key==='contest'&&filters.filiere&&cncContest(filters.filiere)!==filters.contest)filters.filiere='';
+  render();document.querySelector(`[data-cnc-filter="${key}"]`)?.focus()});
+ document.addEventListener('click',e=>{if(currentPage!=='cnc')return;
+  if(e.target.closest('[data-cnc-filter-clear]')){filters={contest:'',filiere:'',subject:'',year:''};render();document.querySelector('[data-cnc-filter="contest"]')?.focus();return}
+  const open=e.target.closest('[data-cnc-open]');if(open){const [f,subject,year]=open.dataset.cncOpen.split('|');openPaper(f,subject,Number(year))}});
  const renderCncBase=renderCnc;
  renderCnc=function(){
   renderCncBase();const shell=document.querySelector('.cnc-shell');
   // The privacy line belongs to the first screen; inside a filière it only shows while loading or on error.
   const settled=loaded&&!loading&&!error;
+  if(cncView.screen==='filieres')filterBar(shell);
   if(!settled||cncView.screen==='filieres')shell.insertAdjacentHTML('afterbegin',`<div class="cnc-library-note${settled?'':' is-status'}"><span role="status">${error?esc(error):loading?'Chargement de la bibliothèque…':loaded?'Les sujets publiés sont partagés. Vos notes et résultats restent privés.':'Bibliothèque en attente de connexion.'}</span><div><button type="button" class="link-btn" data-cnc-refresh ${loading?'disabled':''}>Actualiser</button>${admin?'<button type="button" class="secondary-btn" data-cnc-manage>Gestion des annales</button>':''}</div></div>`);
   if(cncView.screen!=='paper')return;
   const p=getPaper(cncView.filiere,cncView.subject,cncView.year),record=find(p);if(!record)return;

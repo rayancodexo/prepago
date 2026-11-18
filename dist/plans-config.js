@@ -6,6 +6,8 @@
   const FREE_TIER_OPEN = false;
   /* Colle simulator: false shows a "Bientôt disponible" page instead. Set to true to reopen it. */
   const COLLE_OPEN = false;
+  /* Mode Épreuve: false hides it from the menus and sends its page to Concours. Set to true to bring it back. */
+  const EPREUVE_OPEN = false;
   const LIMITS = {
     free: {
       colleSoloPerWeek: 3,   // solo colles per week (Monday to Sunday)
@@ -49,7 +51,7 @@
     return {ok: true, feature, plan};
   }
   root.PrepagoPlans = {
-    FREE_TIER_OPEN, COLLE_OPEN, LIMITS, NAMES, hasAccess, planOf, limitsOf, check,
+    FREE_TIER_OPEN, COLLE_OPEN, EPREUVE_OPEN, LIMITS, NAMES, hasAccess, planOf, limitsOf, check,
     /* For tests and previews only: force a plan in this tab. */
     setOverride(plan) { override = LIMITS[plan] ? plan : null; }
   };

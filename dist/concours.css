@@ -1,0 +1,16 @@
+/* Concours page: filter bar above the filière cards, and the filtered sujets. */
+body[data-page="cnc"] #page .cnc-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 24px;padding:16px 20px}
+body[data-page="cnc"] #page .cnc-filter{display:grid;gap:6px;min-width:0;margin:0}
+body[data-page="cnc"] #page .cnc-filter>span{color:var(--ink);font-size:var(--text-sm);font-weight:var(--font-medium)}
+body[data-page="cnc"] #page .cnc-filter select{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--hairline);border-radius:10px;background:var(--surface);color:var(--ink);font-size:var(--text-sm)}
+body[data-page="cnc"] #page .cnc-results{padding:16px 20px}
+body[data-page="cnc"] #page .cnc-results-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+body[data-page="cnc"] #page .cnc-results-head h2{margin:0;font-size:var(--text-base,16px)}
+body[data-page="cnc"] #page .cnc-result-row{display:grid;grid-template-columns:56px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-height:56px;margin:0;padding:8px 10px;border:0;border-top:1px solid var(--hairline);border-radius:0;background:transparent;text-align:left;cursor:pointer}
+body[data-page="cnc"] #page .cnc-result-row:hover{background:var(--surface-hover)}
+body[data-page="cnc"] #page .cnc-result-year{color:var(--secondary);font-size:var(--text-sm);font-variant-numeric:tabular-nums}
+body[data-page="cnc"] #page .cnc-result-name{display:grid;min-width:0}
+body[data-page="cnc"] #page .cnc-result-name strong{overflow:hidden;color:var(--ink);font-size:var(--text-sm);text-overflow:ellipsis;white-space:nowrap}
+body[data-page="cnc"] #page .cnc-result-name small{color:var(--secondary);font-size:12px}
+body[data-page="cnc"] #page .cnc-results-empty{margin:8px 0 0;color:var(--secondary);font-size:var(--text-sm)}
+@media (max-width:760px){body[data-page="cnc"] #page .cnc-filters{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px}}

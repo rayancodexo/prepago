@@ -128,7 +128,7 @@ function setMode(nextMode) {
   signupFields.querySelector('[name="full_name"]').required = signingUp;
   signupFields.querySelector('[name="filiere"]').required = signingUp;
   const prepaPicker = signupFields.querySelector('[data-prepa-picker]')?.__prepa;
-  if (prepaPicker) prepaPicker.required = signingUp;
+  if (prepaPicker) prepaPicker.required = false; // optional at sign-up
   if (codeField) codeField.hidden = !signingUp;
   form.elements.password.autocomplete = signingUp ? 'new-password' : 'current-password';
   form.elements.password.minLength = signingUp ? 8 : 1;

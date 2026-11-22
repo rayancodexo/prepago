@@ -46,6 +46,6 @@ Pushing to `main` runs the "Publish site" workflow, which copies `dist/` to the 
 
 ## Access
 
-Prepago AI shows a "Bientôt" page to students; admin accounts still see the real workspace to test it. At sign-up, students pick their prépa from a list of public CPGE centres (`dist/prepa-picker.js`) or type it if it isn't listed; it is saved in `profiles.prepa`.
+Prepago AI shows a "Bientôt" page to students; admin accounts still see the real workspace to test it. At sign-up, students can pick their prépa (optional) from a list of public CPGE centres (`dist/prepa-picker.js`) or type it if it isn't listed; it is saved in `profiles.prepa`.
 
 Students get in with an activation code, entered at sign-up or on the activation screen. Codes are created in the admin panel inside the workspace (admin accounts only).

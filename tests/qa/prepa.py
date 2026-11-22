@@ -1,5 +1,5 @@
 """Checks for the prépa picker: search, pick from the list, "Ma prépa n'est pas dans la liste"
-with a typed name, required at sign-up, sent with the account, editable in Mon compte.
+with a typed name, optional at sign-up, sent with the account, editable in Mon compte.
 Run: python3 tests/qa/prepa.py"""
 import sys
 
@@ -42,15 +42,22 @@ with Site() as site:
               page.locator('#authForm .prepa-not-listed').count() == 1 and 'Aucune prépa' in page.inner_text('#authForm .prepa-list'))
         check(f'{viewport}: fits the width', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
 
-        # ---- Required at sign-up ----------------------------------------------------------------
+        check(f'{viewport}: label says optional', 'facultatif' in page.inner_text('#authForm .prepa-label'))
+        page.context.close()
+
+        # ---- Optional at sign-up ----------------------------------------------------------------
+        page, problems = site.open('/#inscription', viewport, {'mode': 'signed-out'})
         fill_signup(page, 'sans-prepa@example.invalid')
-        page.fill('#authForm .prepa-query', '')
         page.click('#authSubmit')
-        page.wait_for_timeout(400)
-        check(f'{viewport}: sign-up without prépa is blocked', not signups(page))
-        check(f'{viewport}: and says why', page.is_visible('#authForm .prepa-error'))
+        page.wait_for_timeout(500)
+        sent = signups(page)
+        check(f'{viewport}: sign-up without prépa goes through', len(sent) == 1 and 'prepa' not in sent[0]['data'], sent)
+        check(f'{viewport}: no prépa error shown', not page.is_visible('#authForm .prepa-error'))
+        page.context.close()
 
         # ---- Pick, then send --------------------------------------------------------------------
+        page, problems = site.open('/#inscription', viewport, {'mode': 'signed-out'})
+        fill_signup(page, 'avec-prepa@example.invalid')
         page.fill('#authForm .prepa-query', 'oujda')
         page.locator('#authForm .prepa-list [data-prepa-pick]').first.click()
         check(f'{viewport}: chosen prépa shown', 'Oujda' in page.inner_text('#authForm .prepa-chosen'))
@@ -67,9 +74,6 @@ with Site() as site:
     fill_signup(page, 'autre@example.invalid')
     page.locator('#authForm .prepa-not-listed').click()
     check('not-listed opens a text box', page.is_visible('#authForm .prepa-other-input'))
-    page.click('#authSubmit')
-    page.wait_for_timeout(300)
-    check('empty typed name is refused', not signups(page) and page.is_visible('#authForm .prepa-error'))
     page.fill('#authForm .prepa-other-input', '  CPGE   Privée  Excellence — Casablanca ')
     page.click('#authSubmit')
     page.wait_for_timeout(500)

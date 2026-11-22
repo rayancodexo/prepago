@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /connexion/
+Disallow: /inscription/
+Disallow: /verification/
+Disallow: /mot-de-passe-oublie/
+Disallow: /nouveau-mot-de-passe/
+Disallow: /activation/
+Sitemap: https://www.prepago.site/sitemap.xml

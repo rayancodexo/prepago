@@ -1,0 +1,66 @@
+.subject-learning-workspace{max-width:1240px;margin:0 auto}
+.programme-banner{display:flex;align-items:center;flex-wrap:wrap;gap:16px;padding:18px 21px;margin:0 0 25px;border:1px solid #dce7e3;border-radius:12px;background:#f6faf8}
+.programme-icon{display:grid;place-items:center;flex:0 0 40px;height:40px;border-radius:10px;color:#237668;background:#e6f1ec}
+.programme-banner-copy{flex:1;min-width:190px}
+.programme-banner strong{font-size:15px;color:#28554b}
+.programme-banner p{margin:5px 0 0;font-size:var(--text-sm);color:#677a71;line-height:1.5}
+.programme-banner p span{margin:0 7px;color:#acb9b3}
+.programme-source-links{display:flex;align-items:center;flex-wrap:wrap;gap:18px;font-size:var(--text-sm)}
+.programme-source-links a{color:#267265;text-decoration:none;border-bottom:1px solid #aecbbf;padding:5px 0}
+.programme-source-links a:hover{border-color:#267265}
+.programme-source-links .link-btn{font-size:var(--text-sm);font-weight:var(--font-medium)}
+.programme-subject-note{font-size:var(--text-sm);line-height:1.7;color:#68766e;padding:0 2px;margin:-9px 0 22px;max-width:750px}
+.chapter-classification .chapter-programme-reference{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-label);color:#647b71;text-decoration:none;margin-left:auto}
+.chapter-programme-reference:hover{text-decoration:underline}
+.chapter-programme-reference .icon-svg{width:14px;height:14px}
+@media(max-width:650px){.programme-banner{padding:17px;gap:12px}.programme-source-links{gap:14px}.chapter-classification .chapter-programme-reference{margin-left:0}}
+.subject-learning-workspace .section-head{gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.subject-learning-workspace .section-head>div{flex:1 1 300px}
+.subject-learning-workspace .section-head h1{overflow-wrap:anywhere}
+.learning-breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 23px;font-size:var(--text-label);color:#69737d}
+.learning-breadcrumb button{border:0;padding:4px 0;background:transparent;color:inherit;font:inherit;cursor:pointer;overflow-wrap:anywhere;text-align:left}
+.learning-breadcrumb button:hover{color:#087f79;text-decoration:underline}
+.learning-breadcrumb [aria-current]{color:#233a41;font-weight:var(--font-semibold)}
+.breadcrumb-divider{color:#aab3b8}
+.learning-section-label{margin:24px 0 18px}
+.learning-section-label h2{font-size:var(--text-panel);margin:0 0 7px;color:#233a41}
+.learning-section-label p{font-size:var(--text-sm);margin:0;color:#66757d;line-height:1.6}
+.subject-level-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.learning-choice-card{display:flex;flex-direction:column;align-items:stretch;border:1px solid #dfe7e6;border-radius:16px;background:#fff;padding:26px;color:#233a41;font:inherit;text-align:left;cursor:pointer;min-width:0;box-shadow:0 3px 12px #183c3305;transition:border-color .15s,box-shadow .15s,transform .15s}
+.learning-choice-card:hover{border-color:#0d8c82;box-shadow:0 8px 24px #183c3310;transform:translateY(-2px)}
+.learning-choice-card:focus-visible,.learning-breadcrumb button:focus-visible{outline:3px solid #169b8e;outline-offset:4px}
+.learning-choice-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:23px}
+.learning-year-badge{background:#e9f6f2;color:#176b5c;border-radius:7px;padding:7px 12px;font-size:var(--text-xs);font-weight:var(--font-semibold)}
+.learning-choice-number{font-size:27px;letter-spacing:-1px;font-weight:var(--font-semibold);color:#a4b8b3}
+.learning-choice-card h2{margin:0 0 9px;font-size:26px;line-height:1.2;letter-spacing:-.6px;overflow-wrap:anywhere}
+.learning-choice-card>p{color:#65757d;font-size:var(--text-sm);line-height:1.6;margin:0 0 24px;flex:1}
+.learning-choice-stats{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:var(--text-xs);color:#69767e;margin-bottom:12px}
+.learning-choice-stats strong{font-size:17px;color:#233a41;font-weight:var(--font-semibold)}
+.learning-choice-progress{display:flex;align-items:center;gap:12px;font-size:var(--text-xs);color:#47716b}
+.learning-choice-progress>.progress-bar{flex:1;margin:0;height:6px;background:#eef2f1}
+.subject-learning-workspace .progress-fill{background:#158478}
+.learning-choice-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #edf1f0;margin-top:22px;padding-top:17px;font-size:var(--text-label);font-weight:var(--font-semibold);color:#087a71}
+.learning-choice-footer .icon-svg{width:17px;height:17px}
+.subject-level-card:nth-child(2) .learning-year-badge{background:#eef1fb;color:#515d91}
+.subject-level-card:nth-child(2) .learning-choice-number{color:#a6aecb}
+.physics-theme-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.physics-theme-card{padding:23px}
+.physics-theme-symbol{display:grid;place-items:center;width:43px;height:43px;background:#eef6f7;color:#297581;border-radius:11px;font-size:25px;margin-bottom:19px}
+.physics-theme-card h2{font-size:var(--text-panel);letter-spacing:-.3px;line-height:1.4}
+.physics-theme-card>p{font-size:var(--text-label);margin-bottom:22px}
+.learning-classify-notice{display:flex;align-items:center;gap:15px;border:1px solid #dce7e3;border-radius:12px;background:#f4f9f7;padding:20px;margin-top:23px}
+.learning-notice-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:10px;background:#e2eee9;color:#47766a}
+.learning-classify-notice>div{flex:1;min-width:0}
+.learning-classify-notice strong{font-size:var(--text-sm);color:#315249}
+.learning-classify-notice p{margin:5px 0 0;color:#64776e;font-size:var(--text-label);line-height:1.6}
+.learning-classify-notice .secondary-btn{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;background:#fff;font-size:var(--text-xs)}
+.learning-total{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:24px;font-size:var(--text-xs);color:#76847e}
+.learning-total strong{font-weight:var(--font-medium);color:#52645d}
+.subject-learning-workspace .subject-detail-summary{margin-bottom:22px}
+.subject-learning-workspace .subject-detail-summary .progress-bar{margin-top:11px}
+.chapter-classification{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chapter-classification>span{padding:4px 8px;border-radius:5px;background:#edf5f2;color:#3e7266;font-size:11px;font-weight:var(--font-semibold)}
+.chapter-classification .link-btn{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-xs);padding:4px 0}
+@media(max-width:1100px){.physics-theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.learning-classify-notice{flex-wrap:wrap}.learning-classify-notice .secondary-btn{margin-left:53px}}
+@media(max-width:650px){.subject-level-grid,.physics-theme-grid{grid-template-columns:1fr;gap:14px}.learning-choice-card{padding:22px}.subject-learning-workspace .section-head{margin-bottom:20px}.subject-learning-workspace .section-head>div{flex-basis:100%}.learning-classify-notice{padding:17px;gap:12px}.learning-classify-notice .secondary-btn{margin-left:0}.learning-classify-notice>div{flex-basis:calc(100% - 50px)}.learning-breadcrumb{font-size:var(--text-xs);gap:8px}}
+@media(prefers-reduced-motion:reduce){.learning-choice-card{transition:none}.learning-choice-card:hover{transform:none}}

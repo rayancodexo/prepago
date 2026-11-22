@@ -1,0 +1,37 @@
+/* Prépa picker (sign-up and Mon compte). */
+.prepa-picker { display: block; margin: 0 0 16px; grid-column: 1 / -1; min-width: 0; }
+.prepa-picker .prepa-label { display: block; font-size: 13px; font-weight: var(--font-medium, 500); line-height: 1.4; color: var(--ink, #14213A); }
+.prepa-picker .prepa-query,
+.prepa-picker .prepa-other-input {
+  display: block; width: 100%; height: 46px; margin-top: 6px; padding: 0 14px;
+  border: 1px solid var(--border, #D9E0EA); border-radius: 8px; background: var(--surface, #fff);
+  color: var(--ink, #14213A); font: inherit; font-size: 15px; box-sizing: border-box;
+}
+.prepa-picker .prepa-query:focus,
+.prepa-picker .prepa-other-input:focus { border-color: var(--brand, #0A5CFF); outline: 0; box-shadow: 0 0 0 3px #0A5CFF29; }
+.prepa-picker .prepa-list {
+  list-style: none; margin: 6px 0 0; padding: 4px; max-height: 196px; overflow-y: auto;
+  border: 1px solid var(--border, #D9E0EA); border-radius: 8px; background: var(--surface, #fff);
+}
+.prepa-picker .prepa-list button {
+  display: block; width: 100%; min-height: 38px; padding: 8px 10px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--ink, #14213A); font: inherit; font-size: 14px; text-align: left; cursor: pointer;
+}
+.prepa-picker .prepa-list button:hover,
+.prepa-picker .prepa-list button:focus-visible { background: var(--surface-hover, #F2F5FA); outline: 0; }
+.prepa-picker .prepa-list .prepa-not-listed { color: var(--brand, #0A5CFF); font-weight: var(--font-medium, 500); border-top: 1px solid var(--border, #D9E0EA); border-radius: 0 0 6px 6px; }
+.prepa-picker .prepa-empty { padding: 8px 10px; color: var(--muted, #667085); font-size: 14px; }
+.prepa-picker .prepa-chosen {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; margin-top: 6px;
+  padding: 0 6px 0 14px; border: 1px solid var(--border, #D9E0EA); border-radius: 8px; background: var(--surface, #fff);
+}
+.prepa-picker .prepa-chosen[hidden], .prepa-picker .prepa-search[hidden], .prepa-picker .prepa-other[hidden], .prepa-picker .prepa-error[hidden] { display: none; }
+.prepa-picker .prepa-chosen-name { font-size: 15px; color: var(--ink, #14213A); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.prepa-picker .prepa-change,
+.prepa-picker .prepa-back {
+  flex: none; min-height: 34px; padding: 6px 10px; border: 0; border-radius: 6px; background: transparent;
+  color: var(--brand, #0A5CFF); font: inherit; font-size: 13px; font-weight: var(--font-medium, 500); cursor: pointer;
+}
+.prepa-picker .prepa-back { margin-top: 4px; padding-left: 0; }
+.prepa-picker .prepa-error { margin: 6px 0 0; color: var(--danger, #C62828); font-size: 13px; }
+@media (max-width: 640px) { .prepa-picker .prepa-query, .prepa-picker .prepa-other-input { font-size: 16px; height: 44px; } }

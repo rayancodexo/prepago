@@ -1,0 +1,328 @@
+/* Login, sign-up, e-mail confirmation, password and activation screens (October 2026 redesign).
+   Loaded after every other stylesheet. Rules start with #authGate so they win over the older
+   auth styles spread across auth, studio-pages, typography, code-journey and legal. */
+
+/* ---- No scrollbar ----------------------------------------------------------------------
+   While the gate is open, the page behind it must not scroll: it used to be a few pixels
+   taller than the window, which put a scrollbar (and a reserved white strip) on the right. */
+html:has(> body.auth-pending:not(.landing-view)) { overflow: hidden; scrollbar-gutter: auto; }
+body.auth-pending:not(.landing-view) { overflow: hidden; }
+
+#authGate {
+  --paper: #FBFCFF;
+  --paper-grid: #E2EAF7;
+  --paper-margin: #F0B8C2;
+  --field-border: #D5DDEA;
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(460px, 1fr);
+  /* Without this the row stays at the window height and a tall form (sign-up) spills out of the top. */
+  grid-auto-rows: max-content;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  /* Short screens (sign-up on a small laptop) can still scroll, without a visible bar. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+#authGate::-webkit-scrollbar { display: none; width: 0; height: 0; }
+#authGate [hidden] { display: none !important; }
+
+/* ---- Left: a sheet of squared paper ---------------------------------------------------- */
+#authGate .auth-brand-panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px clamp(32px, 4vw, 64px) 44px 112px;
+  overflow: hidden;
+  border-right: 1px solid var(--hairline);
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 79px, var(--paper-margin) 79px, var(--paper-margin) 80px, transparent 80px),
+    linear-gradient(var(--paper-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--paper-grid) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+  background-position: 0 0, 0 0, 0 0;
+}
+#authGate .auth-brand-panel::before,
+#authGate .auth-brand-panel::after { content: none; display: none; }
+
+#authGate .auth-wordmark { display: flex; align-items: center; gap: 10px; margin: 0; }
+#authGate .auth-wordmark .prepago-mark { width: 34px; height: 34px; }
+#authGate .auth-wordmark .prepago-wordmark { font-size: 22px; font-weight: var(--font-bold); letter-spacing: -.035em; color: var(--ink) !important; }
+
+#authGate .auth-countdown { margin: 0; }
+#authGate .auth-countdown p { margin: 0; }
+#authGate .auth-countdown-value {
+  margin-left: -.06em !important;
+  font-size: clamp(104px, 10.5vw, 184px);
+  font-weight: var(--font-semibold);
+  line-height: .86;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand);
+  white-space: nowrap;
+}
+#authGate .auth-countdown-label {
+  margin-top: 22px !important;
+  font-size: 20px;
+  font-weight: var(--font-medium);
+  line-height: 1.35;
+  letter-spacing: -.015em;
+  color: var(--ink);
+}
+#authGate .auth-countdown-date { margin-top: 6px !important; font-size: 14px; line-height: 1.5; color: var(--secondary); }
+
+#authGate .auth-paper-foot { max-width: 36rem; }
+#authGate .auth-paper-foot h1 {
+  margin: 0 0 8px;
+  max-width: none;
+  font-size: 24px;
+  font-weight: var(--font-semibold);
+  line-height: 1.25;
+  letter-spacing: -.025em;
+  color: var(--ink);
+}
+#authGate .auth-paper-foot p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--secondary); text-wrap: pretty; }
+
+/* ---- Right: the form ------------------------------------------------------------------- */
+#authGate .auth-form-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 48px clamp(32px, 5vw, 80px);
+  background: var(--surface);
+}
+#authGate .auth-card { width: min(400px, 100%); max-width: 400px; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; text-align: left; }
+#authGate .auth-mobile-brand { display: none; }
+#authGate .auth-card .auth-kicker { display: none; }
+
+#authGate .auth-card h2 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  font-weight: var(--font-semibold);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+#authGate .auth-card .auth-subtitle { margin: 0 0 28px; font-size: 15px; line-height: 1.5; color: var(--secondary); }
+
+/* Connexion / Créer un compte */
+#authGate .auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 24px;
+  padding: 3px;
+  border: 0;
+  border-radius: 10px;
+  background: #EEF2F8;
+}
+#authGate .auth-tabs button {
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--secondary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: color var(--motion), background-color var(--motion);
+}
+#authGate .auth-tabs button:hover { color: var(--ink); }
+#authGate .auth-tabs button.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px #14213A14, 0 0 0 1px #14213A0D; }
+#authGate .auth-tabs button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* Fields */
+#authGate .auth-card label {
+  display: block;
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: var(--font-medium);
+  line-height: 1.4;
+  color: var(--ink);
+}
+#authGate .auth-card input,
+#authGate .auth-card select {
+  display: block;
+  width: 100%;
+  height: 46px;
+  min-height: 46px;
+  margin-top: 6px;
+  padding: 0 14px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  box-shadow: 0 1px 2px #14213A08;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: var(--font-regular);
+  transition: border-color var(--motion), box-shadow var(--motion);
+}
+#authGate .auth-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  background-image: url('/icons/chevron-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+  cursor: pointer;
+}
+#authGate .auth-card input::placeholder { color: #8A94A6; opacity: 1; }
+#authGate .auth-card input:hover,
+#authGate .auth-card select:hover { border-color: #B9C6DA; }
+#authGate .auth-card input:focus,
+#authGate .auth-card input:focus-visible,
+#authGate .auth-card select:focus,
+#authGate .auth-card select:focus-visible { border-color: var(--brand); outline: 0; box-shadow: 0 0 0 3px #0A5CFF29; }
+
+#authGate .auth-signup-fields { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+#authGate .auth-code-field { margin: 0 0 18px; }
+#authGate .auth-code-field label { margin-bottom: 6px; }
+#authGate .auth-code-hint { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--secondary); }
+#authGate .auth-code-hint a { color: var(--brand); font-weight: var(--font-medium); text-decoration: none; }
+#authGate .auth-code-hint a:hover { text-decoration: underline; }
+
+/* Buttons */
+#authGate .auth-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  height: 46px;
+  min-height: 46px;
+  margin: 8px 0 0;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--brand-solid);
+  box-shadow: 0 1px 2px #0A5CFF40, inset 0 1px 0 #FFFFFF26;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: var(--font-semibold);
+  transform: none;
+  cursor: pointer;
+  transition: background-color var(--motion);
+}
+#authGate .auth-submit:hover { background: var(--brand-solid-hover); transform: none; }
+#authGate .auth-submit:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+#authGate .auth-submit:disabled { opacity: .6; cursor: wait; }
+
+#authGate .auth-forgot,
+#authGate .auth-back {
+  display: block;
+  margin: 14px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font: inherit;
+  font-size: 14px;
+  font-weight: var(--font-medium);
+  cursor: pointer;
+}
+#authGate .auth-forgot:hover,
+#authGate .auth-back:hover { text-decoration: underline; text-underline-offset: 3px; }
+#authGate .auth-forgot:focus-visible,
+#authGate .auth-back:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 2px; }
+
+#authGate .auth-card .auth-status { min-height: 20px; margin: 10px 0 0; font-size: 13px; line-height: 1.45; text-align: left; color: var(--danger); }
+#authGate .auth-card .auth-status.success { color: var(--success); }
+
+/* Activation code note, then the legal line */
+#authGate .auth-trial-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #D9E5FF;
+  border-radius: 10px;
+  background: var(--brand-tint);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+#authGate .auth-trial-note .auth-check { display: none; }
+#authGate .auth-trial-note > span:last-child { display: block; }
+#authGate .auth-trial-note strong { display: block; font-size: 14px; font-weight: var(--font-semibold); color: var(--ink); }
+#authGate .auth-trial-note small { display: block; margin-top: 2px; font-size: 13px; color: var(--secondary); }
+#authGate .auth-trial-note a { color: var(--brand); font-weight: var(--font-medium); text-decoration: none; white-space: nowrap; }
+#authGate .auth-trial-note a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* On sign-up the code field already says where to get a code. */
+#authGate .auth-card:has(#authCodeField:not([hidden])) .auth-trial-note { display: none; }
+
+#authGate .auth-card .auth-legal-links { margin: 16px 0 0; font-size: 12px; line-height: 1.55; color: var(--secondary); }
+#authGate .auth-legal-links a { color: inherit; text-decoration: underline; text-decoration-color: #C3CBD8; text-underline-offset: 2px; }
+#authGate .auth-legal-links a:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+/* E-mail confirmation */
+#authGate .auth-confirm-card { text-align: left; }
+#authGate .auth-confirm-card .auth-mail-icon { margin: 0 0 20px; width: 48px; height: 48px; border-radius: 12px; font-size: 22px; }
+#authGate .auth-confirm-card .auth-subtitle { margin-bottom: 4px; }
+#authGate .auth-confirm-email { margin: 0; font-size: 15px; font-weight: var(--font-semibold); color: var(--ink); }
+#authGate .auth-confirm-help { max-width: none; margin: 16px 0 20px; font-size: 14px; line-height: 1.55; color: var(--secondary); }
+
+/* Activation (signed in, no access yet) */
+#authGate .auth-access { width: min(560px, 100%); }
+
+/* ---- Short laptop screens: tighten the form so sign-up fits without scrolling ---------- */
+@media (min-width: 960px) and (max-height: 820px) {
+  #authGate .auth-form-panel { padding-top: 28px; padding-bottom: 28px; }
+  #authGate .auth-card h2 { font-size: 30px; }
+  #authGate .auth-card .auth-subtitle { margin-bottom: 20px; }
+  #authGate .auth-tabs { margin-bottom: 18px; }
+  #authGate .auth-card label { margin-bottom: 12px; }
+  #authGate .auth-code-field { margin-bottom: 12px; }
+  #authGate .auth-card input,
+  #authGate .auth-card select { height: 44px; min-height: 44px; }
+  #authGate .auth-submit { height: 44px; min-height: 44px; }
+}
+
+/* ---- Tablet and phone: the form alone -------------------------------------------------- */
+@media (max-width: 959px) {
+  #authGate { display: block; }
+  #authGate .auth-brand-panel { display: none; }
+  #authGate .auth-form-panel { justify-content: flex-start; padding: 32px 24px 40px; }
+  #authGate .auth-card,
+  #authGate .auth-access { margin-top: clamp(0px, 8vh, 72px); }
+  #authGate .auth-mobile-brand { display: flex; align-items: center; gap: 10px; margin: 0 0 40px; }
+  #authGate .auth-mobile-brand .prepago-mark { width: 32px; height: 32px; }
+  #authGate .auth-mobile-brand .prepago-wordmark { font-size: 21px; font-weight: var(--font-bold); letter-spacing: -.035em; color: var(--ink) !important; }
+}
+@media (max-width: 767px) {
+  /* 16px keeps iOS from zooming into the field. */
+  #authGate .auth-card input,
+  #authGate .auth-card select { font-size: 16px; }
+}
+@media (max-width: 479px) {
+  #authGate .auth-form-panel { padding: 24px 20px 32px; }
+  #authGate .auth-card,
+  #authGate .auth-access { margin-top: 8px; }
+  #authGate .auth-mobile-brand { margin-bottom: 32px; }
+  #authGate .auth-card h2 { font-size: 28px; }
+  #authGate .auth-signup-fields { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #authGate * { transition: none !important; }
+}

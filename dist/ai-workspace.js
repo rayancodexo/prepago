@@ -235,6 +235,29 @@
     </section>`;
   }
 
+  // Until launch, students see a "coming soon" page. Admin accounts keep the real workspace to test it.
+  function isComingSoon() {
+    return window.PrepagoAccount?.isAdmin !== true;
+  }
+
+  function renderComingSoon() {
+    document.querySelector('#page').innerHTML = `<section class="ai-workspace ai-access-gate ai-coming-soon" aria-label="Prepago AI">
+      <header class="ai-workspace-bar"><div><h1>Prepago AI</h1><span class="ai-discovery-label">Bientôt</span></div></header>
+      <div class="ai-access-content">
+        <span class="ai-kicker">BIENTÔT DISPONIBLE</span>
+        <h2>Ton tuteur IA de prépa arrive bientôt.</h2>
+        <p>Tu bloques sur un exo ? Prepago AI te donnera un indice, une explication ou une correction, pensé pour le programme des CPGE marocaines.</p>
+        <ul class="ai-soon-list">
+          <li>${icon('check')}<span>Indice pour avancer sans te donner la réponse</span></li>
+          <li>${icon('check')}<span>Explication pas à pas d’une méthode ou d’un chapitre</span></li>
+          <li>${icon('check')}<span>Correction de ta rédaction, comme au concours</span></li>
+        </ul>
+        <p class="ai-access-availability">Suis <a href="https://www.instagram.com/prepago.ma/" target="_blank" rel="noopener noreferrer">@prepago.ma</a> sur Instagram pour savoir dès que c’est ouvert.</p>
+        <div class="ai-access-actions"><a class="primary-btn" href="https://www.instagram.com/prepago.ma/" target="_blank" rel="noopener noreferrer">Suivre @prepago.ma</a><button type="button" class="secondary-btn" data-ai-planner>Ouvrir mon plan de révision</button></div>
+      </div>
+    </section>`;
+  }
+
   function renderWorkspace() {
     const isDemo = workspace.stage === 'demo';
     const fileName = workspace.file?.name || (isDemo ? 'Oscillateur harmonique · exemple' : 'Photo ou PDF');
@@ -312,6 +335,9 @@
     if (workspace.view === 'planner') {
       renderPlanner();
       document.querySelector('#page .section-head').insertAdjacentHTML('afterend', '<button type="button" class="ai-back link-btn" data-ai-workspace>Retour à Prepago AI</button>');
+    } else if (isComingSoon()) {
+      clear();
+      renderComingSoon();
     } else if (canUseWorkspace()) {
       if (workspace.view === 'start') renderStart();
       else renderWorkspace();
@@ -325,7 +351,7 @@
   pageNames.ai = 'Prepago AI';
   // Prepago AI sits right under Accueil in the sidebar and first in the phone "Plus" menu.
   const aiNav = document.querySelector('[data-page="ai"]');
-  aiNav.innerHTML = '<span class="icon"></span>Prepago AI';
+  aiNav.innerHTML = '<span class="icon"></span>Prepago AI<span class="nav-pill">Bientôt</span>';
   document.querySelector('#mainNav [data-page="overview"]')?.after(aiNav);
   const mobileLink = document.querySelector('.studio-more [data-go="ai"]');
   if (mobileLink) {mobileLink.innerHTML = uiIcon('ai') + 'Prepago AI'; mobileLink.parentElement.prepend(mobileLink);}

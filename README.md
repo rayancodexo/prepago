@@ -34,7 +34,7 @@ Logging in from a local address talks to the real Supabase project.
 npm test
 ```
 
-This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) `tests/qa/landing.py` (public home page: product tour video, XP section) `tests/qa/colle.py` (Colle: solo, duo on two phones, question submission, moderation, upgrade screen) and `tests/qa/epreuve.py` (Mode Épreuve: full-screen exam, barème, Mes épreuves). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
+This opens every public page, the login, sign-up and activation screens and every workspace page on desktop and phone, and fails on any missing file or script error. It then runs the behaviour checks in `tests/qa/flows.py` (code journey, loading) `tests/qa/home.py` (Accueil dashboard, CNC countdown) `tests/qa/pages.py` (Concentration, Calendrier, Matières and Annales CNC: shared look and navigation) `tests/qa/landing.py` (public home page: product tour video, XP section) `tests/qa/colle.py` (Colle: solo, duo on two phones, question submission, moderation, upgrade screen) `tests/qa/epreuve.py` (Mode Épreuve: full-screen exam, barème, Mes épreuves) and `tests/qa/prepa.py` (prépa picker at sign-up and in Mon compte). No network and no real accounts are used. It needs Python with Playwright and a Chromium build.
 
 ## Publish
 
@@ -45,5 +45,7 @@ Pushing to `main` runs the "Publish site" workflow, which copies `dist/` to the 
 `dist/index.html` holds both the landing page and the workspace. A visitor reading the landing page downloads only what it shows; the workspace's scripts and most of its stylesheets load when someone has a session or opens login or sign-up. The loader is the last script in `index.html`.
 
 ## Access
+
+Prepago AI shows a "Bientôt" page to students; admin accounts still see the real workspace to test it. At sign-up, students pick their prépa from a list of public CPGE centres (`dist/prepa-picker.js`) or type it if it isn't listed; it is saved in `profiles.prepa`.
 
 Students get in with an activation code, entered at sign-up or on the activation screen. Codes are created in the admin panel inside the workspace (admin accounts only).

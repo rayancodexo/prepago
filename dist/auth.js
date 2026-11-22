@@ -89,6 +89,7 @@ function setStatus(message = '', success = false) {
 
 function friendlyError(error) {
   const code = error?.code || '';
+  if (code === 'missing_prepa') return 'Choisis ta prépa dans la liste ou écris son nom.';
   if (code === 'invalid_track') return 'Choisis une filière CPGE : MPSI/MP, PCSI/PSI, TSI, ECS ou ECT.';
   if (code === 'invalid_activation_code') return 'Ce code d’activation n’a pas le bon format. Vérifie-le, ou laisse le champ vide pour l’ajouter plus tard.';
   if (code === 'invalid_credentials') return 'E-mail ou mot de passe incorrect.';
@@ -104,6 +105,17 @@ function friendlyError(error) {
   return 'Impossible de terminer cette action. Réessaie dans quelques instants.';
 }
 
+// "prepa" is read on its own so that a database without the column yet still lets everyone in.
+function missingColumn(error) {
+  return ['42703', 'PGRST204'].includes(error?.code) || /column .*prepa|prepa.* column/i.test(error?.message || '');
+}
+async function loadPrepa(id, target) {
+  try {
+    const {data, error} = await supabase.from('profiles').select('prepa').eq('id', id).maybeSingle();
+    if (!error && data && currentUser?.id === id) target.prepa = data.prepa || null;
+  } catch (_) { /* optional field */ }
+}
+
 function setMode(nextMode) {
   mode = nextMode;
   const signingUp = mode === 'signup';
@@ -115,6 +127,8 @@ function setMode(nextMode) {
   signupFields.hidden = !signingUp;
   signupFields.querySelector('[name="full_name"]').required = signingUp;
   signupFields.querySelector('[name="filiere"]').required = signingUp;
+  const prepaPicker = signupFields.querySelector('[data-prepa-picker]')?.__prepa;
+  if (prepaPicker) prepaPicker.required = signingUp;
   if (codeField) codeField.hidden = !signingUp;
   form.elements.password.autocomplete = signingUp ? 'new-password' : 'current-password';
   form.elements.password.minLength = signingUp ? 8 : 1;
@@ -350,6 +364,7 @@ async function loadUserData(session) {
   if (profileError) throw profileError;
   if (generation !== sessionGeneration || currentUser?.id !== userId) return;
   currentProfile = profile;
+  loadPrepa(currentUser.id, profile);
   window.PrepagoCncLibrary?.connect(supabase, userId);
   const roleResult = await supabase.from('user_roles').select('role').eq('user_id',userId).maybeSingle();
   if (roleResult.error) throw roleResult.error;
@@ -376,9 +391,12 @@ async function loadUserData(session) {
       if (!full_name) throw new Error('Nom requis');
       const filiere=window.PrepagoCurriculum.normalizeTrack(values.filiere);
       if(!filiere)throw {code:'invalid_track'};
-      const {error} = await supabase.from('profiles').update({full_name, filiere}).eq('id', userId);
+      const prepa = window.PrepagoPrepa?.clean(values.prepa) || '';
+      let {error} = await supabase.from('profiles').update({full_name, filiere, prepa: prepa || null}).eq('id', userId);
+      // The prepa column may not exist yet if the database migration has not run: save the rest.
+      if (error && missingColumn(error)) ({error} = await supabase.from('profiles').update({full_name, filiere}).eq('id', userId));
       if (error) throw error;
-      Object.assign(profile, {full_name, filiere});
+      Object.assign(profile, {full_name, filiere, prepa: prepa || null});
       const next=window.PrepagoCurriculum.prepare(appState.snapshot(),filiere,window.PrepagoCurriculumCatalog).state;
       next.profileName=full_name;appState.replace(next);scheduleCloudSave(appState.snapshot());
     }
@@ -521,13 +539,16 @@ form.addEventListener('submit', async event => {
   try {
     if (mode === 'signup') {
       if(!window.PrepagoCurriculum.normalizeTrack(values.filiere))throw {code:'invalid_track'};
+      const prepaPicker = signupFields.querySelector('[data-prepa-picker]')?.__prepa;
+      if (prepaPicker && !prepaPicker.validate()) throw {code:'missing_prepa'};
+      const prepa = window.PrepagoPrepa?.clean(values.prepa) || '';
       const activationCode = String(values.activation_code || '').trim().toUpperCase();
       if (activationCode && !activationCodePattern.test(activationCode)) throw {code:'invalid_activation_code'};
       const { data, error } = await supabase.auth.signUp({
         email,
         password: values.password,
         options: {
-          data: { full_name: values.full_name.trim(), filiere: window.PrepagoCurriculum.normalizeTrack(values.filiere), ...(activationCode ? { activation_code: activationCode } : {}) },
+          data: { full_name: values.full_name.trim(), filiere: window.PrepagoCurriculum.normalizeTrack(values.filiere), ...(prepa ? { prepa } : {}), ...(activationCode ? { activation_code: activationCode } : {}) },
           emailRedirectTo: 'https://prepago.site/verification/'
         }
       });

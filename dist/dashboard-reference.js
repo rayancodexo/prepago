@@ -13,7 +13,7 @@
     }
     document.querySelectorAll('.studio-profile-menu, #topbarProfileMenu').forEach(menu => {
       if (!menu.querySelector('[data-go="ai"]')) {
-        menu.insertAdjacentHTML('beforeend', '<button type="button" role="menuitem" data-go="ai">Prepago AI+ · abonnement requis</button>');
+        menu.insertAdjacentHTML('beforeend', '<button type="button" role="menuitem" data-go="ai">Prepago AI · bientôt</button>');
       }
     });
     const plus = document.querySelector('.topbar-create-plus');

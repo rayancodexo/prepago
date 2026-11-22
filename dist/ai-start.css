@@ -58,3 +58,9 @@ body[data-page="ai"] #page .ai-start-hero h1{margin:6px 0 0;font-size:40px;line-
   .ai-ask-modes{margin-left:0}
       .ai-start-suggestions{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Prepago AI: coming soon (students) */
+.ai-coming-soon .ai-soon-list{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:10px}
+.ai-coming-soon .ai-soon-list li{display:flex;align-items:flex-start;gap:10px;font-size:var(--text-base);line-height:1.5;color:var(--ink)}
+.ai-coming-soon .ai-soon-list .icon-svg,.ai-coming-soon .ai-soon-list svg,.ai-coming-soon .ai-soon-list img{width:18px;height:18px;flex:none;margin-top:3px}
+.ai-coming-soon .ai-access-availability a{color:var(--brand);font-weight:var(--font-medium)}

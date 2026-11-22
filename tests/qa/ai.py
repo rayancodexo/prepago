@@ -1,5 +1,5 @@
 """Checks for the Prepago AI start screen: chat-first page, question sent with mode, subject and
-chapter, answer shown in the thread, daily counter, guided example still reachable, AI+ gate kept.
+chapter, answer shown in the thread, daily counter, guided example still reachable (admin), students see a coming-soon page.
 Run: python3 tests/qa/ai.py"""
 import sys
 
@@ -24,7 +24,7 @@ def pick_first(page, selector):
 
 with Site() as site:
     # ---- Tutor not switched on yet --------------------------------------------------------------
-    page, problems = site.workspace('desktop', plan='ai_plus')
+    page, problems = site.workspace('desktop', plan='ai_plus', admin=True)
     goto_page(page, 'ai')
     page.wait_for_timeout(500)
     check('start screen is the first thing shown', 'Sur quoi tu bloques' in (text(page, '#page') or ''), text(page, '#page'))
@@ -50,7 +50,7 @@ with Site() as site:
     page.context.close()
 
     # ---- Tutor on: ask a question ---------------------------------------------------------------
-    page, problems = site.workspace('desktop', plan='ai_plus', aiEnabled=True)
+    page, problems = site.workspace('desktop', plan='ai_plus', aiEnabled=True, admin=True)
     goto_page(page, 'ai')
     page.wait_for_timeout(600)
     check('daily counter shows questions used', '2 / 10' in (text(page, '.ai-start-usage') or ''), text(page, '.ai-start-usage'))
@@ -77,7 +77,7 @@ with Site() as site:
     page.context.close()
 
     # ---- Phone ----------------------------------------------------------------------------------
-    page, problems = site.workspace('phone', plan='ai_plus')
+    page, problems = site.workspace('phone', plan='ai_plus', admin=True)
     goto_page(page, 'ai')
     page.wait_for_timeout(500)
     check('phone: start screen fits the width', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'),
@@ -85,12 +85,18 @@ with Site() as site:
     check('phone: no errors', not problems, '; '.join(problems[:3]))
     page.context.close()
 
-    # ---- Standard plan keeps the AI+ gate -------------------------------------------------------
-    page, problems = site.workspace('desktop')
-    goto_page(page, 'ai')
-    page.wait_for_timeout(400)
-    check('standard plan still sees the AI+ gate', 'Réservé à Prepago AI+' in (text(page, '#page') or ''))
-    page.context.close()
+    # ---- Students see "coming soon" (admins keep the workspace above) ---------------------------
+    for plan, viewport in (('standard', 'desktop'), ('ai_plus', 'desktop'), ('ai_plus', 'phone')):
+        page, problems = site.workspace(viewport, plan=plan)
+        goto_page(page, 'ai')
+        page.wait_for_timeout(400)
+        body = text(page, '#page') or ''
+        check(f'{plan}/{viewport}: coming-soon page shown', 'arrive bientôt' in body, body[:120])
+        check(f'{plan}/{viewport}: no question box', page.locator('#aiAskText').count() == 0)
+        check(f'{plan}/{viewport}: nav says Bientôt', 'Bientôt' in (text(page, '#mainNav [data-page="ai"]') or ''))
+        check(f'{plan}/{viewport}: fits the width', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
+        check(f'{plan}/{viewport}: no errors', not problems, '; '.join(problems[:3]))
+        page.context.close()
 
 failed = [r for r in results if not r[1]]
 for name, ok, detail in results:

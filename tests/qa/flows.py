@@ -15,6 +15,11 @@ def calls(page, key):
     return page.evaluate('k => (window.__QA_CALLS || []).filter(c => k in c)', key)
 
 
+def pick_prepa(page, query):
+    page.fill('#authForm .prepa-query', query)
+    page.locator('#authForm .prepa-list [data-prepa-pick]').first.click()
+
+
 def rpc_calls(page, name):
     return [c for c in calls(page, 'rpc') if c['rpc'] == name]
 
@@ -45,6 +50,7 @@ with Site() as site:
     page, problems = site.open('/#inscription', 'desktop', {'mode': 'signed-out'})
     page.fill('input[name="full_name"]', 'Test Étudiant')
     page.select_option('select[name="filiere"]', 'MP')
+    pick_prepa(page, 'tanger')
     page.fill('#authForm input[name="email"]', 'Test@Example.invalid')
     page.fill('#authForm input[name="password"]', 'motdepasse123')
     page.fill('input[name="activation_code"]', ' prepa-2026 ')
@@ -64,6 +70,7 @@ with Site() as site:
     page, _ = site.open('/#inscription', 'desktop', {'mode': 'signed-out'})
     page.fill('input[name="full_name"]', 'Sans Code')
     page.select_option('select[name="filiere"]', 'PSI')
+    pick_prepa(page, 'tanger')
     page.fill('#authForm input[name="email"]', 'sans@example.invalid')
     page.fill('#authForm input[name="password"]', 'motdepasse123')
     page.click('#authSubmit')
@@ -76,6 +83,7 @@ with Site() as site:
     page, _ = site.open('/#inscription', 'desktop', {'mode': 'signed-out'})
     page.fill('input[name="full_name"]', 'Mauvais Code')
     page.select_option('select[name="filiere"]', 'TSI')
+    pick_prepa(page, 'tanger')
     page.fill('#authForm input[name="email"]', 'bad@example.invalid')
     page.fill('#authForm input[name="password"]', 'motdepasse123')
     page.fill('input[name="activation_code"]', 'a b')
